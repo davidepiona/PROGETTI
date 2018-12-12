@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ExpenseIt
 {
     /// <summary>
-    /// Logica di interazione per MainWindow.xaml
+    /// Logica di interazione per ExpenseItViewExpensexaml.xaml
     /// </summary>
-    public partial class MainWindow : NavigationWindow
+    public partial class ExpenseItViewExpensexaml : Page
     {
-        public MainWindow()
+        public ExpenseItViewExpensexaml()
         {
             InitializeComponent();
         }
