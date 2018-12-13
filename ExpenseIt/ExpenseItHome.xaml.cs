@@ -13,7 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
-using System.Collections;
+using System.Runtime.InteropServices.ComTypes;
+using System.Diagnostics;
 
 namespace ExpenseIt
 {
@@ -25,6 +26,10 @@ namespace ExpenseIt
         public ExpenseItHome()
         {
             InitializeComponent();
+            string targetDirectory = "C:/Users/attil/source/repos/ExpenseIt/ExpenseIt";
+            string[] fileEntries = Directory.GetFileSystemEntries(targetDirectory);
+            foreach (string fileName in fileEntries)
+                ProcessFile(fileName);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -55,29 +60,73 @@ namespace ExpenseIt
         public void ProcessDirectory(string targetDirectory)
         {
             // Process the list of files found in the directory.
-            string[] fileEntries = Directory.GetFiles(targetDirectory);
+            string[] fileEntries = Directory.GetFileSystemEntries(targetDirectory);
             foreach (string fileName in fileEntries)
                 ProcessFile(fileName);
 
             // Recurse into subdirectories of this directory.
-            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-            foreach (string subdirectory in subdirectoryEntries)
-                ProcessDirectory(subdirectory);
+            //string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+            //foreach (string subdirectory in subdirectoryEntries)
+            //    ProcessDirectory(subdirectory);
 
-            ExpenseItViewExpense expenseItViewExpense = new ExpenseItViewExpense();
-            this.NavigationService.Navigate(expenseItViewExpense);
+            
+            
+
+            // CAMBIARE PAGINA
+            //ExpenseItViewExpense expenseItViewExpense = new ExpenseItViewExpense();
+            //this.NavigationService.Navigate(expenseItViewExpense);
         }
 
         // Insert logic for processing found files here.
         public void ProcessFile(string path)
         {
+            ListView listView = this.FindName("ListView") as ListView;
+            listView.Items.Add(path);
             Console.WriteLine("Processed file '{0}'.", path);
         }
 
         private void Button_Click3(object sender, RoutedEventArgs e)
         {
-            string path = "C:/Users/attil/source/repos/ExpenseIt/ExpenseIt";
-            System.Diagnostics.Process.Start(path);
+            ListView listView = this.FindName("ListView") as ListView;
+            string path = listView.SelectedItem.ToString();
+            if (Directory.Exists(path))
+            {
+                System.Diagnostics.Process.Start(path);
+            }
+           
+            
+        }
+
+        private void Button_Click4(object sender, RoutedEventArgs e)
+        {
+            string fileName = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\read2.docx";
+
+            // Create a document in memory: 
+            // var doc = Xceed.Words.NET.DocX.Create(fileName);
+
+            var doc = Xceed.Words.NET.DocX.Load(fileName);
+
+            // Insert a paragrpah:
+            doc.InsertParagraph("This is my first paragraph");
+
+            // Save to the output directory:
+            doc.Save();
+
+            Console.WriteLine(doc.Text);
+
+            RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
+            richTextBox.AppendText(doc.Text);
+
+            // Open in Word: 
+            // Process.Start("WINWORD.EXE", fileName);
+        }
+
+        private void ListView_MouseLeftButtonDown(object sender, MouseEventArgs e)
+        {
+            Console.Write(e);
+            Console.Write("aaa");
+            MessageBox.Show("show");
+            //System.Diagnostics.Process.Start(path);
         }
     }
 }
