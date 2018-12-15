@@ -26,17 +26,21 @@ namespace ExpenseIt
         public ExpenseItHome()
         {
             InitializeComponent();
-            string targetDirectory = "C:/Users/attil/source/repos/ExpenseIt/ExpenseIt";
-            string[] fileEntries = Directory.GetFileSystemEntries(targetDirectory);
+            string example = "C:/Users/attil/source/repos/ExpenseIt/ExpenseIt";
+            string[] fileEntries = Directory.GetFileSystemEntries(example);
             foreach (string fileName in fileEntries)
                 ProcessFile(fileName);
+
+            
+
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             // View Expense Report
-            ExpenseItViewExpense expenseItViewExpense = new ExpenseItViewExpense();
-            this.NavigationService.Navigate(expenseItViewExpense);
+            Home_Clienti home_clienti = new Home_Clienti();
+            this.NavigationService.Navigate(home_clienti);
 
         }
 
@@ -69,8 +73,8 @@ namespace ExpenseIt
             //foreach (string subdirectory in subdirectoryEntries)
             //    ProcessDirectory(subdirectory);
 
-            
-            
+
+
 
             // CAMBIARE PAGINA
             //ExpenseItViewExpense expenseItViewExpense = new ExpenseItViewExpense();
@@ -93,8 +97,8 @@ namespace ExpenseIt
             {
                 System.Diagnostics.Process.Start(path);
             }
-           
-            
+
+
         }
 
         private void Button_Click4(object sender, RoutedEventArgs e)
