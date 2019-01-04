@@ -13,5 +13,5 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="ExpenseIt" Height="800" Width="800" Source="Home_Clienti.xaml">
+        Title="ExpenseIt" Height="900" Width="1400" Source="Clienti_Home.xaml">
 </NavigationWindow>

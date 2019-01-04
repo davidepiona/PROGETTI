@@ -39,6 +39,7 @@
         <ListView x:Name="ListView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="3"  
                  HorizontalAlignment="Left" VerticalAlignment="Top"
                  MouseLeftButtonDown="ListView_MouseLeftButtonDown"
+                 SelectedItem="ListView_SelectedItem"
                  Background="White">
 
         </ListView>
@@ -46,5 +47,7 @@
 Height="40" Click="Open_Folder" Background="Green" Content="Apri Cartella"/>
         <Button Grid.Column="4" Grid.Row="2"  Width="150" HorizontalAlignment="Left"
             Height="40" Click="New_Project" Background="Green" Content="Nuovo Progetto"/>
+
+        <RichTextBox x:Name="richTextBox" Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="5" Grid.RowSpan="3"></RichTextBox>
     </Grid>
 </Page>

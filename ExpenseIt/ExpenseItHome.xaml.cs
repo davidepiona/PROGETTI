@@ -39,8 +39,8 @@ namespace ExpenseIt
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             // View Expense Report
-            Home_Clienti home_clienti = new Home_Clienti();
-            this.NavigationService.Navigate(home_clienti);
+            Clienti_Home clienti_home = new Clienti_Home();
+            this.NavigationService.Navigate(clienti_home);
 
         }
 
