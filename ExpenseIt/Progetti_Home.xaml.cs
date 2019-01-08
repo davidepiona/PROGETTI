@@ -24,24 +24,27 @@ namespace ExpenseIt
         private Cliente cliente;
         private string lastProject;
         private List<Progetto> progetti = new List<Progetto>();
+        private List<Progetto> progettiSync = new List<Progetto>();
         private static string PROGETTI = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\PROGETTI\";
         public Progetti_Home(Cliente cliente)
         {
             InitializeComponent();
             this.cliente = cliente;
+            readProjects();
             createList();
             Label titolo = this.FindName("titolo") as Label;
-            titolo.Content = titolo.Content.ToString() + cliente.getNomeCliente();
+            titolo.Content = titolo.Content.ToString() + " " + cliente.getNomeCliente();
 
         }
 
-        private void createList()
+
+        private void readProjects()
         {
             Console.WriteLine("\nCreate List");
             List<string> lines = new List<string>();
             int i = 0;
             int j = 0;
-            using (var reader = new CsvFileReader(@"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\"+cliente.getNomeCliente()+".csv"))
+            using (var reader = new CsvFileReader(@"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + ".csv"))
             {
                 i = 0;
                 while (reader.ReadRow(lines))
@@ -57,23 +60,46 @@ namespace ExpenseIt
                     reader.ReadRow(lines);
                     string data = lines[0];
 
-                    progetti.Add(new Progetto(numero, nome, tipoOP, tipoOP, data));
+                    progetti.Add(new Progetto(cliente.getNomeCliente() + numero, nome, tipoOP, tipoOP, data));
                     i++;
                 }
-                
             }
+        }
 
+        private void sync()
+        {
+
+        }
+
+        private void createList()
+        {
             //string path = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\PROGETTI\" + cliente.getNomeCliente();
             //string[] fileEntries = Directory.GetFileSystemEntries(path);
+            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
 
-            ListView listView = this.FindName("ListView") as ListView;
-            listView.SelectionChanged += new SelectionChangedEventHandler(changePreview);
+            dataGrid.SelectionChanged += new SelectionChangedEventHandler(changePreview);
+            //dataGrid.SelectionChanged += new SelectionChangedEventHandler(changePreview);
             //foreach (string fileEntry in fileEntries)
+            foreach (Progetto p in progetti)
+            {
+                dataGrid.Items.Add(p);
+            }
+        }
+
+        private void updateList(string filter)
+        {
+            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            Console.WriteLine("filter: <" + filter + ">");
+            if (dataGrid != null)
+            {
+                dataGrid.Items.Clear();
                 foreach (Progetto p in progetti)
                 {
-                
-                listView.Items.Add(cliente.getNomeCliente()+p.ToName());
-                
+                    if (p.ToName().IndexOf(filter, 0, StringComparison.CurrentCultureIgnoreCase) != -1)
+                    {
+                        dataGrid.Items.Add(p);
+                    }
+                }
             }
         }
 
@@ -88,8 +114,8 @@ namespace ExpenseIt
         private void Open_Folder(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("\nOpen Folder");
-            ListView listView = this.FindName("ListView") as ListView;
-            string lastProject = (listView.SelectedValue.ToString()).Split(null)[0];
+            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            string lastProject = dataGrid.SelectedValue.ToString();
             string path = PROGETTI + cliente.getNomeCliente() + @"\" + lastProject;
             if (Directory.Exists(path))
             {
@@ -110,10 +136,10 @@ namespace ExpenseIt
         private void changePreview(object sender, EventArgs e)
         {
             Console.WriteLine("\nChange Preview");
-            lastProject = (((ListView)sender).SelectedValue.ToString()).Split(null)[0];
+            lastProject = ((DataGrid)sender).SelectedValue.ToString();
             try
             {   
-                var doc = Xceed.Words.NET.DocX.Load(PROGETTI+cliente.getNomeCliente()+@"\"+lastProject+ @"\progetto.docx");
+                var doc = Xceed.Words.NET.DocX.Load(PROGETTI+ cliente.getNomeCliente() + @"\"+lastProject + @"\progetto.docx");
                 RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
                 richTextBox.Document.Blocks.Clear();
                 richTextBox.AppendText(doc.Text);
@@ -143,5 +169,9 @@ namespace ExpenseIt
             
         }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            updateList(((TextBox)sender).Text);
+        }
     }
 }

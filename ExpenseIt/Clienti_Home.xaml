@@ -8,7 +8,11 @@
       d:DesignHeight="750" d:DesignWidth="1400"
       Title="Clienti_Home">
 
-    <Grid x:Name="grid" Margin="10" Background="#FF2196F3" ClipToBounds="True" UseLayoutRounding="False">
+    <Grid x:Name="grid" Margin="10"  ClipToBounds="True" UseLayoutRounding="False">
+        <!--Background="#FF2196F3"-->
+        <Grid.Background>
+            <ImageBrush ImageSource="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\background2.jpg" />
+        </Grid.Background>
         <Grid.ColumnDefinitions >
             <ColumnDefinition />
             <ColumnDefinition />
@@ -31,7 +35,7 @@
 
 
 
-        <Label  Grid.ColumnSpan="6" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Dubai Medium" 
+        <Label x:Name="titolo" Grid.ColumnSpan="6" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Dubai Medium" 
  FontWeight="Bold" FontSize="50" Foreground="White" >
             ELENCO CLIENTI
         </Label>
