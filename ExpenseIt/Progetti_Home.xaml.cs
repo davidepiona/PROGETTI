@@ -25,18 +25,50 @@ namespace ExpenseIt
         private string lastProject;
         private List<Progetto> progetti = new List<Progetto>();
         private List<Progetto> progettiSync = new List<Progetto>();
-        private static string PROGETTI = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\PROGETTI\";
+        private List<Cliente> clienti = new List<Cliente>();
+        private UltimaModifica ultimaModifica;
+        private string lastClient;
         public Progetti_Home(Cliente cliente)
         {
             InitializeComponent();
             this.cliente = cliente;
-            readProjects();
-            createList();
-            Label titolo = this.FindName("titolo") as Label;
-            titolo.Content = titolo.Content.ToString() + " " + cliente.getNomeCliente();
+            initialize();
 
         }
 
+        public Progetti_Home()
+        {
+            InitializeComponent();
+            var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
+            var reader = new StreamReader(file);
+            reader.ReadLine();
+            lastClient = reader.ReadLine();
+            while (!reader.EndOfStream)
+            {
+                string[] line = reader.ReadLine().Split(',');
+                if (line.Length == 4)
+                {
+                    clienti.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
+                }
+
+            }
+            file.Close();
+            cliente = clienti[clienti.FindIndex(x => x.getNomeCliente().Equals(lastClient))];
+            initialize();
+            
+        }
+
+        private void initialize()
+        {
+            readProjects();
+            ultimaModifica = new UltimaModifica(cliente);
+            ultimaModifica.readByCSV(Globals.DATI + cliente.getNomeCliente() + "date.csv");
+            ultimaModifica.aggiornoModifiche(progetti);
+            updateList("");
+            createList();
+            Label titolo = this.FindName("titolo") as Label;
+            titolo.Content = titolo.Content.ToString() + " " + cliente.getNomeCliente();
+        }
 
         private void readProjects()
         {
@@ -44,13 +76,13 @@ namespace ExpenseIt
             List<string> lines = new List<string>();
             int i = 0;
             int j = 0;
-            using (var reader = new CsvFileReader(@"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + ".csv"))
+            using (var reader = new CsvFileReader(Globals.DATI + cliente.getNomeCliente() + ".csv"))
             {
                 i = 0;
                 while (reader.ReadRow(lines))
                 {
                     int num = Int32.Parse(lines[0]);
-                    string numero = string.Format("{0:D3}", num);
+                    //string numero = string.Format("{0:D3}", num);
                     reader.ReadRow(lines);
                     string nome = lines[0];
                     reader.ReadRow(lines);
@@ -59,17 +91,13 @@ namespace ExpenseIt
                     string tipoOP = lines[0];
                     reader.ReadRow(lines);
                     string data = lines[0];
-
-                    progetti.Add(new Progetto(cliente.getNomeCliente() + numero, nome, tipoOP, tipoOP, data));
+                    Console.WriteLine(num);
+                    progetti.Add(new Progetto(cliente.getNomeCliente() + num, nome, tipoOP, tipoOP, data));
                     i++;
                 }
             }
         }
 
-        private void sync()
-        {
-
-        }
 
         private void createList()
         {
@@ -80,16 +108,28 @@ namespace ExpenseIt
             dataGrid.SelectionChanged += new SelectionChangedEventHandler(changePreview);
             //dataGrid.SelectionChanged += new SelectionChangedEventHandler(changePreview);
             //foreach (string fileEntry in fileEntries)
+            int i = 0;
             foreach (Progetto p in progetti)
-            {
+            {   
                 dataGrid.Items.Add(p);
+                if (p.numero.Equals(cliente.getNomeCliente() + cliente.getlastId()))
+                {
+                    dataGrid.SelectedIndex = i;
+                    dataGrid.ScrollIntoView(progetti[i]);
+                    
+                }
+                i++;
             }
+
+            //dataGrid.FirstDisplayedScrollingRowIndex = dataGrid.SelectedRows[10].Index;
+            //
+            
         }
 
         private void updateList(string filter)
         {
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-            Console.WriteLine("filter: <" + filter + ">");
+            //Console.WriteLine("filter: <" + filter + ">");
             if (dataGrid != null)
             {
                 dataGrid.Items.Clear();
@@ -103,12 +143,20 @@ namespace ExpenseIt
             }
         }
 
-        private void ListView_MouseLeftButtonDown(object sender, MouseEventArgs e)
+        private void updateList(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
-            Console.Write(e);
-            Console.Write("aaa");
-            MessageBox.Show("show");
-            //System.Diagnostics.Process.Start(path);
+
+            readProjects();
+            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            //Console.WriteLine("filter: <" + filter + ">");
+            if (dataGrid != null)
+            {
+                dataGrid.Items.Clear();
+                foreach (Progetto p in progetti)
+                {
+                        dataGrid.Items.Add(p);
+                }
+            }
         }
 
         private void Open_Folder(object sender, RoutedEventArgs e)
@@ -116,7 +164,7 @@ namespace ExpenseIt
             Console.WriteLine("\nOpen Folder");
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             string lastProject = dataGrid.SelectedValue.ToString();
-            string path = PROGETTI + cliente.getNomeCliente() + @"\" + lastProject;
+            string path = Globals.PROGETTI + cliente.getNomeCliente() + @"\" + lastProject;
             if (Directory.Exists(path))
             {
                 System.Diagnostics.Process.Start(path);
@@ -127,6 +175,9 @@ namespace ExpenseIt
         {
             Console.WriteLine("\nNew Project");
             Form1 testDialog = new Form1(cliente);
+            
+            testDialog.FormClosed
+                += new System.Windows.Forms.FormClosedEventHandler(this.updateList);
             testDialog.ShowDialog();
             //Console.WriteLine("\nNew Project");
             //FormNuovoCliente testDialog = new FormNuovoCliente();
@@ -136,42 +187,100 @@ namespace ExpenseIt
         private void changePreview(object sender, EventArgs e)
         {
             Console.WriteLine("\nChange Preview");
-            lastProject = ((DataGrid)sender).SelectedValue.ToString();
             try
-            {   
-                var doc = Xceed.Words.NET.DocX.Load(PROGETTI+ cliente.getNomeCliente() + @"\"+lastProject + @"\progetto.docx");
-                RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
-                richTextBox.Document.Blocks.Clear();
-                richTextBox.AppendText(doc.Text);
-            }
-            catch(FileNotFoundException)
             {
+                lastProject = ((DataGrid)sender).SelectedValue.ToString();
+
                 RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
-                richTextBox.Document.Blocks.Clear();
+                Image image = this.FindName("image") as Image;
+                try
+                {
+                    var doc = Xceed.Words.NET.DocX.Load(Globals.PROGETTI + cliente.getNomeCliente() + @"\" + lastProject + @"\progetto.docx");
+
+                    richTextBox.Document.Blocks.Clear();
+                    richTextBox.AppendText(doc.Text);
+
+                }
+                catch (FileNotFoundException)
+                {
+                    richTextBox.Document.Blocks.Clear();
+                }
+                catch (IOException)
+                {
+                    //the file is unavailable because it is: still being written to or being processed by another thread or does not exist (has already been processed)
+                    // Insert a paragrpah:
+                    //doc.InsertParagraph("This is my first paragraph");
+
+                    // Save to the output directory:
+                    //doc.Save();
+
+                    //Console.WriteLine(doc.Text);
+                }
+
+                try
+                {
+                    BitmapImage bmi = new BitmapImage();
+                    bmi.BeginInit();
+                    bmi.UriSource = new Uri(Globals.PROGETTI + cliente.getNomeCliente() + @"\" + lastProject + @"\anteprima.jpg", UriKind.Absolute);
+                    bmi.EndInit();
+                    image.Source = bmi;
+                }
+                catch (FileNotFoundException)
+                {
+                    image.Source = null;
+                }
+                catch (IOException)
+                {
+                    //the picture is unavailable because it is: still being open to or being processed by another thread or does not exist (has already been processed)
+                }
             }
-            catch (IOException)
+            catch (NullReferenceException nre)
             {
-                
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
-            }         
+                Console.WriteLine("ECCEZIONE: " + nre);
+            }
 
-            //// Insert a paragrpah:
-            //doc.InsertParagraph("This is my first paragraph");
-
-            //// Save to the output directory:
-            //doc.Save();
-
-            //Console.WriteLine(doc.Text);
-
-            
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             updateList(((TextBox)sender).Text);
+        }
+
+        private void Apri_Docx(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(Globals.PROGETTI + cliente.getNomeCliente() + @"\" + lastProject + @"\progetto.docx");
+        }
+
+        private void Apri_Immagine(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(Globals.PROGETTI + cliente.getNomeCliente() + @"\" + lastProject + @"\anteprima.jpg");
+        }
+
+
+        private void Ultime_Modifiche(object sender, RoutedEventArgs e)
+        {
+            //UltimaModifica u = new UltimaModifica(cliente);
+            //Console.WriteLine(u.modificheByFile(PROGETTI + cliente.getNomeCliente() + @"\PATA190"));
+            ultimaModifica.ricercaLenta(Globals.PROGETTI + cliente.getNomeCliente() + @"\");
+            ultimaModifica.writeInCSV(Globals.DATI + cliente.getNomeCliente() + "date.csv");
+            ultimaModifica.aggiornoModifiche(progetti);
+            updateList("");
+        }
+
+        
+        private void Sync(object sender, RoutedEventArgs e)
+        {
+            ultimaModifica.readSync(Globals.DATIsync + cliente.getNomeCliente() + "date.csv");
+            ultimaModifica.confrontoSync(progetti);
+            updateList("");
+
+            
+
+        }
+
+        private void Altro(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

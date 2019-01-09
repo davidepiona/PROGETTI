@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,30 +22,24 @@ namespace ExpenseIt
     public partial class Clienti_Home : Page
     {
         private List<Cliente> clienti = new List<Cliente>();
+        private string lastOpen;
         public Clienti_Home()
         {
             InitializeComponent();
-            //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI.txt");
-            List<string> lines = new List<string>();
-            int i = 0;
-            using (var reader = new CsvFileReader(@"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI.csv"))
+            var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
+            var reader = new StreamReader(file); string info = reader.ReadLine();
+            lastOpen = reader.ReadLine();
+            while (!reader.EndOfStream)
             {
-                i = 0;
-                while (reader.ReadRow(lines))
+                string[] line = reader.ReadLine().Split(',');
+                if (line.Length == 4)
                 {
-                    Console.WriteLine(lines);
-                    if (lines.Count!=0)
-                    {
-                        clienti.Add(new Cliente(lines[0], lines[1], Int32.Parse(lines[2]), Int32.Parse(lines[3])));
-                        i++;
-                    }
-                    else
-                    {
-                        Console.WriteLine("vuoto");
-                    }
+                    clienti.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
                 }
-            }
 
+            }
+            file.Close();
+            int i = clienti.Count;
             Button[] buttonArray = new Button[i];
             Grid grid = this.FindName("grid") as Grid;
             int j = clienti.Count;
@@ -76,7 +71,7 @@ namespace ExpenseIt
             string clienteAttuale = ((Button)sender).Content.ToString();
             int n = clienti.FindIndex(x => x.getNomeCliente().Equals(clienteAttuale));
             // se la cartella o il file csv di quel clienteAttualee non esiste
-            if (!System.IO.Directory.Exists(@"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\PROGETTI\" + clienteAttuale) || !System.IO.File.Exists(@"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + clienteAttuale + ".csv"))
+            if (!System.IO.Directory.Exists(Globals.PROGETTI + clienteAttuale) || !System.IO.File.Exists(Globals.DATI + clienteAttuale + ".csv"))
             {
                 MessageBox.Show("La cartella o il file csv del clienteAttualee " + clienteAttuale + " non è presente");
             }

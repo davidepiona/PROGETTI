@@ -25,4 +25,13 @@ namespace ExpenseIt
             InitializeComponent();
         }
     }
+
+    public static class Globals
+    {
+        //public const Int32 BUFFER_SIZE = 512; // Unmodifiable
+        //public static String FILE_NAME = "Output.txt"; // Modifiable
+        public static readonly String PROGETTI = @"R:\PROGETTI\"; //Unmodifiable
+        public static readonly String DATI = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\";// Unmodifiable
+        public static readonly String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\";// Unmodifiable
+    }
 }

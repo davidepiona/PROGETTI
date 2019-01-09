@@ -13,7 +13,7 @@ namespace ExpenseIt
         private int maxId;
         private int lastId;
 
-        public Cliente(string nomeCliente, string suffisso, int maxId, int lastId)
+        public Cliente(string nomeCliente, string suffisso, int lastId, int maxId)
         {
             this.nomeCliente = nomeCliente;
             this.suffisso = suffisso;
@@ -38,6 +38,18 @@ namespace ExpenseIt
         {
             return lastId;
         }
+
+        public void setMaxId(int maxId)
+        {
+            this.maxId = maxId;
+        }
+
+        public void setLastId(int lastId)
+        {
+            this.lastId = lastId;
+        }
+
+       
 
     }
 }
