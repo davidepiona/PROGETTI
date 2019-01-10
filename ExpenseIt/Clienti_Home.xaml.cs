@@ -21,30 +21,33 @@ namespace ExpenseIt
     /// </summary>
     public partial class Clienti_Home : Page
     {
-        private List<Cliente> clienti = new List<Cliente>();
-        private string lastOpen;
+        
         public Clienti_Home()
         {
             InitializeComponent();
-            var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
-            var reader = new StreamReader(file); string info = reader.ReadLine();
-            lastOpen = reader.ReadLine();
-            while (!reader.EndOfStream)
+            if (Globals.CLIENTI == null)
             {
-                string[] line = reader.ReadLine().Split(',');
-                if (line.Length == 4)
+                var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
+                var reader = new StreamReader(file); string info = reader.ReadLine();
+                Globals.LAST_CLIENT = reader.ReadLine();
+                Globals.LAST_CLIENT = reader.ReadLine();
+                while (!reader.EndOfStream)
                 {
-                    clienti.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
-                }
+                    string[] line = reader.ReadLine().Split(',');
+                    if (line.Length == 4)
+                    {
+                        Globals.CLIENTI.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
+                    }
 
+                }
+                file.Close();
             }
-            file.Close();
-            int i = clienti.Count;
+            int i = Globals.CLIENTI.Count;
             Button[] buttonArray = new Button[i];
             Grid grid = this.FindName("grid") as Grid;
-            int j = clienti.Count;
+            int j = Globals.CLIENTI.Count;
             i = 0;
-            foreach (Cliente cliente in clienti)
+            foreach (Cliente cliente in Globals.CLIENTI)
             {
                 buttonArray[i] = new Button();
                 buttonArray[i].Width = 140;
@@ -69,7 +72,7 @@ namespace ExpenseIt
         {
             // CAMBIARE PAGINA
             string clienteAttuale = ((Button)sender).Content.ToString();
-            int n = clienti.FindIndex(x => x.getNomeCliente().Equals(clienteAttuale));
+            int n = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(clienteAttuale));
             // se la cartella o il file csv di quel clienteAttualee non esiste
             if (!System.IO.Directory.Exists(Globals.PROGETTI + clienteAttuale) || !System.IO.File.Exists(Globals.DATI + clienteAttuale + ".csv"))
             {
@@ -78,10 +81,12 @@ namespace ExpenseIt
             
             else
             {
-                Progetti_Home progetti_home = new Progetti_Home(clienti[n]);
+                Progetti_Home progetti_home = new Progetti_Home(n);
                 this.NavigationService.Navigate(progetti_home);
             }
         }
+
+        
     }
 }
 

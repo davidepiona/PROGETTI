@@ -71,10 +71,10 @@ namespace ExpenseIt
         //}
         public void aggiornoModifiche(List<Progetto> progetti)
         {
-            Console.Write("Aggiorno Modifiche");
+            Console.WriteLine("Aggiorno Modifiche");
             foreach (Progetto p in progetti)
             {
-                if (allDate.TryGetValue(p.numero, out DateTime ultima))
+                if (allDate.TryGetValue(p.cliente + p.numero, out DateTime ultima))
                 {
                     p.modifica = ultima.ToString();
                 }
@@ -82,11 +82,11 @@ namespace ExpenseIt
         }
         public void confrontoSync(List<Progetto> progetti)
         {
-            Console.Write("Syncronizzo");
+            Console.WriteLine("Syncronizzo");
             foreach (Progetto p in progetti)
             {
-                bool pc = allDate.TryGetValue(p.numero, out DateTime datePc);
-                bool sync = allDateSync.TryGetValue(p.numero, out DateTime dateSync);
+                bool pc = allDate.TryGetValue(p.cliente + p.numero, out DateTime datePc);
+                bool sync = allDateSync.TryGetValue(p.cliente + p.numero, out DateTime dateSync);
                 Console.WriteLine("SY: " + p.numero + "  pc: " + datePc + "  sync: " + dateSync);
                 if (pc & sync)
                 {

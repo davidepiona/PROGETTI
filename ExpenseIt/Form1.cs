@@ -13,27 +13,16 @@ namespace ExpenseIt
 {
     public partial class Form1: Form
     {
-        private List<Cliente> clienti = new List<Cliente>();
-        private string lastOpen;
+        
         public Form1(Cliente cliente)
         {
             InitializeComponent();
-            var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
-            var reader = new StreamReader(file);
-            string info = reader.ReadLine();
-            lastOpen = reader.ReadLine();
-            while (!reader.EndOfStream)
-            {
-                string[] line = reader.ReadLine().Split(',');
-                if (line.Length == 4)
-                {
-                    clienti.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
-                    this.comboBox1.Items.Add(line[0]);
-                }
 
-            }
-            file.Close();  
             //seleziono quello che ho passato
+            foreach (Cliente c in Globals.CLIENTI) {
+
+                this.comboBox1.Items.Add(c.getNomeCliente());
+                    }
             this.comboBox1.SelectedItem = cliente.getNomeCliente();
         }
 
@@ -73,7 +62,6 @@ namespace ExpenseIt
             string titolo = textBox1.Text.ToString();
             string tipoPLC = textBox2.Text.ToString();
             string tipoOP = textBox3.Text.ToString();
-            string data = textBox4.Text.ToString();
 
             if (titolo.Equals(""))
                 titolo = ".";
@@ -81,13 +69,11 @@ namespace ExpenseIt
                 tipoPLC = ".";
             if (titolo.Equals(""))
                 tipoOP = ".";
-            if (data.Equals(""))
-                data = ".";
-
+            string data = (DateTime.Now).ToString();
             //leggere l'attuale file coi progetti di quel cliente
             int numCliente=0;
             int i = 0;
-            foreach (Cliente c in clienti)
+            foreach (Cliente c in Globals.CLIENTI)
             {   
                 if(c.getNomeCliente().Equals(cliente))
                 {
@@ -95,8 +81,8 @@ namespace ExpenseIt
                 }
                 i++;
             }
-            string numProgetto = (clienti[numCliente].getMaxId()+1).ToString();
-            clienti[numCliente].setMaxId(clienti[numCliente].getMaxId() + 1);
+            string numProgetto = (Globals.CLIENTI[numCliente].getMaxId()+1).ToString();
+            Globals.CLIENTI[numCliente].setMaxId(Globals.CLIENTI[numCliente].getMaxId() + 1);
             Console.WriteLine("\n ultimo progetto= " + numProgetto );
             string file = Globals.DATI + cliente + ".csv";
             string projectDetails = numProgetto + Environment.NewLine + titolo + Environment.NewLine + tipoPLC + Environment.NewLine + tipoOP + Environment.NewLine + data + Environment.NewLine;
@@ -117,9 +103,9 @@ namespace ExpenseIt
             // Save to the output directory:
             doc.Save();
 
-
+            Globals.LAST_CLIENT = cliente + numProgetto;
             //crea nuovo file cliente coi progetti aggiornati
-            cambiaClientiCSV();
+            
 
             this.Close();
 
@@ -127,20 +113,6 @@ namespace ExpenseIt
 
         }
         
-        private void cambiaClientiCSV ()
-        {
-            string[] lines = new string[2 + clienti.Count];
-            lines[0] = "CLIENTE,SUFFISSO,LAST_ID,MAX_ID";
-            lines[1] = lastOpen;
-            int i = 2;
-            foreach(Cliente c in clienti)
-            {
-                lines[i] = c.getNomeCliente() + "," + c.getSuffisso() + "," + c.getlastId() + "," + c.getMaxId();
-                i++;
-            }
-            File.WriteAllLines(Globals.DATI + @"\CLIENTI.csv", lines);
-            
-        }
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
 
@@ -151,6 +123,19 @@ namespace ExpenseIt
 
         }
 
-        
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void contextMenuStrip1_Opening_1(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
