@@ -30,7 +30,6 @@ namespace ExpenseIt
                 var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
                 var reader = new StreamReader(file); string info = reader.ReadLine();
                 Globals.LAST_CLIENT = reader.ReadLine();
-                Globals.LAST_CLIENT = reader.ReadLine();
                 while (!reader.EndOfStream)
                 {
                     string[] line = reader.ReadLine().Split(',');
@@ -53,7 +52,7 @@ namespace ExpenseIt
                 buttonArray[i].Width = 140;
                 buttonArray[i].Height = 50;
                 buttonArray[i].Name = "button" + i;
-                buttonArray[i].Content = cliente.getNomeCliente();
+                buttonArray[i].Content = cliente.getSuffisso();
                 buttonArray[i].Click += new RoutedEventHandler(button_Click);
                 buttonArray[i].Background = Brushes.White;
                 buttonArray[i].Foreground = Brushes.Black;
@@ -61,7 +60,7 @@ namespace ExpenseIt
                 Grid.SetColumn(buttonArray[i], i % 4 +1 );
                 Grid.SetRow(buttonArray[i], 1 + (i / 4));
                 grid.Children.Add(buttonArray[i]);
-                Console.WriteLine("\t" + cliente.getNomeCliente());
+                Console.WriteLine("\t" + cliente.getSuffisso());
                 i++;
             }
             InitializeComponent();
@@ -72,7 +71,8 @@ namespace ExpenseIt
         {
             // CAMBIARE PAGINA
             string clienteAttuale = ((Button)sender).Content.ToString();
-            int n = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(clienteAttuale));
+            int n = Globals.CLIENTI.FindIndex(x => x.getSuffisso().Equals(clienteAttuale));
+            Globals.LAST_CLIENT = Globals.CLIENTI[n].getSuffisso();
             // se la cartella o il file csv di quel clienteAttualee non esiste
             if (!System.IO.Directory.Exists(Globals.PROGETTI + clienteAttuale) || !System.IO.File.Exists(Globals.DATI + clienteAttuale + ".csv"))
             {

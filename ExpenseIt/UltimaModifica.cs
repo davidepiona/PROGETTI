@@ -26,49 +26,6 @@ namespace ExpenseIt
             return allDate;
         }
 
-
-        //public void confrontoSync(List<Progetto> progetti)
-        //{
-        //    Dictionary<string, int> merge = allDate.Concat(allDateSync).GroupBy(d => d.Key)
-        //    .ToDictionary(d => d.Key, d => 1);
-
-        //    foreach (KeyValuePair<string, int> i in merge)
-        //    {
-
-
-        //    bool pc = allDate.TryGetValue(i.Key, out DateTime datePc);
-        //    bool sync = allDateSync.TryGetValue(i.Key, out DateTime dateSync);
-
-        //    if (pc & sync)
-        //    {
-        //        if (DateTime.Compare(datePc, dateSync) > 0)
-        //        {
-        //            status.Add(i.Key, 2);
-        //        }
-        //        else if (DateTime.Compare(datePc, dateSync) < 0)
-        //        {
-        //                status.Add(i.Key, 0);
-        //            }
-        //            else
-        //            {
-        //                status.Add(i.Key, 1);
-        //            }
-        //        }
-        //    else if (pc)
-        //    {
-        //            status.Add(i.Key, 2);
-        //        }
-        //    else if (sync)
-        //    {
-        //            status.Add(i.Key, 0);
-        //        }
-
-        //}
-        //    foreach (KeyValuePair<string, int> i in status)
-        //    {
-        //        Console.WriteLine(i);
-        //    }
-        //}
         public void aggiornoModifiche(List<Progetto> progetti)
         {
             Console.WriteLine("Aggiorno Modifiche");
@@ -80,9 +37,13 @@ namespace ExpenseIt
                 }
             }
         }
-        public void confrontoSync(List<Progetto> progetti)
+        public bool confrontoSync(List<Progetto> progetti)
         {
             Console.WriteLine("Syncronizzo");
+            if (allDate.Count == 0)
+            {
+                return false;
+            }
             foreach (Progetto p in progetti)
             {
                 bool pc = allDate.TryGetValue(p.cliente + p.numero, out DateTime datePc);
@@ -90,7 +51,7 @@ namespace ExpenseIt
                 Console.WriteLine("SY: " + p.numero + "  pc: " + datePc + "  sync: " + dateSync);
                 if (pc & sync)
                 {
-                    if (DateTime.Compare(DateTime.Parse(datePc.ToString()),DateTime.Parse(dateSync.ToString())) > 0)
+                    if (DateTime.Compare(DateTime.Parse(datePc.ToString()), DateTime.Parse(dateSync.ToString())) > 0)
                     {
                         p.sync = null;
                     }
@@ -111,16 +72,17 @@ namespace ExpenseIt
                 {
                     p.sync = false;
                 }
-
+            
             }
             //foreach (Progetto i in progetti)
             //{
             //    Console.WriteLine(i);
             //}
+            return true;
         }
         public void ricercaLenta(string path)
         {
-            //string path = PROGETTI + cliente.getNomeCliente() + @"\";
+            //string path = PROGETTI + cliente.getSuffisso() + @"\";
             allDate = new Dictionary<string, DateTime>();
             if (Directory.Exists(path))
             {
@@ -181,20 +143,28 @@ namespace ExpenseIt
             }
         }
 
-        public void writeInCSV(string file)
+        public bool writeInCSV(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
+            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getSuffisso() + "date.csv";
             string projectDate = "";
             foreach (KeyValuePair<string, DateTime> i in allDate)
             {
                 projectDate += i.Key + "," + i.Value + Environment.NewLine;
             }
-            File.WriteAllText(file, projectDate);
+            try
+            {
+                File.WriteAllText(file, projectDate);
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public void readByCSV(string file)
+        public bool readByCSV(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
+            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getSuffisso() + "date.csv";
             List<string> lines = new List<string>();
             try
             {
@@ -212,103 +182,117 @@ namespace ExpenseIt
                         }
                     }
                 }
-            }catch(FileNotFoundException) { }
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public void readSync(string file)
+        public bool readSync(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
+            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\CLIENTI\" + cliente.getSuffisso() + "date.csv";
             allDateSync = new Dictionary<string, DateTime>();
             List<string> lines = new List<string>();
-            using (var reader = new CsvFileReader(file))
+            try
             {
-                while (reader.ReadRow(lines))
+                using (var reader = new CsvFileReader(file))
                 {
-                    if (lines.Count != 0)
+                    while (reader.ReadRow(lines))
                     {
-                        allDateSync.Add(lines[0], DateTime.Parse(lines[1]));
-                    }
-                    else
-                    {
-                        Console.WriteLine("vuoto");
+                        if (lines.Count != 0)
+                        {
+                            allDateSync.Add(lines[0], DateTime.Parse(lines[1]));
+                        }
+                        else
+                        {
+                            Console.WriteLine("vuoto");
+                        }
                     }
                 }
             }
+            catch (IOException)
+            {
+                return false;
+            }
+            return true;
         }
-
-        //public void ricercaRapida()
-        //{
-        //    string path = PROGETTI + cliente.getNomeCliente() + @"\";
-        //    if (Directory.Exists(path))
-        //    {
-        //        foreach (string proj in Directory.GetDirectories(path))
-        //        {
-        //            allDate.Add(proj.Split('\\').Last(), modificheLiv2(proj));
-        //        }
-        //    }
-
-        //    //foreach (KeyValuePair<string, DateTime> i in allDate)
-        //    //{
-        //    //    Console.WriteLine(i.ToString() + " ");
-        //    //}
-        //    confronto();
-        //}
-
-        //private DateTime modificheLiv2(string proj)
-        //{
-        //    DateTime dtNew = new DateTime();
-        //    if (Directory.Exists(proj))
-        //    {
-        //        DateTime dt = Directory.GetLastWriteTime(proj);
-        //        if (DateTime.Compare(dtNew, dt) < 0)
-        //        {
-        //            //Console.WriteLine("più nuovo liv1");
-        //            dtNew = dt;
-        //        }
-        //        foreach (string c in Directory.GetDirectories(proj))
-        //        {
-        //            dt = Directory.GetLastWriteTime(c);
-        //            if (DateTime.Compare(dtNew, dt) < 0)
-        //            {
-        //                //Console.WriteLine("più nuovo liv2");
-        //                dtNew = dt;
-        //            }
-        //        }
-        //    }
-        //    return dtNew;
-        //}
-
-        //private List<string> confronto()
-        //{
-        //    string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
-        //    List<string> daControllare = new List<string>();
-        //    List<string> lines = new List<string>();
-        //    using (var reader = new CsvFileReader(file))
-        //    {
-        //        while (reader.ReadRow(lines))
-        //        {
-        //            if (lines.Count != 0)
-        //            {
-        //                //Console.WriteLine("letto: " + lines[0]);
-        //                DateTime tempDate;
-        //                if (allDate.TryGetValue(lines[0], out tempDate))
-        //                {
-        //                    //Console.WriteLine("trovato " + tempDate + "  " + DateTime.Parse(lines[1]));
-        //                    if (DateTime.Compare(DateTime.Parse(tempDate.ToString()), DateTime.Parse(lines[1])) > 0)
-        //                    {
-        //                        daControllare.Add(lines[0]);
-        //                        Console.WriteLine("aggiunto " + lines[0] + " < " + tempDate + ">  <" + DateTime.Parse(lines[1]) + ">");
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine("vuoto");
-        //            }
-        //        }
-        //    }
-        //    Console.WriteLine("DA CONTROLLARE: " + daControllare.Count);
-        //    return daControllare;
-        //}
     }
 }
+// RICERCA RAPIDA
+//public void ricercaRapida()
+//{
+//    string path = PROGETTI + cliente.getSuffisso() + @"\";
+//    if (Directory.Exists(path))
+//    {
+//        foreach (string proj in Directory.GetDirectories(path))
+//        {
+//            allDate.Add(proj.Split('\\').Last(), modificheLiv2(proj));
+//        }
+//    }
+
+//    //foreach (KeyValuePair<string, DateTime> i in allDate)
+//    //{
+//    //    Console.WriteLine(i.ToString() + " ");
+//    //}
+//    confronto();
+//}
+
+//private DateTime modificheLiv2(string proj)
+//{
+//    DateTime dtNew = new DateTime();
+//    if (Directory.Exists(proj))
+//    {
+//        DateTime dt = Directory.GetLastWriteTime(proj);
+//        if (DateTime.Compare(dtNew, dt) < 0)
+//        {
+//            //Console.WriteLine("più nuovo liv1");
+//            dtNew = dt;
+//        }
+//        foreach (string c in Directory.GetDirectories(proj))
+//        {
+//            dt = Directory.GetLastWriteTime(c);
+//            if (DateTime.Compare(dtNew, dt) < 0)
+//            {
+//                //Console.WriteLine("più nuovo liv2");
+//                dtNew = dt;
+//            }
+//        }
+//    }
+//    return dtNew;
+//}
+
+//private List<string> confronto()
+//{
+//    string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getSuffisso() + "date.csv";
+//    List<string> daControllare = new List<string>();
+//    List<string> lines = new List<string>();
+//    using (var reader = new CsvFileReader(file))
+//    {
+//        while (reader.ReadRow(lines))
+//        {
+//            if (lines.Count != 0)
+//            {
+//                //Console.WriteLine("letto: " + lines[0]);
+//                DateTime tempDate;
+//                if (allDate.TryGetValue(lines[0], out tempDate))
+//                {
+//                    //Console.WriteLine("trovato " + tempDate + "  " + DateTime.Parse(lines[1]));
+//                    if (DateTime.Compare(DateTime.Parse(tempDate.ToString()), DateTime.Parse(lines[1])) > 0)
+//                    {
+//                        daControllare.Add(lines[0]);
+//                        Console.WriteLine("aggiunto " + lines[0] + " < " + tempDate + ">  <" + DateTime.Parse(lines[1]) + ">");
+//                    }
+//                }
+//            }
+//            else
+//            {
+//                Console.WriteLine("vuoto");
+//            }
+//        }
+//    }
+//    Console.WriteLine("DA CONTROLLARE: " + daControllare.Count);
+//    return daControllare;
+//}
+

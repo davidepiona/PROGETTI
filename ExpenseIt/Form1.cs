@@ -21,9 +21,9 @@ namespace ExpenseIt
             //seleziono quello che ho passato
             foreach (Cliente c in Globals.CLIENTI) {
 
-                this.comboBox1.Items.Add(c.getNomeCliente());
+                this.comboBox1.Items.Add(c.getSuffisso());
                     }
-            this.comboBox1.SelectedItem = cliente.getNomeCliente();
+            this.comboBox1.SelectedItem = cliente.getSuffisso();
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -58,7 +58,8 @@ namespace ExpenseIt
         }
 
         private void button2_Click(object sender, EventArgs e)
-        {   string cliente = comboBox1.Text.ToString();
+        {
+            string cliente = comboBox1.Text.ToString();
             string titolo = textBox1.Text.ToString();
             string tipoPLC = textBox2.Text.ToString();
             string tipoOP = textBox3.Text.ToString();
@@ -67,7 +68,7 @@ namespace ExpenseIt
                 titolo = ".";
             if (tipoPLC.Equals(""))
                 tipoPLC = ".";
-            if (titolo.Equals(""))
+            if (tipoOP.Equals(""))
                 tipoOP = ".";
             string data = (DateTime.Now).ToString();
             //leggere l'attuale file coi progetti di quel cliente
@@ -75,40 +76,59 @@ namespace ExpenseIt
             int i = 0;
             foreach (Cliente c in Globals.CLIENTI)
             {   
-                if(c.getNomeCliente().Equals(cliente))
+                if(c.getSuffisso().Equals(cliente))
                 {
                     numCliente = i;
                 }
                 i++;
             }
             string numProgetto = (Globals.CLIENTI[numCliente].getMaxId()+1).ToString();
-            Globals.CLIENTI[numCliente].setMaxId(Globals.CLIENTI[numCliente].getMaxId() + 1);
-            Console.WriteLine("\n ultimo progetto= " + numProgetto );
-            string file = Globals.DATI + cliente + ".csv";
-            string projectDetails = numProgetto + Environment.NewLine + titolo + Environment.NewLine + tipoPLC + Environment.NewLine + tipoOP + Environment.NewLine + data + Environment.NewLine;
-            File.AppendAllText(file, projectDetails);
-
-
-            //creare nuova cartella in progetti e riempirla dei file iniziali
-            Directory.CreateDirectory(Globals.PROGETTI + cliente + @"\" + cliente + numProgetto);
-            string fileName = Globals.PROGETTI + cliente + @"\" + cliente + numProgetto + @"\progetto.docx";
-            // Create a document in memory: 
-            var doc = Xceed.Words.NET.DocX.Create(fileName);
-            // Insert a paragrpah:
-            doc.InsertParagraph("TITOLO DEL PROGETTO:" + titolo);
-            doc.InsertParagraph("\n TIPO DI PLC: " + tipoPLC);
-            doc.InsertParagraph("\n TIPO DI OP: " + tipoOP);
-            doc.InsertParagraph("\n DATA INIZIO: " + data);
-            doc.InsertParagraph("\n Note:");
-            // Save to the output directory:
-            doc.Save();
-
-            Globals.LAST_CLIENT = cliente + numProgetto;
-            //crea nuovo file cliente coi progetti aggiornati
             
+            
+            string file = Globals.DATI + cliente + ".csv";
+            try
+            {
+                string projectDetails = numProgetto + Environment.NewLine + titolo + Environment.NewLine + tipoPLC + Environment.NewLine + tipoOP + Environment.NewLine + data + Environment.NewLine;
+                File.AppendAllText(file, projectDetails);
+                Console.WriteLine("\n ultimo progetto= " + numProgetto);
+                try { 
+                //creare nuova cartella in progetti e riempirla dei file iniziali
+                Directory.CreateDirectory(Globals.PROGETTI + cliente + @"\" + cliente + numProgetto);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E09 - La cartella " + Globals.PROGETTI + cliente + @"\" + cliente + numProgetto + " non è stato creata per un problema");
+            }
+            string fileName = Globals.PROGETTI + cliente + @"\" + cliente + numProgetto + @"\progetto.docx";
+            try
+            {
+                
+                // Create a document in memory: 
+                var doc = Xceed.Words.NET.DocX.Create(fileName);
+                // Insert a paragrpah:
+                doc.InsertParagraph(cliente + " " + numProgetto).Bold();
+                doc.InsertParagraph("\n TITOLO DEL PROGETTO:" + titolo);
+                doc.InsertParagraph("\n TIPO DI PLC: " + tipoPLC);
+                doc.InsertParagraph("\n TIPO DI OP: " + tipoOP);
+                doc.InsertParagraph("\n DATA INIZIO: " + data);
+                doc.InsertParagraph("\n Note:");
+                // Save to the output directory:
+                doc.Save();
+            }catch(IOException)
+            {
+                MessageBox.Show("E07 - Il file " + fileName + " non è stato creato per un problema");
+            }
+            Globals.CLIENTI[numCliente].setMaxId(Globals.CLIENTI[numCliente].getMaxId() + 1);
+            Globals.CLIENTI[numCliente].setLastId(Globals.CLIENTI[numCliente].getMaxId());
+            MainWindow m = new MainWindow();
+            m.salvaClientiCSV();
 
             this.Close();
-
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E06 - Il file " + file + " non esiste o è aperto da un altro programma");
+            }
 
 
         }
@@ -134,6 +154,11 @@ namespace ExpenseIt
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }

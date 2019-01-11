@@ -21,7 +21,9 @@ namespace ExpenseIt
     /// </summary>
     public partial class Progetti_Home : Page
     {
+        private bool back = false; 
         private int num_cliente;
+        private int ProgSelezionato;
         private List<Progetto> progetti = new List<Progetto>();
         private List<Progetto> progettiSync = new List<Progetto>();
         private UltimaModifica ultimaModifica;
@@ -39,46 +41,77 @@ namespace ExpenseIt
 
             InitializeComponent();
             Loaded += Progetti_Home_Loaded;
-            if (Globals.CLIENTI == null)
+            try
             {
-                var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
-                var reader = new StreamReader(file);
-                reader.ReadLine();
-                Globals.LAST_CLIENT = reader.ReadLine();
-                Globals.CLIENTI = new List<Cliente>();
-                while (!reader.EndOfStream)
+                if (Globals.CLIENTI == null)
                 {
-                    string[] line = reader.ReadLine().Split(',');
-                    if (line.Length == 4)
+                    var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
+                    var reader = new StreamReader(file);
+                    reader.ReadLine();
+                    Globals.LAST_CLIENT = reader.ReadLine();
+                    Globals.CLIENTI = new List<Cliente>();
+                    while (!reader.EndOfStream)
                     {
-                        Globals.CLIENTI.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
-                    }
+                        string[] line = reader.ReadLine().Split(',');
+                        if (line.Length == 4)
+                        {
+                            Globals.CLIENTI.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
+                        }
 
+                    }
+                    file.Close();
                 }
-                file.Close();
+            }catch(IOException)
+            {
+                MessageBox.Show("E01 - Il file " + Globals.DATI + @"\CLIENTI.csv" + " non esiste o è aperto da un altro programma. \n L'APPLICAZIONE SARA' CHIUSA");
+                Environment.Exit(0);
             }
 
-            num_cliente = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT));
-            initialize();
+            num_cliente = Globals.CLIENTI.FindIndex(x => x.getSuffisso().Equals(Globals.LAST_CLIENT));
+            string cliente = Globals.CLIENTI.Find(x => x.getSuffisso().Equals(Globals.LAST_CLIENT)).getNomeCliente();
+            if(checkFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
+            {
+                initialize();
+            }
 
         }
-
+        public bool checkFolderandCsv(string cliente)
+        {
+            if (!System.IO.Directory.Exists(Globals.PROGETTI + cliente) || !System.IO.File.Exists(Globals.DATI + cliente + ".csv"))
+            {
+                MessageBox.Show("La cartella o il file csv del cliente attuale " + cliente + " non è presente");
+                back = true;
+                return false;
+            }
+            return true;
+        }
         private void initialize()
         {
             readProjects();
+            ProgSelezionato = Globals.CLIENTI[num_cliente].getlastId();
             ultimaModifica = new UltimaModifica(Globals.CLIENTI[num_cliente]);
-            ultimaModifica.readByCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv");
+            if (!ultimaModifica.readByCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv"))
+            {
+                MessageBox.Show("E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non saranno caricate da file.");
+            }
             ultimaModifica.aggiornoModifiche(progetti);
             updateList("");
             createList();
             Label titolo = this.FindName("titolo") as Label;
-            titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getNomeCliente();
+            titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getSuffisso();
+            PreviewKeyDown += new KeyEventHandler(PreviewKeyDown2);
+            initCheck();
 
         }
-        private void Progetti_Home_Loaded(object sender, RoutedEventArgs e)
+        public void Progetti_Home_Loaded(object sender, RoutedEventArgs e)
         {
             TextBox textBox = this.FindName("TextBox") as TextBox;
             textBox.Focus();
+            if (back)
+            {
+                Clienti_Home clienti_home = new Clienti_Home();
+                this.NavigationService.Navigate(clienti_home);
+            }
         }
         private void readProjects()
         {
@@ -86,24 +119,30 @@ namespace ExpenseIt
             List<string> lines = new List<string>();
             int i = 0;
             int j = 0;
-            using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv"))
+            //Console.WriteLine(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv");
+            try
             {
-                i = 0;
-                while (reader.ReadRow(lines))
+                using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv"))
                 {
-                    int num = Int32.Parse(lines[0]);
-                    //string numero = string.Format("{0:D3}", num);
-                    reader.ReadRow(lines);
-                    string nome = lines[0];
-                    reader.ReadRow(lines);
-                    string tipoPLC = lines[0];
-                    reader.ReadRow(lines);
-                    string tipoOP = lines[0];
-                    reader.ReadRow(lines);
-                    string data = lines[0];
-                    progetti.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getNomeCliente()));
-                    i++;
+                    i = 0;
+                    while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
+                    {
+                        int num = Int32.Parse(lines[0]);
+                        reader.ReadRow(lines);
+                        string nome = lines[0];
+                        reader.ReadRow(lines);
+                        string tipoPLC = lines[0];
+                        reader.ReadRow(lines);
+                        string tipoOP = lines[0];
+                        reader.ReadRow(lines);
+                        string data = lines[0];
+                        progetti.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getSuffisso()));
+                        i++;
+                    }
                 }
+            }catch(IOException)
+            {
+                    MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv" + " non esiste o è aperto da un altro programma");
             }
         }
 
@@ -111,7 +150,7 @@ namespace ExpenseIt
         private void createList()
         {
             Console.WriteLine("Create List");
-            //string path = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\PROGETTI\" + cliente.getNomeCliente();
+            //string path = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\PROGETTI\" + cliente.getSuffisso();
             //string[] fileEntries = Directory.GetFileSystemEntries(path);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
 
@@ -126,7 +165,7 @@ namespace ExpenseIt
                 if (p.numero.Equals(Globals.CLIENTI[num_cliente].getlastId()))
                 {
                     dataGrid.SelectedIndex = i;
-                    dataGrid.ScrollIntoView(progetti[i + 5]);
+                    dataGrid.ScrollIntoView(progetti[i]);
 
                 }
                 i++;
@@ -137,37 +176,59 @@ namespace ExpenseIt
 
         }
 
-        private void updateList(string filter)
+        private Progetto updateList(string filter)
         {
             Console.WriteLine("Update list1");
+            Progetto primo = new Progetto(0, null, null, null, null, null);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             //Console.WriteLine("filter: <" + filter + ">");
             if (dataGrid != null)
             {
                 dataGrid.Items.Clear();
+                int i = 0;
                 foreach (Progetto p in progetti)
                 {
                     if (p.ToName().IndexOf(filter, 0, StringComparison.CurrentCultureIgnoreCase) != -1)
                     {
+                        if (i == 0)
+                        {
+                            primo = p;
+                        }
                         dataGrid.Items.Add(p);
+                        if (p.numero.Equals(Globals.CLIENTI[num_cliente].getlastId()))
+                        {
+                            dataGrid.SelectedIndex = i;
+                            dataGrid.ScrollIntoView(progetti[i]);
+
+                        }
+                        i++;
                     }
                 }
             }
-
+            return primo;
         }
 
-        private void updateList(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        private void updateListNewProject(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
             Console.WriteLine("UpdateList2");
+            progetti = new List<Progetto>();
             readProjects();
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             //Console.WriteLine("filter: <" + filter + ">");
             if (dataGrid != null)
             {
+                int i = 0;
                 dataGrid.Items.Clear();
                 foreach (Progetto p in progetti)
                 {
                     dataGrid.Items.Add(p);
+                    if (p.numero.Equals(Globals.CLIENTI[num_cliente].getlastId()))
+                    {
+                        dataGrid.SelectedIndex = i;
+                        dataGrid.ScrollIntoView(progetti[i]);
+
+                    }
+                    i++;
                 }
             }
 
@@ -175,9 +236,9 @@ namespace ExpenseIt
 
         private void Open_Folder(object sender, RoutedEventArgs e)
         {
-
+            Globals.CLIENTI[num_cliente].setLastId(ProgSelezionato);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-            string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId();
+            string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() + @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + Globals.CLIENTI[num_cliente].getlastId();
             if (Directory.Exists(path))
             {
                 System.Diagnostics.Process.Start(path);
@@ -186,15 +247,22 @@ namespace ExpenseIt
 
         private void New_Project(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("\nNew Project");
-            Form1 testDialog = new Form1(Globals.CLIENTI[num_cliente]);
+            if (checkFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
+            {
+                Console.WriteLine("\nNew Project");
+                Form1 testDialog = new Form1(Globals.CLIENTI[num_cliente]);
 
-            testDialog.FormClosed
-                += new System.Windows.Forms.FormClosedEventHandler(this.updateList);
-            testDialog.ShowDialog();
-            //Console.WriteLine("\nNew Project");
-            //FormNuovoCliente testDialog = new FormNuovoCliente();
-            //testDialog.ShowDialog();
+                testDialog.FormClosed
+                    += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
+                testDialog.ShowDialog();
+                //Console.WriteLine("\nNew Project");
+                //FormNuovoCliente testDialog = new FormNuovoCliente();
+                //testDialog.ShowDialog();
+            }
+            else
+            {
+                Progetti_Home_Loaded(null,null);
+            }
         }
 
         private void changePreview(object sender, EventArgs e)
@@ -202,8 +270,8 @@ namespace ExpenseIt
             Console.WriteLine("Change Preview");
             try
             {
-                Globals.CLIENTI[num_cliente].setLastId(((Progetto)((DataGrid)sender).SelectedValue).getNumProject());
-
+                //Globals.CLIENTI[num_cliente].setLastId(((Progetto)((DataGrid)sender).SelectedValue).getNumProject());
+                ProgSelezionato = ((Progetto)((DataGrid)sender).SelectedValue).getNumProject();
                 //Globals.CLIENTI[num_cliente].setLastId(12);
                 RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
                 richTextBox.Visibility = Visibility.Visible;
@@ -211,10 +279,10 @@ namespace ExpenseIt
                 button.Visibility = Visibility.Visible;
                 Image image = this.FindName("image") as Image;
 
-                //Console.WriteLine("PATHHH:  " + Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                //@"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId() + @"\progetto.docx");
-                string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                    @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId() + @"\progetto.docx";
+                //Console.WriteLine("PATHHH:  " + Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
+                //@"\" + Globals.CLIENTI[num_cliente].getSuffisso() + Globals.CLIENTI[num_cliente].getlastId() + @"\progetto.docx");
+                string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
+                    @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx";
                 if (File.Exists(file))
                 {
                     var doc = Xceed.Words.NET.DocX.Load(file);
@@ -228,8 +296,8 @@ namespace ExpenseIt
                     button.Visibility = Visibility.Hidden;
                 }
 
-                file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                   @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId() + @"\anteprima.jpg";
+                file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
+                   @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\anteprima.jpg";
                 if (File.Exists(file))
                 {
                     BitmapImage bmi = new BitmapImage();
@@ -249,41 +317,47 @@ namespace ExpenseIt
             }
             catch (NullReferenceException nre)
             {
-                Console.WriteLine("ECCEZIONE: " + nre);
+                //Console.WriteLine("ECCEZIONE: " + nre);
             }
 
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            updateList(((TextBox)sender).Text);
+            Progetto p = updateList(((TextBox)sender).Text);
+            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            dataGrid.SelectedIndex = 0;
+            dataGrid.ScrollIntoView(p);
         }
 
         private void Apri_Docx(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId() + @"\progetto.docx");
+            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
+                @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx");
         }
 
         private void Apri_Immagine(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId() + @"\anteprima.jpg");
+            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
+                @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\anteprima.jpg");
         }
 
 
         private void Ultime_Modifiche(object sender, RoutedEventArgs e)
         {
             //UltimaModifica u = new UltimaModifica(cliente);
-            //Console.WriteLine(u.modificheByFile(PROGETTI + cliente.getNomeCliente() + @"\PATA190"));
+            //Console.WriteLine(u.modificheByFile(PROGETTI + cliente.getSuffisso() + @"\PATA190"));
             Button buttonModifiche = this.FindName("BottModifiche") as Button;
             Button buttonSync = this.FindName("BottSync") as Button;
             buttonModifiche.IsEnabled = false;
             buttonSync.IsEnabled = false;
             Task.Factory.StartNew(() =>
             {
-                ultimaModifica.ricercaLenta(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\");
-                ultimaModifica.writeInCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv");
+                ultimaModifica.ricercaLenta(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() + @"\");
+                if (!ultimaModifica.writeInCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv"))
+                {
+                    MessageBox.Show("E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma. \n\nNon è stato possibile salvare i dati relativi alle ultime modifiche.");
+                }
                 ultimaModifica.aggiornoModifiche(progetti);
 
 
@@ -300,10 +374,19 @@ namespace ExpenseIt
 
         private void Sync(object sender, RoutedEventArgs e)
         {
-            ultimaModifica.readSync(Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv");
-            ultimaModifica.confrontoSync(progetti);
-            updateList("");
-
+            if (!ultimaModifica.readSync(Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv"))
+            {
+                MessageBox.Show("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
+            }
+            else
+            {
+                if (!ultimaModifica.confrontoSync(progetti))
+                {
+                    MessageBox.Show("E' necessario aver caricato almeno una volta le date di ultime modifiche prima di effettuare la sincronizzazione");
+                }
+               
+                updateList("");
+            }
 
 
         }
@@ -324,5 +407,49 @@ namespace ExpenseIt
         {
             Open_Folder(sender, null);
         }
+
+        private void PreviewKeyDown2(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                Console.WriteLine("su");
+                DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+                dataGrid.Focus();
+                if (dataGrid.SelectedIndex > 0)
+                {
+                    dataGrid.SelectedIndex = dataGrid.SelectedIndex - 1;
+                    dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+                }
+
+            }
+            if (e.Key == Key.Down)
+            {
+                DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+                Console.WriteLine("giu");
+                dataGrid.SelectedIndex = dataGrid.SelectedIndex + 1;
+                if (dataGrid.SelectedItem != null)
+                {
+                    dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+                }
+            }
+            if (e.Key == Key.Enter)
+            {
+                Console.WriteLine("invio");
+                Open_Folder(null, null);
+
+            }
+
+        }
+
+        private void initCheck()
+        {
+            if(progetti.Count!=0 && progetti[progetti.Count-1].numero != Globals.CLIENTI[num_cliente].getMaxId())
+            {
+                MessageBox.Show("ALLARME IN INIZIALIZZAZIONE: numero di progetti segnati diverso dal numero di progetti effettivi"+
+                    progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId());
+            }
+        }
+
+       
     }
 }
