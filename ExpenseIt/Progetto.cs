@@ -48,5 +48,15 @@ namespace ExpenseIt
             return cliente+ numero + "\t" + nome + "\t\t" + tipoPLC;
         }
 
+        public override bool Equals(object obj)
+        {
+            var progetto = obj as Progetto;
+            return progetto != null &&
+                   nome == progetto.nome &&
+                   tipoPLC == progetto.tipoPLC &&
+                   tipoOP == progetto.tipoOP &&
+                   data == progetto.data &&
+                   sigla == progetto.sigla;
+        }
     }
 }

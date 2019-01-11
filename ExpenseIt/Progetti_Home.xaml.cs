@@ -117,14 +117,11 @@ namespace ExpenseIt
         {
             Console.WriteLine("Read Projects");
             List<string> lines = new List<string>();
-            int i = 0;
-            int j = 0;
             //Console.WriteLine(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv");
             try
             {
                 using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv"))
                 {
-                    i = 0;
                     while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
                     {
                         int num = Int32.Parse(lines[0]);
@@ -137,7 +134,6 @@ namespace ExpenseIt
                         reader.ReadRow(lines);
                         string data = lines[0];
                         progetti.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getSuffisso()));
-                        i++;
                     }
                 }
             }catch(IOException)
@@ -395,6 +391,13 @@ namespace ExpenseIt
         {
             TextBox textBox = this.FindName("TextBox") as TextBox;
             textBox.Focus();
+            Sync s = new Sync(progetti, num_cliente);
+            s.readSyncProject(Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv");
+            List<Progetto>[] compare = s.compareSyncProject();
+            Console.WriteLine("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
+            ShowDifference form = new ShowDifference(compare[1]);
+            
+            form.Show();
         }
 
         private void Cambia_Pagina(object sender, RoutedEventArgs e)

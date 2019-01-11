@@ -81,6 +81,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ShowDifference.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShowDifference.Designer.cs">
+      <DependentUpon>ShowDifference.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sync.cs" />
     <Compile Include="UltimaModifica.cs" />
     <Page Include="ExpenseItHome.xaml">
       <SubType>Designer</SubType>
@@ -154,6 +161,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShowDifference.resx">
+      <DependentUpon>ShowDifference.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
