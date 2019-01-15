@@ -70,7 +70,7 @@ namespace ExpenseIt
                 else
                 {
                     Console.WriteLine("Un progetto in più: " + p.sigla + " -->"+ p.data);
-                    list[1].Add(p);
+                    list[2].Add(p);
                 }
             }
             foreach(Progetto ps in progettiSync)
@@ -78,7 +78,7 @@ namespace ExpenseIt
                 if (ps.sync==false)
                 {
                     Console.WriteLine("Un progetto mancante localmente: " + ps.sigla + " -->" + ps.data);
-                    list[2].Add(ps);
+                    list[1].Add(ps);
                 }
             }
             return list;

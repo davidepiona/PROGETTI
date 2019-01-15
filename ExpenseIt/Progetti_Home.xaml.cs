@@ -95,6 +95,7 @@ namespace ExpenseIt
                 MessageBox.Show("E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non saranno caricate da file.");
             }
             ultimaModifica.aggiornoModifiche(progetti);
+            check_sync();
             updateList("");
             createList();
             Label titolo = this.FindName("titolo") as Label;
@@ -122,8 +123,10 @@ namespace ExpenseIt
             {
                 using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv"))
                 {
+
                     while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
                     {
+                        Console.WriteLine(lines[0]);
                         int num = Int32.Parse(lines[0]);
                         reader.ReadRow(lines);
                         string nome = lines[0];
@@ -177,6 +180,7 @@ namespace ExpenseIt
             Console.WriteLine("Update list1");
             Progetto primo = new Progetto(0, null, null, null, null, null);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            ultimaModifica.aggiornoModifiche(progetti);
             //Console.WriteLine("filter: <" + filter + ">");
             if (dataGrid != null)
             {
@@ -210,6 +214,7 @@ namespace ExpenseIt
             progetti = new List<Progetto>();
             readProjects();
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            ultimaModifica.aggiornoModifiche(progetti);
             //Console.WriteLine("filter: <" + filter + ">");
             if (dataGrid != null)
             {
@@ -230,7 +235,7 @@ namespace ExpenseIt
 
         }
 
-        private void Open_Folder(object sender, RoutedEventArgs e)
+        private void Button_Open_Folder(object sender, RoutedEventArgs e)
         {
             Globals.CLIENTI[num_cliente].setLastId(ProgSelezionato);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
@@ -241,7 +246,7 @@ namespace ExpenseIt
             }
         }
 
-        private void New_Project(object sender, RoutedEventArgs e)
+        private void Button_New_Project(object sender, RoutedEventArgs e)
         {
             if (checkFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
             {
@@ -326,7 +331,7 @@ namespace ExpenseIt
             dataGrid.ScrollIntoView(p);
         }
 
-        private void Apri_Docx(object sender, RoutedEventArgs e)
+        private void Button_Apri_Docx(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
                 @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx");
@@ -339,14 +344,18 @@ namespace ExpenseIt
         }
 
 
-        private void Ultime_Modifiche(object sender, RoutedEventArgs e)
+        private void Button_Ultime_Modifiche(object sender, RoutedEventArgs e)
         {
             //UltimaModifica u = new UltimaModifica(cliente);
             //Console.WriteLine(u.modificheByFile(PROGETTI + cliente.getSuffisso() + @"\PATA190"));
             Button buttonModifiche = this.FindName("BottModifiche") as Button;
-            Button buttonSync = this.FindName("BottSync") as Button;
+            Button buttonClone = this.FindName("BottGitClone") as Button;
+            Button buttonPush = this.FindName("BottGitPush") as Button;
+            Button buttonMerge = this.FindName("BottMerge") as Button;
             buttonModifiche.IsEnabled = false;
-            buttonSync.IsEnabled = false;
+            buttonClone.IsEnabled = false;
+            buttonPush.IsEnabled = false;
+            buttonMerge.IsEnabled = false;
             Task.Factory.StartNew(() =>
             {
                 ultimaModifica.ricercaLenta(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() + @"\");
@@ -361,19 +370,23 @@ namespace ExpenseIt
             {
                 updateList("");
                 buttonModifiche.IsEnabled = true;
-                buttonSync.IsEnabled = true;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+                buttonClone.IsEnabled = true;
+                buttonPush.IsEnabled = true;
+                buttonMerge.IsEnabled = true;
+                MessageBox.Show("Le ultime modifiche di tutti i progetti di " + Globals.CLIENTI[num_cliente].getNomeCliente() + " sono state aggiornate e caricate nel relativo file csv.");
 
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
         }
 
 
-        private void Sync(object sender, RoutedEventArgs e)
+        private void check_sync()
         {
             if (!ultimaModifica.readSync(Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv"))
             {
-                MessageBox.Show("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
-            }
+                //MessageBox.Show("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
+                Console.WriteLine("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
+             }
             else
             {
                 if (!ultimaModifica.confrontoSync(progetti))
@@ -381,13 +394,10 @@ namespace ExpenseIt
                     MessageBox.Show("E' necessario aver caricato almeno una volta le date di ultime modifiche prima di effettuare la sincronizzazione");
                 }
                
-                updateList("");
             }
-
-
         }
 
-        private void Altro(object sender, RoutedEventArgs e)
+        private void Button_Merge(object sender, RoutedEventArgs e)
         {
             TextBox textBox = this.FindName("TextBox") as TextBox;
             textBox.Focus();
@@ -395,12 +405,12 @@ namespace ExpenseIt
             s.readSyncProject(Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv");
             List<Progetto>[] compare = s.compareSyncProject();
             Console.WriteLine("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
-            ShowDifference form = new ShowDifference(compare[1]);
-            
+            ShowDifference form = new ShowDifference(compare[1], num_cliente);
+            form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
             form.Show();
         }
 
-        private void Cambia_Pagina(object sender, RoutedEventArgs e)
+        private void Button_Cambia_Pagina(object sender, RoutedEventArgs e)
         {
             Clienti_Home clienti_home = new Clienti_Home();
             this.NavigationService.Navigate(clienti_home);
@@ -408,7 +418,7 @@ namespace ExpenseIt
 
         private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Open_Folder(sender, null);
+            Button_Open_Folder(sender, null);
         }
 
         private void PreviewKeyDown2(object sender, KeyEventArgs e)
@@ -438,7 +448,7 @@ namespace ExpenseIt
             if (e.Key == Key.Enter)
             {
                 Console.WriteLine("invio");
-                Open_Folder(null, null);
+                Button_Open_Folder(null, null);
 
             }
 
@@ -453,6 +463,33 @@ namespace ExpenseIt
             }
         }
 
-       
+        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_GitHubClone(object sender, RoutedEventArgs e)
+        {
+            GitCommands git = new GitCommands();
+            git.clone();
+            check_sync();
+            updateList("");
+        }
+        private void Button_GitHubPush(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler caricare i progetti attuali online", "Caricare online?", MessageBoxButton.YesNo);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                GitCommands git = new GitCommands();
+                git.copyFolder();
+                git.push();
+            }
+            else if (dialogResult == MessageBoxResult.No)
+            {
+                
+            }
+            
+        }
+        
     }
 }
