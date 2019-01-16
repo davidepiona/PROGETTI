@@ -28,16 +28,17 @@ namespace ExpenseIt
                   "Salvare l'attuale indirizzo per il repository GitHub usato dall'applicazione?",
                   "Conferma",
                   MessageBoxButton.YesNo,
-                  MessageBoxImage.Stop);
+                  MessageBoxImage.Question);
                 if (me == MessageBoxResult.No)
                 {
                     return;
                 }
-            
-            Globals.GITURL = tb1;
-            MainWindow m = new MainWindow();
-            m.salvaClientiCSV();
-
+            if (!tb1.Equals(Globals.GITURL))
+            {
+                Globals.GITURL = tb1;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
             this.Close();
         }
 
@@ -93,6 +94,11 @@ namespace ExpenseIt
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void Form_github_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

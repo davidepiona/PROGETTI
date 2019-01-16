@@ -41,7 +41,26 @@
         </Label>
         <!--<Canvas  Grid.Column="1" Grid.ColumnSpan="3"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="750" Width="900" Background="#FFE0E0E0" ClipToBounds="True" UseLayoutRounding="True"/>-->
         <Border Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="650" Width="900" Background="#FFE0E0E0" CornerRadius="8" OpacityMask="#FF4F1A1A" />
+        
+        <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0" >
+            <MenuItem Width="50" Height="50" FlowDirection="RightToLeft">
+                <MenuItem.Background>
+                    <ImageBrush ImageSource="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\3lines.png"/>
+                </MenuItem.Background>
+                <MenuItem Header="Imposta percorsi file" Click="Menu_percorsi" Background="AliceBlue">
+                    <MenuItem.Icon>
+                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Imposta repository GitHub" Click="Menu_github" Background="AliceBlue">
+                    <MenuItem.Icon>
+                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\github.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Mostra anteprima e docx" Click="Menu_anteprima" IsCheckable="True" Name="Menu_anteprima_check" Background="AliceBlue"/>
+                <MenuItem Header="Mostra azioni sincronizzazione" Click="Menu_sync" IsCheckable="True" Name="Menu_sync_check" Background="AliceBlue"/>
 
-
+            </MenuItem>
+        </Menu>
     </Grid>
 </Page>

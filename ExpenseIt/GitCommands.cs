@@ -65,7 +65,7 @@ namespace ExpenseIt
 
         }
 
-        public void push()
+        public bool push()
         {
             string gitAddOrigin = @"remote add origin " + @Globals.GITURL;
             string gitAddArgument = @"add " + Globals.DATIsync;
@@ -84,10 +84,6 @@ namespace ExpenseIt
                 string err = proc.StandardError.ReadLine();
                 Console.WriteLine("ERR: " + err);
                 string[] split = err.Split(':');
-                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
-                {
-
-                }
             }
 
             _processStartInfo.Arguments = gitAddOrigin;
@@ -97,10 +93,6 @@ namespace ExpenseIt
                 string err = proc.StandardError.ReadLine();
                 Console.WriteLine("ERR: " + err);
                 string[] split = err.Split(':');
-                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
-                {
-
-                }
             }
 
             _processStartInfo.Arguments = gitAddArgument;
@@ -110,10 +102,6 @@ namespace ExpenseIt
                 string err = proc.StandardError.ReadLine();
                 Console.WriteLine("ERR: " + err);
                 string[] split = err.Split(':');
-                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
-                {
-
-                }
             }
 
             _processStartInfo.Arguments = gitCommitArgument;
@@ -123,10 +111,6 @@ namespace ExpenseIt
                 string err = proc.StandardError.ReadLine();
                 Console.WriteLine("ERR: " + err);
                 string[] split = err.Split(':');
-                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
-                {
-
-                }
             }
 
             _processStartInfo.Arguments = gitPushArgument;
@@ -136,12 +120,13 @@ namespace ExpenseIt
                 string err = proc.StandardError.ReadLine();
                 Console.WriteLine("ERRUltim: " + err);
                 string[] split = err.Split(':');
-                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
+                if (split[0].Equals("To https"))
                 {
-
+                    return true;
                 }
             }
 
+            return false;
 
 
 

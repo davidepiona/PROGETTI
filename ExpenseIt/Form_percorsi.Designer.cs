@@ -55,10 +55,10 @@
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.Location = new System.Drawing.Point(535, 462);
+            this.textBox3.Location = new System.Drawing.Point(450, 462);
             this.textBox3.Margin = new System.Windows.Forms.Padding(6);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(770, 55);
+            this.textBox3.Size = new System.Drawing.Size(859, 55);
             this.textBox3.TabIndex = 25;
             this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
@@ -77,10 +77,10 @@
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(535, 323);
+            this.textBox2.Location = new System.Drawing.Point(450, 323);
             this.textBox2.Margin = new System.Windows.Forms.Padding(6);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(770, 55);
+            this.textBox2.Size = new System.Drawing.Size(859, 55);
             this.textBox2.TabIndex = 26;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
@@ -99,10 +99,10 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(535, 185);
+            this.textBox1.Location = new System.Drawing.Point(450, 185);
             this.textBox1.Margin = new System.Windows.Forms.Padding(6);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(770, 55);
+            this.textBox1.Size = new System.Drawing.Size(859, 55);
             this.textBox1.TabIndex = 23;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -148,7 +148,7 @@
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(469, 185);
+            this.pictureBox1.Location = new System.Drawing.Point(384, 185);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(66, 55);
             this.pictureBox1.TabIndex = 32;
@@ -160,7 +160,7 @@
             this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox2.Location = new System.Drawing.Point(469, 323);
+            this.pictureBox2.Location = new System.Drawing.Point(384, 323);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(66, 55);
             this.pictureBox2.TabIndex = 33;
@@ -172,7 +172,7 @@
             this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox3.Location = new System.Drawing.Point(469, 462);
+            this.pictureBox3.Location = new System.Drawing.Point(384, 462);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(66, 55);
             this.pictureBox3.TabIndex = 34;

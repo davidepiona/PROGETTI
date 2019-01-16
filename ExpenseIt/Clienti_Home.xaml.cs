@@ -21,7 +21,7 @@ namespace ExpenseIt
     /// </summary>
     public partial class Clienti_Home : Page
     {
-        
+
         public Clienti_Home()
         {
             InitializeComponent();
@@ -57,14 +57,14 @@ namespace ExpenseIt
                 buttonArray[i].Background = Brushes.White;
                 buttonArray[i].Foreground = Brushes.Black;
 
-                Grid.SetColumn(buttonArray[i], i % 4 +1 );
+                Grid.SetColumn(buttonArray[i], i % 4 + 1);
                 Grid.SetRow(buttonArray[i], 1 + (i / 4));
                 grid.Children.Add(buttonArray[i]);
                 Console.WriteLine("\t" + cliente.getSuffisso());
                 i++;
             }
             InitializeComponent();
-
+            setVisibility();
         }
 
         private void button_Click(object sender, EventArgs e)
@@ -78,7 +78,7 @@ namespace ExpenseIt
             {
                 MessageBox.Show("La cartella o il file csv del clienteAttualee " + clienteAttuale + " non è presente");
             }
-            
+
             else
             {
                 Progetti_Home progetti_home = new Progetti_Home(n);
@@ -86,7 +86,48 @@ namespace ExpenseIt
             }
         }
 
-        
+        private void Menu_percorsi(object sender, RoutedEventArgs e)
+        {
+            Form_percorsi form = new Form_percorsi();
+            form.ShowDialog();
+        }
+        private void Menu_github(object sender, RoutedEventArgs e)
+        {
+            Form_github form = new Form_github();
+            form.ShowDialog();
+        }
+        private void Menu_anteprima(object sender, RoutedEventArgs e)
+        {
+            bool value = ((MenuItem)sender).IsChecked;
+            if (value != Globals.ANTEPRIME)
+            {
+                Globals.ANTEPRIME = value;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
+        }
+
+        private void Menu_sync(object sender, RoutedEventArgs e)
+        {
+            bool value = ((MenuItem)sender).IsChecked;
+
+            if (value != Globals.SINCRONIZZAZIONE)
+            {
+                Globals.SINCRONIZZAZIONE = value;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
+
+        }
+
+        private void setVisibility()
+        {
+            Console.WriteLine("Set visibility");
+            MenuItem ma = this.FindName("Menu_anteprima_check") as MenuItem;
+            MenuItem ms = this.FindName("Menu_sync_check") as MenuItem;
+            ma.IsChecked = Globals.ANTEPRIME;
+            ms.IsChecked = Globals.SINCRONIZZAZIONE;
+        }
     }
 }
 

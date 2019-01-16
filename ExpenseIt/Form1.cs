@@ -71,7 +71,6 @@ namespace ExpenseIt
             if (tipoOP.Equals(""))
                 tipoOP = ".";
             string data = (DateTime.Now).ToString();
-            MessageBox.Show(data);
             //leggere l'attuale file coi progetti di quel cliente
             int numCliente=0;
             int i = 0;

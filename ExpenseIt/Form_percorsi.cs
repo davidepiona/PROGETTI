@@ -36,6 +36,10 @@ namespace ExpenseIt
             if (result == DialogResult.OK)
             {
                 string path = folderBrowserDialog1.SelectedPath;
+                if (!path[path.Length - 1].ToString().Equals(@"\"))
+                {
+                    path = path + "\\";
+                }
                 textBox1.Text= path;
             }
         }
@@ -47,6 +51,10 @@ namespace ExpenseIt
             if (result == DialogResult.OK)
             {
                 string path = folderBrowserDialog1.SelectedPath;
+                if (!path[path.Length - 1].ToString().Equals(@"\"))
+                {
+                    path = path + "\\";
+                }
                 textBox2.Text = path;
             }
         }
@@ -112,17 +120,20 @@ namespace ExpenseIt
                   "Uno dei percorsi inseriti non esiste, sei sicuro di voler continuare e salvare le modifiche?",
                   "Percorso inesistente",
                   MessageBoxButton.YesNo,
-                  MessageBoxImage.Stop);
+                  MessageBoxImage.Question);
                 if (me == MessageBoxResult.No)
                 {
                     return;
                 }
             }
-            Globals.PROGETTI = tb1;
-            Globals.DATI = tb2;
-            Globals.DATIsync = tb3;
-            MainWindow m = new MainWindow();
-            m.salvaClientiCSV();
+            if (!tb1.Equals(Globals.PROGETTI) || !tb2.Equals(Globals.DATI) || !tb3.Equals(Globals.DATIsync))
+            {
+                Globals.PROGETTI = tb1;
+                Globals.DATI = tb2;
+                Globals.DATIsync = tb3;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
 
             this.Close();
         }

@@ -24,6 +24,7 @@ namespace ExpenseIt
         public MainWindow()
         {
             InitializeComponent();
+            ShowsNavigationUI = false;
             if (Globals.CLIENTI == null)
             {
                 leggiSETTINGS();
@@ -80,24 +81,51 @@ namespace ExpenseIt
 
         public void leggiSETTINGS()
         {
+            Console.WriteLine("Leggo SETTINGS");
             try
             {
                 var file = File.OpenRead(Directory.GetCurrentDirectory() + @"\SETTINGS.csv");
                 var reader = new StreamReader(file);
-                reader.ReadLine();
+                
                 Globals.GITURL = reader.ReadLine();
                 Globals.PROGETTI = reader.ReadLine();
                 Globals.DATI = reader.ReadLine();
                 Globals.DATIsync = reader.ReadLine();
-                Globals.ANTEPRIME = reader.ReadLine().Equals("true") ? true : false;
-                Globals.SINCRONIZZAZIONE = reader.ReadLine().Equals("true") ? true : false;
-
+                Globals.ANTEPRIME = reader.ReadLine().Equals("True") ? true : false;
+                Globals.SINCRONIZZAZIONE = reader.ReadLine().Equals("True") ? true : false;
+                //Console.WriteLine("<" + reader.ReadLine() + "><" + reader.ReadLine() + ">");
                 file.Close();
             }
             catch (IOException)
             {
                 MessageBox.Show("E11 - non è stato possibile aprire il file " + Directory.GetCurrentDirectory() + @"\SETTINGS.csv" +
                     " quindi sono state caricate le impostazioni di default");
+            }
+        }
+
+        public void scriviSETTINGS()
+        {
+            Console.WriteLine("Scrivo SETTINGS");
+
+            string[] lines = new string[6];
+            lines[0] = Globals.GITURL;
+            lines[1] = Globals.PROGETTI;
+            lines[2] = Globals.DATI;
+            lines[3] = Globals.DATIsync;
+            lines[4] = Globals.ANTEPRIME.ToString();
+            lines[5] = Globals.SINCRONIZZAZIONE.ToString();
+            try
+            {
+                File.WriteAllLines(Directory.GetCurrentDirectory() + @"\SETTINGS.csv", lines);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show(
+               "E14 - Il file " + Directory.GetCurrentDirectory() + @"\SETTINGS.csv" + " non esiste o è aperto da un altro programma." +
+               " \n\nNon è possibile salvare le nuove preferenze.",
+               "File bloccato",
+               MessageBoxButton.OK,
+               MessageBoxImage.Information);
             }
         }
     }

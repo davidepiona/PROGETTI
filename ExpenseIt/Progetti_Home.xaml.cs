@@ -38,7 +38,6 @@ namespace ExpenseIt
 
         public Progetti_Home()
         {
-
             InitializeComponent();
             Loaded += Progetti_Home_Loaded;
             try
@@ -103,8 +102,42 @@ namespace ExpenseIt
             titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getSuffisso();
             PreviewKeyDown += new KeyEventHandler(PreviewKeyDown2);
             initCheck();
+            setVisibility();
 
         }
+
+        private void setVisibility()
+        {
+            Console.WriteLine("Set visibility");
+            MenuItem ma = this.FindName("Menu_anteprima_check") as MenuItem;
+            MenuItem ms = this.FindName("Menu_sync_check") as MenuItem;
+            ma.IsChecked = Globals.ANTEPRIME;
+            ms.IsChecked = Globals.SINCRONIZZAZIONE;
+            if (!Globals.ANTEPRIME)
+            {
+                RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
+                Button button = this.FindName("buttonOpenDocx") as Button;
+                Image image = this.FindName("image") as Image;
+
+                richTextBox.Visibility = Visibility.Hidden;
+                button.Visibility = Visibility.Hidden;
+                image.Visibility = Visibility.Hidden;
+
+            }
+            if (!Globals.SINCRONIZZAZIONE)
+            {
+                Button buttonModifiche = this.FindName("BottModifiche") as Button;
+                Button buttonClone = this.FindName("BottGitClone") as Button;
+                Button buttonPush = this.FindName("BottGitPush") as Button;
+                Button buttonMerge = this.FindName("BottMerge") as Button;
+
+                buttonModifiche.Visibility = Visibility.Hidden;
+                buttonClone.Visibility = Visibility.Hidden;
+                buttonPush.Visibility = Visibility.Hidden;
+                buttonMerge.Visibility = Visibility.Hidden;
+            }
+        }
+
         public void Progetti_Home_Loaded(object sender, RoutedEventArgs e)
         {
             TextBox textBox = this.FindName("TextBox") as TextBox;
@@ -277,10 +310,14 @@ namespace ExpenseIt
                 ProgSelezionato = ((Progetto)((DataGrid)sender).SelectedValue).getNumProject();
                 //Globals.CLIENTI[num_cliente].setLastId(12);
                 RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
-                richTextBox.Visibility = Visibility.Visible;
+
                 Button button = this.FindName("buttonOpenDocx") as Button;
-                button.Visibility = Visibility.Visible;
                 Image image = this.FindName("image") as Image;
+                if (Globals.ANTEPRIME)
+                {
+                    richTextBox.Visibility = Visibility.Visible;
+                    button.Visibility = Visibility.Visible;
+                }
 
                 //Console.WriteLine("PATHHH:  " + Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
                 //@"\" + Globals.CLIENTI[num_cliente].getSuffisso() + Globals.CLIENTI[num_cliente].getlastId() + @"\progetto.docx");
@@ -487,7 +524,10 @@ namespace ExpenseIt
                 GitCommands git = new GitCommands();
                 if (git.copyFolder())
                 {
-                    git.push();
+                    if (git.push())
+                    {
+                        MessageBox.Show("Upload sul repository " + Globals.GITURL + " riuscito correttamente!");
+                    }
                 }
             }
             else if (dialogResult == MessageBoxResult.No)
@@ -526,6 +566,13 @@ namespace ExpenseIt
                 button.Visibility = Visibility.Hidden;
                 image.Visibility = Visibility.Hidden;
             }
+
+            if (value != Globals.ANTEPRIME)
+            {
+                Globals.ANTEPRIME = value;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
         }
 
         private void Menu_sync(object sender, RoutedEventArgs e)
@@ -549,7 +596,12 @@ namespace ExpenseIt
                 buttonPush.Visibility = Visibility.Hidden;
                 buttonMerge.Visibility = Visibility.Hidden;
             }
-
+            if (value != Globals.SINCRONIZZAZIONE)
+            {
+                Globals.SINCRONIZZAZIONE = value;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
 
         }
     }

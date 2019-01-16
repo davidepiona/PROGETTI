@@ -48,7 +48,7 @@ namespace ExpenseIt
             {
                 bool pc = allDate.TryGetValue(p.cliente + p.numero, out DateTime datePc);
                 bool sync = allDateSync.TryGetValue(p.cliente + p.numero, out DateTime dateSync);
-                Console.WriteLine("SY: " + p.numero + "  pc: " + datePc + "  sync: " + dateSync);
+                //Console.WriteLine("SY: " + p.numero + "  pc: " + datePc + "  sync: " + dateSync);
                 if (pc & sync)
                 {
                     if (DateTime.Compare(DateTime.Parse(datePc.ToString()), DateTime.Parse(dateSync.ToString())) > 0)

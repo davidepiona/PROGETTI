@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:ExpenseIt"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="800"
+      
       Title="Progetti_Home">
 
     <Grid x:Name="grid" Margin="10" Grid.Column="1" Grid.Row="1">
@@ -67,8 +68,8 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri">
         </Button>
 
 
-        <TextBox x:Name="TextBox" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Padding="17,0,0,1" Background="White" HorizontalAlignment="Left" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
-        <Image Grid.Column="2" Grid.Row="1" Height='20' Width='20' HorizontalAlignment="Left" Margin="15,20,22,17" VerticalAlignment="Top" Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\magnifier.png" />
+        <TextBox x:Name="TextBox" Grid.Row="1" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" HorizontalAlignment="Center" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
+        <Image Grid.ColumnSpan="6" Grid.Row="1" Height='20' Width='20' HorizontalAlignment="Center" Margin="0,20,210,17" VerticalAlignment="Top" Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\magnifier.png" />
         <DataGrid AutoGenerateColumns="False" x:Name="dataGrid" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Left" Width="880" Height="566" Margin="10,50,22,17" Grid.Row="1" Grid.RowSpan="9"  VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Foreground="#FF222222" IsReadOnly="True" SelectionChanged="dataGrid_SelectionChanged" >
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
@@ -93,9 +94,9 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri">
             </DataGrid.Columns>
         </DataGrid>
 
-        <Image x:Name="image" Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" Margin="5,5,5,5" MouseDown="Apri_Immagine" />
-        <RichTextBox x:Name="richTextBox" Grid.Column="0" Grid.Row="5" Grid.RowSpan="3" Margin="5,5,5,5" IsReadOnly="True" Visibility="Hidden" ></RichTextBox>
-        <Button x:Name="buttonOpenDocx" Grid.Column="0" Grid.Row="8"  Width="150" HorizontalAlignment="Center"
+        <Image x:Name="image" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Margin="5,5,5,5" MouseDown="Apri_Immagine" />
+        <RichTextBox x:Name="richTextBox" Grid.Column="0" Grid.Row="4" Grid.RowSpan="3" Margin="5,5,5,5" IsReadOnly="True" Visibility="Hidden" ></RichTextBox>
+        <Button x:Name="buttonOpenDocx" Grid.Column="0" Grid.Row="7"  Width="150" HorizontalAlignment="Center"
             Height="40" Click="Button_Apri_Docx" Background="Green" Content="Apri Docx" Visibility="Hidden"/>
         <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0" >
             <MenuItem Width="50" Height="50" FlowDirection="RightToLeft">
@@ -112,8 +113,8 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri">
                         <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\github.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Mostra anteprima e docx" Click="Menu_anteprima" IsCheckable="True" IsChecked="True" Background="AliceBlue"/>
-                <MenuItem Header="Mostra azioni sincronizzazione" Click="Menu_sync" IsCheckable="True" IsChecked="True" Background="AliceBlue"/>
+                <MenuItem Header="Mostra anteprima e docx" Click="Menu_anteprima" IsCheckable="True" Name="Menu_anteprima_check" Background="AliceBlue"/>
+                <MenuItem Header="Mostra azioni sincronizzazione" Click="Menu_sync" IsCheckable="True" Name="Menu_sync_check" Background="AliceBlue"/>
 
             </MenuItem>
 
