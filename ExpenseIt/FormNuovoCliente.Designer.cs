@@ -50,6 +50,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.label5);
             this.Name = "FormNuovoCliente";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormNuovoCliente";
             this.Load += new System.EventHandler(this.FormNuovoCliente_Load);
             this.ResumeLayout(false);

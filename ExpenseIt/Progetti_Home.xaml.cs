@@ -21,7 +21,7 @@ namespace ExpenseIt
     /// </summary>
     public partial class Progetti_Home : Page
     {
-        private bool back = false; 
+        private bool back = false;
         private int num_cliente;
         private int ProgSelezionato;
         private List<Progetto> progetti = new List<Progetto>();
@@ -61,7 +61,8 @@ namespace ExpenseIt
                     }
                     file.Close();
                 }
-            }catch(IOException)
+            }
+            catch (IOException)
             {
                 MessageBox.Show("E01 - Il file " + Globals.DATI + @"\CLIENTI.csv" + " non esiste o è aperto da un altro programma. \n L'APPLICAZIONE SARA' CHIUSA");
                 Environment.Exit(0);
@@ -69,7 +70,7 @@ namespace ExpenseIt
 
             num_cliente = Globals.CLIENTI.FindIndex(x => x.getSuffisso().Equals(Globals.LAST_CLIENT));
             string cliente = Globals.CLIENTI.Find(x => x.getSuffisso().Equals(Globals.LAST_CLIENT)).getNomeCliente();
-            if(checkFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
+            if (checkFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
             {
                 initialize();
             }
@@ -126,7 +127,7 @@ namespace ExpenseIt
 
                     while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
                     {
-                        Console.WriteLine(lines[0]);
+                        //Console.WriteLine(lines[0]);
                         int num = Int32.Parse(lines[0]);
                         reader.ReadRow(lines);
                         string nome = lines[0];
@@ -139,9 +140,10 @@ namespace ExpenseIt
                         progetti.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getSuffisso()));
                     }
                 }
-            }catch(IOException)
+            }
+            catch (IOException)
             {
-                    MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv" + " non esiste o è aperto da un altro programma");
+                MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv" + " non esiste o è aperto da un altro programma");
             }
         }
 
@@ -262,7 +264,7 @@ namespace ExpenseIt
             }
             else
             {
-                Progetti_Home_Loaded(null,null);
+                Progetti_Home_Loaded(null, null);
             }
         }
 
@@ -368,11 +370,13 @@ namespace ExpenseIt
 
             }).ContinueWith(task =>
             {
-                updateList("");
+
                 buttonModifiche.IsEnabled = true;
                 buttonClone.IsEnabled = true;
                 buttonPush.IsEnabled = true;
                 buttonMerge.IsEnabled = true;
+                check_sync();
+                updateList("");
                 MessageBox.Show("Le ultime modifiche di tutti i progetti di " + Globals.CLIENTI[num_cliente].getNomeCliente() + " sono state aggiornate e caricate nel relativo file csv.");
 
             }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -386,14 +390,14 @@ namespace ExpenseIt
             {
                 //MessageBox.Show("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
                 Console.WriteLine("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
-             }
+            }
             else
             {
                 if (!ultimaModifica.confrontoSync(progetti))
                 {
                     MessageBox.Show("E' necessario aver caricato almeno una volta le date di ultime modifiche prima di effettuare la sincronizzazione");
                 }
-               
+
             }
         }
 
@@ -405,9 +409,9 @@ namespace ExpenseIt
             s.readSyncProject(Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv");
             List<Progetto>[] compare = s.compareSyncProject();
             Console.WriteLine("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
-            ShowDifference form = new ShowDifference(compare[1], num_cliente);
+            Form_ShowDifference form = new Form_ShowDifference(compare[1], num_cliente);
             form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
-            form.Show();
+            form.ShowDialog();
         }
 
         private void Button_Cambia_Pagina(object sender, RoutedEventArgs e)
@@ -456,9 +460,9 @@ namespace ExpenseIt
 
         private void initCheck()
         {
-            if(progetti.Count!=0 && progetti[progetti.Count-1].numero != Globals.CLIENTI[num_cliente].getMaxId())
+            if (progetti.Count != 0 && progetti[progetti.Count - 1].numero != Globals.CLIENTI[num_cliente].getMaxId())
             {
-                MessageBox.Show("ALLARME IN INIZIALIZZAZIONE: numero di progetti segnati diverso dal numero di progetti effettivi"+
+                MessageBox.Show("ALLARME IN INIZIALIZZAZIONE: numero di progetti segnati diverso dal numero di progetti effettivi" +
                     progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId());
             }
         }
@@ -481,15 +485,72 @@ namespace ExpenseIt
             if (dialogResult == MessageBoxResult.Yes)
             {
                 GitCommands git = new GitCommands();
-                git.copyFolder();
-                git.push();
+                if (git.copyFolder())
+                {
+                    git.push();
+                }
             }
             else if (dialogResult == MessageBoxResult.No)
             {
-                
+
             }
-            
+
         }
-        
+
+        private void Menu_percorsi(object sender, RoutedEventArgs e)
+        {
+            Form_percorsi form = new Form_percorsi();
+            form.ShowDialog();
+        }
+        private void Menu_github(object sender, RoutedEventArgs e)
+        {
+            Form_github form = new Form_github();
+            form.ShowDialog();
+        }
+        private void Menu_anteprima(object sender, RoutedEventArgs e)
+        {
+            bool value = ((MenuItem)sender).IsChecked;
+            RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
+            Button button = this.FindName("buttonOpenDocx") as Button;
+            Image image = this.FindName("image") as Image;
+
+            if (value)
+            {
+                button.Visibility = Visibility.Visible;
+                richTextBox.Visibility = Visibility.Visible;
+                image.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                richTextBox.Visibility = Visibility.Hidden;
+                button.Visibility = Visibility.Hidden;
+                image.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void Menu_sync(object sender, RoutedEventArgs e)
+        {
+            bool value = ((MenuItem)sender).IsChecked;
+            Button buttonModifiche = this.FindName("BottModifiche") as Button;
+            Button buttonClone = this.FindName("BottGitClone") as Button;
+            Button buttonPush = this.FindName("BottGitPush") as Button;
+            Button buttonMerge = this.FindName("BottMerge") as Button;
+            if (value)
+            {
+                buttonModifiche.Visibility = Visibility.Visible;
+                buttonClone.Visibility = Visibility.Visible;
+                buttonPush.Visibility = Visibility.Visible;
+                buttonMerge.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                buttonModifiche.Visibility = Visibility.Hidden;
+                buttonClone.Visibility = Visibility.Hidden;
+                buttonPush.Visibility = Visibility.Hidden;
+                buttonMerge.Visibility = Visibility.Hidden;
+            }
+
+
+        }
     }
 }

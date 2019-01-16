@@ -5,69 +5,142 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ExpenseIt
 {
     class GitCommands
     {
         private string gitCommand = "git";
-        private string gitUrl = "https://github.com/davidepiona/DATIsync.git";
+
         private string workingDirectory;
-        public GitCommands() {
+        public GitCommands()
+        {
             workingDirectory = Directory.GetParent(Directory.GetParent(Globals.DATI).ToString()).ToString();
             //Console.WriteLine( + "\n" + System.IO.Directory.GetParent(Globals.DATI).FullName);
-                }
-        public void copyFolder()
+        }
+        public bool copyFolder()
         {
-            string SourcePath = Globals.DATI; 
+            string SourcePath = Globals.DATI;
             string DestinationPath = Globals.DATIsync;
-            var dir = new DirectoryInfo(DestinationPath);
-            if (Directory.Exists(DestinationPath))
+            try
             {
-                foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                var dir = new DirectoryInfo(DestinationPath);
+                if (Directory.Exists(DestinationPath))
                 {
-                    info.Attributes = FileAttributes.Normal;
-                }
+                    foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                    {
+                        info.Attributes = FileAttributes.Normal;
+                    }
 
-                dir.Delete(true);
+                    dir.Delete(true);
+                }
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E12 - Il file " + DestinationPath + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.");
+                return false;
             }
             Console.WriteLine("Eliminata vecchia cartella DATIsync");
             //Now Create all of the directories
-            foreach (string dirPath in Directory.GetDirectories(SourcePath, "*",
-                SearchOption.AllDirectories))
-                Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
-            Directory.CreateDirectory(DestinationPath);
-            //Copy all the files & Replaces any files with the same name
-            foreach (string newPath in Directory.GetFiles(SourcePath, "*.*",
-                SearchOption.AllDirectories))
-                File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+            try
+            {
+                foreach (string dirPath in Directory.GetDirectories(SourcePath, "*",
+                    SearchOption.AllDirectories))
+                    Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
+                Directory.CreateDirectory(DestinationPath);
+                //Copy all the files & Replaces any files with the same name
+                foreach (string newPath in Directory.GetFiles(SourcePath, "*.*",
+                    SearchOption.AllDirectories))
+                    File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E13 - Il file " + SourcePath + " non esiste o è aperto da un altro programma.\n\nNon è possibile copiare la cartella.");
+                return false;
+            }
+            
             Console.WriteLine("Copiato DATI in DATIsync");
+            return true;
+
         }
 
         public void push()
         {
-            string gitAddOrigin = @"remote add origin " + @gitUrl;
-            string gitAddArgument = @"add "+ Globals.DATIsync;
+            string gitAddOrigin = @"remote add origin " + @Globals.GITURL;
+            string gitAddArgument = @"add " + Globals.DATIsync;
             string gitCommitArgument = @"commit -m ""cambiamento"" ";
-            string gitPushArgument = @"push origin master";
+            string gitPushArgument = @"push -f origin master";
 
             ProcessStartInfo _processStartInfo = new ProcessStartInfo();
             _processStartInfo.WorkingDirectory = Globals.DATIsync;
+            _processStartInfo.RedirectStandardError = true;
             _processStartInfo.Arguments = "init";
+            _processStartInfo.UseShellExecute = false;
             _processStartInfo.FileName = @"C:\Program Files\Git\cmd\git.exe";
-            Process.Start(_processStartInfo);
-            
+            var proc = Process.Start(_processStartInfo);
+            while (!proc.StandardError.EndOfStream)
+            {
+                string err = proc.StandardError.ReadLine();
+                Console.WriteLine("ERR: " + err);
+                string[] split = err.Split(':');
+                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
+                {
+
+                }
+            }
+
             _processStartInfo.Arguments = gitAddOrigin;
-            Process.Start(_processStartInfo);
+            proc = Process.Start(_processStartInfo);
+            while (!proc.StandardError.EndOfStream)
+            {
+                string err = proc.StandardError.ReadLine();
+                Console.WriteLine("ERR: " + err);
+                string[] split = err.Split(':');
+                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
+                {
+
+                }
+            }
 
             _processStartInfo.Arguments = gitAddArgument;
-            Process.Start(_processStartInfo);
+            proc = Process.Start(_processStartInfo);
+            while (!proc.StandardError.EndOfStream)
+            {
+                string err = proc.StandardError.ReadLine();
+                Console.WriteLine("ERR: " + err);
+                string[] split = err.Split(':');
+                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
+                {
+
+                }
+            }
 
             _processStartInfo.Arguments = gitCommitArgument;
-            Process.Start(_processStartInfo);
+            proc = Process.Start(_processStartInfo);
+            while (!proc.StandardError.EndOfStream)
+            {
+                string err = proc.StandardError.ReadLine();
+                Console.WriteLine("ERR: " + err);
+                string[] split = err.Split(':');
+                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
+                {
+
+                }
+            }
 
             _processStartInfo.Arguments = gitPushArgument;
-            Process.Start(_processStartInfo);
+            proc = Process.Start(_processStartInfo);
+            while (!proc.StandardError.EndOfStream)
+            {
+                string err = proc.StandardError.ReadLine();
+                Console.WriteLine("ERRUltim: " + err);
+                string[] split = err.Split(':');
+                if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
+                {
+
+                }
+            }
 
 
 
@@ -96,7 +169,7 @@ namespace ExpenseIt
             }
             Console.WriteLine("Eliminata vecchia cartella DATIsync");
             Directory.CreateDirectory(DestinationPath);
-            string gitCloneArgument = @"clone " + gitUrl + " " + Globals.DATIsync;
+            string gitCloneArgument = @"clone " + Globals.GITURL + " " + Globals.DATIsync;
             Console.WriteLine(gitCloneArgument);
             //Process.Start(workingDirectory);
             Process.Start(gitCommand, @gitCloneArgument);

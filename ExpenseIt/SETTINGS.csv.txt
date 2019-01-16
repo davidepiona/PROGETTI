@@ -1,0 +1,6 @@
+"public static String PROGETTI = @""R:\PROGETTI\""; "
+R:\PROGETTI\
+C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\
+C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\
+true
+true

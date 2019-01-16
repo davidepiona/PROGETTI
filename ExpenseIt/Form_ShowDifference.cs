@@ -11,24 +11,22 @@ using System.Windows.Forms;
 
 namespace ExpenseIt
 {
-    public partial class ShowDifference : Form
+    public partial class Form_ShowDifference : Form
     {
-        private System.Windows.Forms.DataGridView dataGridView1;
         private List<Progetto> progetti;
         private int num_cliente;
         DataGridViewCheckBoxColumn col;
-        public ShowDifference(List<Progetto> progetti, int num_cliente)
-        {   
-        
+        public Form_ShowDifference(List<Progetto> progetti, int num_cliente)
+        {
+
             InitializeComponent();
-            this.Size = new Size(1000, 800);
             this.progetti = progetti;
             this.num_cliente = num_cliente;
-           
+
             createDataGridView();
-            
-                populateDataGrid();
-            
+
+            populateDataGrid();
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -39,48 +37,54 @@ namespace ExpenseIt
         private void createDataGridView()
         {
             dataGridView1.ColumnCount = 4;
-            dataGridView1.Left = 100;
+            
             dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.White;
             //dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe", 13);
             //new Font(, FontStyle.Bold);
-
+            dataGridView1.MaximumSize = new Size(1320, 700);
+            dataGridView1.Size = new Size(1320, 700);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
-            dataGridView1.ColumnHeadersBorderStyle =
-                DataGridViewHeaderBorderStyle.Single;
+            //dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+            dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.Single;
             //dataGridView1.GridColor = Color.Black;
             dataGridView1.RowHeadersVisible = false;
+            dataGridView1.ColumnHeadersVisible = true;
+
+            
 
             dataGridView1.Columns[0].Name = "Id";
             dataGridView1.Columns[1].Name = "Nome";
             dataGridView1.Columns[2].Name = "Creazione";
             dataGridView1.Columns[3].Name = "TipoPLC";
 
+            
+
             dataGridView1.Columns[0].DefaultCellStyle.Font = new Font("Segoe", 12);
             dataGridView1.Columns[1].DefaultCellStyle.Font = new Font("Segoe", 12);
             dataGridView1.Columns[2].DefaultCellStyle.Font = new Font("Segoe", 10);
             dataGridView1.Columns[3].DefaultCellStyle.Font = new Font("Segoe", 10);
+
             dataGridView1.Columns[0].ReadOnly = true;
             dataGridView1.Columns[1].ReadOnly = true;
             dataGridView1.Columns[2].ReadOnly = true;
             dataGridView1.Columns[3].ReadOnly = true;
+            
+            dataGridView1.Columns[0].Width = 200;
+            dataGridView1.Columns[1].Width = 490;
+            dataGridView1.Columns[2].Width = 230;
+            dataGridView1.Columns[3].Width = 155;
+
             col = new DataGridViewCheckBoxColumn();
             col.Name = "Aggiungere?";
-            col.Width = 100;
+            col.Width = 200;
+            col.DefaultCellStyle.Font = new Font("Segoe", 14);
             dataGridView1.Columns.Add(col);
 
-            dataGridView1.Columns[4].DefaultCellStyle.Font = new Font("Segoe", 10);
-            dataGridView1.Columns[0].Width = 120;
-            dataGridView1.Columns[1].Width = 371;
-            dataGridView1.Columns[2].Width = 145;
-            dataGridView1.Columns[3].Width = 145;
-
-            dataGridView1.SelectionMode =
-                DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = false;
-            dataGridView1.Dock = DockStyle.Fill;
+            //dataGridView1.Dock = DockStyle.Fill;
 
 
         }
@@ -94,7 +98,7 @@ namespace ExpenseIt
             }
 
         }
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (progetti.Count != 0)
@@ -132,13 +136,17 @@ namespace ExpenseIt
                 }
             }
             this.Close();
-            
+
         }
 
-        private void ShowDifference_Load(object sender, EventArgs e)
+        private void Form_ShowDifference_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
         {
 
         }
     }
 }
-
