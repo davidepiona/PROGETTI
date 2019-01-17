@@ -42,8 +42,8 @@ namespace ExpenseIt
             //dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe", 13);
             //new Font(, FontStyle.Bold);
-            dataGridView1.MaximumSize = new Size(1320, 700);
-            dataGridView1.Size = new Size(1320, 700);
+            dataGridView1.MaximumSize = new Size(9*this.Width/10, 78 * this.Height / 100);
+            dataGridView1.Size = new Size(9 * this.Width / 10, 78 * this.Height / 100);
             dataGridView1.Name = "dataGridView1";
             //dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
@@ -71,14 +71,18 @@ namespace ExpenseIt
             dataGridView1.Columns[2].ReadOnly = true;
             dataGridView1.Columns[3].ReadOnly = true;
             
-            dataGridView1.Columns[0].Width = 200;
-            dataGridView1.Columns[1].Width = 490;
-            dataGridView1.Columns[2].Width = 230;
-            dataGridView1.Columns[3].Width = 155;
+            //dataGridView1.Columns[0].Width = 200;
+            //dataGridView1.Columns[1].Width = 490;
+            //dataGridView1.Columns[2].Width = 230;
+            //dataGridView1.Columns[3].Width = 155;
+            dataGridView1.Columns[0].Width = this.Width / 8;
+            dataGridView1.Columns[1].Width = this.Width / 3;
+            dataGridView1.Columns[2].Width = this.Width / 6;
+            dataGridView1.Columns[3].Width = this.Width / 9;
 
             col = new DataGridViewCheckBoxColumn();
             col.Name = "Aggiungere?";
-            col.Width = 200;
+            col.Width = this.Width / 8;
             col.DefaultCellStyle.Font = new Font("Segoe", 14);
             dataGridView1.Columns.Add(col);
 

@@ -95,7 +95,6 @@ namespace ExpenseIt
                 MessageBox.Show("E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non saranno caricate da file.");
             }
             ultimaModifica.aggiornoModifiche(progetti);
-            check_sync();
             updateList("");
             createList();
             Label titolo = this.FindName("titolo") as Label;
@@ -212,6 +211,7 @@ namespace ExpenseIt
 
         private Progetto updateList(string filter)
         {
+            check_sync();
             Console.WriteLine("Update list1");
             Progetto primo = new Progetto(0, null, null, null, null, null);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
@@ -245,6 +245,7 @@ namespace ExpenseIt
 
         private void updateListNewProject(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
+            check_sync();
             Console.WriteLine("UpdateList2");
             progetti = new List<Progetto>();
             readProjects();
@@ -412,7 +413,6 @@ namespace ExpenseIt
                 buttonClone.IsEnabled = true;
                 buttonPush.IsEnabled = true;
                 buttonMerge.IsEnabled = true;
-                check_sync();
                 updateList("");
                 MessageBox.Show("Le ultime modifiche di tutti i progetti di " + Globals.CLIENTI[num_cliente].getNomeCliente() + " sono state aggiornate e caricate nel relativo file csv.");
 
@@ -511,13 +511,32 @@ namespace ExpenseIt
 
         private void Button_GitHubClone(object sender, RoutedEventArgs e)
         {
+            Button buttonModifiche = this.FindName("BottModifiche") as Button;
+            Button buttonClone = this.FindName("BottGitClone") as Button;
+            Button buttonPush = this.FindName("BottGitPush") as Button;
+            Button buttonMerge = this.FindName("BottMerge") as Button;
+            buttonModifiche.IsEnabled = false;
+            buttonClone.IsEnabled = false;
+            buttonPush.IsEnabled = false;
+            buttonMerge.IsEnabled = false;
             GitCommands git = new GitCommands();
             git.clone();
-            check_sync();
             updateList("");
+            buttonModifiche.IsEnabled = true;
+            buttonClone.IsEnabled = true;
+            buttonPush.IsEnabled = true;
+            buttonMerge.IsEnabled = true;
         }
         private void Button_GitHubPush(object sender, RoutedEventArgs e)
         {
+            Button buttonModifiche = this.FindName("BottModifiche") as Button;
+            Button buttonClone = this.FindName("BottGitClone") as Button;
+            Button buttonPush = this.FindName("BottGitPush") as Button;
+            Button buttonMerge = this.FindName("BottMerge") as Button;
+            buttonModifiche.IsEnabled = false;
+            buttonClone.IsEnabled = false;
+            buttonPush.IsEnabled = false;
+            buttonMerge.IsEnabled = false;
             MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler caricare i progetti attuali online", "Caricare online?", MessageBoxButton.YesNo);
             if (dialogResult == MessageBoxResult.Yes)
             {
@@ -534,6 +553,10 @@ namespace ExpenseIt
             {
 
             }
+            buttonModifiche.IsEnabled = true;
+            buttonClone.IsEnabled = true;
+            buttonPush.IsEnabled = true;
+            buttonMerge.IsEnabled = true;
 
         }
 

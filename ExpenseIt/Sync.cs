@@ -60,7 +60,7 @@ namespace ExpenseIt
             list[1] = new List<Progetto>();
             list[2] = new List<Progetto>();
             foreach (Progetto p in progetti)
-            {
+            {   
                 int i = progettiSync.FindIndex(x => x.data.Equals(p.data));
                 if (i !=-1 )
                 {

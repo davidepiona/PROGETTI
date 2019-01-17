@@ -142,6 +142,7 @@ namespace ExpenseIt
         public static String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\";
         public static bool ANTEPRIME = true;
         public static bool SINCRONIZZAZIONE = true;
+        public static bool changed = false;
         //public static readonly String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync";// Unmodifiable
     }
 

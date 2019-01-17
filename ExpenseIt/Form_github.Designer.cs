@@ -1,4 +1,6 @@
-﻿namespace ExpenseIt
+﻿using System;
+
+namespace ExpenseIt
 {
     partial class Form_github
     {
@@ -96,7 +98,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(35, 38);
             this.pictureBox1.TabIndex = 51;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Visible = false;
             // 
             // pictureBox2
             // 
@@ -126,7 +127,6 @@
             this.Name = "Form_github";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Form_github";
-            this.Load += new System.EventHandler(this.Form_github_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
