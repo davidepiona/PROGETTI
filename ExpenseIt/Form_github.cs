@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +15,12 @@ namespace ExpenseIt
 {
     public partial class Form_github : Form
     {
-        private bool firstTime = true;
         string valoreIniziale = "@@@";
         public Form_github()
         {
             InitializeComponent();
             textBox1.Text = Globals.GITURL;
+            textBox2.Text = Globals.GITPATH;
             Globals.changed = false;
             
         }
@@ -27,9 +28,14 @@ namespace ExpenseIt
         private void button2_Click(object sender, EventArgs e)
         {
             string tb1 = textBox1.Text.ToString();
-            
+            string tb2 = textBox2.Text.ToString();
+            string nonEsiste = "";
+            if (!File.Exists(tb2))
+            {
+                nonEsiste = "Il percorso impostato per l'eseguibile 'git.exe' non esiste.\n";
+            }
             System.Windows.MessageBoxResult me = System.Windows.MessageBox.Show(
-                  "Salvare l'attuale indirizzo per il repository GitHub usato dall'applicazione?",
+                  nonEsiste +"Salvare l'attuale percorso dell'eseguibile e l'attuale indirizzo per il repository GitHub usato dall'applicazione?",
                   "Conferma",
                   MessageBoxButton.YesNo,
                   MessageBoxImage.Question);
@@ -37,9 +43,10 @@ namespace ExpenseIt
                 {
                     return;
                 }
-            if (!tb1.Equals(Globals.GITURL))
+            if (!tb1.Equals(Globals.GITURL) || !tb1.Equals(Globals.GITPATH))
             {
                 Globals.GITURL = tb1;
+                Globals.GITPATH = tb2;
                 MainWindow m = new MainWindow();
                 m.scriviSETTINGS();
             }
@@ -184,5 +191,39 @@ namespace ExpenseIt
             this.Close();
         }
 
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (!File.Exists(textBox2.Text.ToString()))
+            {
+                pictureBox4.Visible = true;
+            }
+            else
+            {
+                pictureBox4.Visible = false;
+            }
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.InitialDirectory = textBox2.Text;
+            openFileDialog1.RestoreDirectory = false;
+            openFileDialog1.FileName = textBox2.Text.Split('\\').Last();
+            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string path = openFileDialog1.FileName;
+                textBox2.Text = path;
+            }
+            
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
     }
 }

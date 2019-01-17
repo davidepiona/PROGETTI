@@ -31,7 +31,7 @@ namespace ExpenseIt
             Console.WriteLine("Aggiorno Modifiche");
             foreach (Progetto p in progetti)
             {
-                if (allDate.TryGetValue(p.cliente + p.numero, out DateTime ultima))
+                if (allDate.TryGetValue(p.nomeCliente + p.numero, out DateTime ultima))
                 {
                     p.modifica = ultima.ToString();
                 }
@@ -46,8 +46,8 @@ namespace ExpenseIt
             }
             foreach (Progetto p in progetti)
             {
-                bool pc = allDate.TryGetValue(p.cliente + p.numero, out DateTime datePc);
-                bool sync = allDateSync.TryGetValue(p.cliente + p.numero, out DateTime dateSync);
+                bool pc = allDate.TryGetValue(p.nomeCliente + p.numero, out DateTime datePc);
+                bool sync = allDateSync.TryGetValue(p.nomeCliente + p.numero, out DateTime dateSync);
                 //Console.WriteLine("SY: " + p.numero + "  pc: " + datePc + "  sync: " + dateSync);
                 if (pc & sync)
                 {
@@ -82,7 +82,7 @@ namespace ExpenseIt
         }
         public void ricercaLenta(string path)
         {
-            //string path = PROGETTI + cliente.getSuffisso() + @"\";
+            //string path = PROGETTI + cliente.getNomeCliente() + @"\";
             allDate = new Dictionary<string, DateTime>();
             if (Directory.Exists(path))
             {
@@ -145,7 +145,7 @@ namespace ExpenseIt
 
         public bool writeInCSV(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getSuffisso() + "date.csv";
+            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
             string projectDate = "";
             foreach (KeyValuePair<string, DateTime> i in allDate)
             {
@@ -164,7 +164,7 @@ namespace ExpenseIt
 
         public bool readByCSV(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getSuffisso() + "date.csv";
+            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
             List<string> lines = new List<string>();
             try
             {
@@ -192,7 +192,7 @@ namespace ExpenseIt
 
         public bool readSync(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\CLIENTI\" + cliente.getSuffisso() + "date.csv";
+            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
             allDateSync = new Dictionary<string, DateTime>();
             List<string> lines = new List<string>();
             try
@@ -223,7 +223,7 @@ namespace ExpenseIt
 // RICERCA RAPIDA
 //public void ricercaRapida()
 //{
-//    string path = PROGETTI + cliente.getSuffisso() + @"\";
+//    string path = PROGETTI + cliente.getNomeCliente() + @"\";
 //    if (Directory.Exists(path))
 //    {
 //        foreach (string proj in Directory.GetDirectories(path))
@@ -265,7 +265,7 @@ namespace ExpenseIt
 
 //private List<string> confronto()
 //{
-//    string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getSuffisso() + "date.csv";
+//    string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
 //    List<string> daControllare = new List<string>();
 //    List<string> lines = new List<string>();
 //    using (var reader = new CsvFileReader(file))

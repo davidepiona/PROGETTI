@@ -24,7 +24,7 @@ namespace ExpenseIt
         {
             Console.WriteLine("Read Sync Projects");
             List<string> lines = new List<string>();
-            //Console.WriteLine(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv");
+            //Console.WriteLine(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv");
             try
             {
                 using (var reader = new CsvFileReader(path))
@@ -40,7 +40,7 @@ namespace ExpenseIt
                         string tipoOP = lines[0];
                         reader.ReadRow(lines);
                         string data = lines[0];
-                        progettiSync.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getSuffisso()));
+                        progettiSync.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getNomeCliente(), Globals.CLIENTI[num_cliente].getSuffisso()));
                     }
                 }
             }

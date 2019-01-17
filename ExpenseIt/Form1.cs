@@ -21,9 +21,9 @@ namespace ExpenseIt
             //seleziono quello che ho passato
             foreach (Cliente c in Globals.CLIENTI) {
 
-                this.comboBox1.Items.Add(c.getSuffisso());
+                this.comboBox1.Items.Add(c.getNomeCliente());
                     }
-            this.comboBox1.SelectedItem = cliente.getSuffisso();
+            this.comboBox1.SelectedItem = cliente.getNomeCliente();
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -76,7 +76,7 @@ namespace ExpenseIt
             int i = 0;
             foreach (Cliente c in Globals.CLIENTI)
             {   
-                if(c.getSuffisso().Equals(cliente))
+                if(c.getNomeCliente().Equals(cliente))
                 {
                     numCliente = i;
                 }

@@ -99,7 +99,7 @@ namespace ExpenseIt
         {
             if (progetti.Count != 0)
             {
-                string file = Globals.DATI + progetti[0].cliente + ".csv";
+                string file = Globals.DATI + progetti[0].nomeCliente + ".csv";
                 try
                 {
                     int i = 0;

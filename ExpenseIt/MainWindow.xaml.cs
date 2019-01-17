@@ -50,16 +50,16 @@ namespace ExpenseIt
             lines[0] = "CLIENTE,SUFFISSO,LAST_ID,MAX_ID";
             lines[1] = Globals.LAST_CLIENT;
             Cliente cl = Globals.CLIENTI.Find(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT));
-            lines[2] = cl.getNomeCliente() + "," + cl.getSuffisso() + "," + cl.getlastId() + "," + cl.getMaxId();
+            lines[2] = cl.getNomeCliente() + "," + cl.getNomeCliente() + "," + cl.getlastId() + "," + cl.getMaxId();
             int i = 3;
             foreach (Cliente c in Globals.CLIENTI)
             {
                 if (!c.getNomeCliente().Equals(Globals.LAST_CLIENT))
                 {
-                    lines[i] = c.getNomeCliente() + "," + c.getSuffisso() + "," + c.getlastId() + "," + c.getMaxId();
+                    lines[i] = c.getNomeCliente() + "," + c.getNomeCliente() + "," + c.getlastId() + "," + c.getMaxId();
                     i++;
                 }
-                //Console.WriteLine(c.getSuffisso() + "," + c.getSuffisso() + "," + c.getlastId() + "," + c.getMaxId());
+                //Console.WriteLine(c.getNomeCliente() + "," + c.getNomeCliente() + "," + c.getlastId() + "," + c.getMaxId());
             }
             try
             {
@@ -88,6 +88,7 @@ namespace ExpenseIt
                 var reader = new StreamReader(file);
                 
                 Globals.GITURL = reader.ReadLine();
+                Globals.GITPATH = reader.ReadLine();
                 Globals.PROGETTI = reader.ReadLine();
                 Globals.DATI = reader.ReadLine();
                 Globals.DATIsync = reader.ReadLine();
@@ -107,13 +108,14 @@ namespace ExpenseIt
         {
             Console.WriteLine("Scrivo SETTINGS");
 
-            string[] lines = new string[6];
+            string[] lines = new string[7];
             lines[0] = Globals.GITURL;
-            lines[1] = Globals.PROGETTI;
-            lines[2] = Globals.DATI;
-            lines[3] = Globals.DATIsync;
-            lines[4] = Globals.ANTEPRIME.ToString();
-            lines[5] = Globals.SINCRONIZZAZIONE.ToString();
+            lines[1] = Globals.GITPATH;
+            lines[2] = Globals.PROGETTI;
+            lines[3] = Globals.DATI;
+            lines[4] = Globals.DATIsync;
+            lines[5] = Globals.ANTEPRIME.ToString();
+            lines[6] = Globals.SINCRONIZZAZIONE.ToString();
             try
             {
                 File.WriteAllLines(Directory.GetCurrentDirectory() + @"\SETTINGS.csv", lines);
@@ -137,6 +139,7 @@ namespace ExpenseIt
         public static List<Cliente> CLIENTI;
 
         public static String GITURL = "https://github.com/davidepiona/DATIsync.git";
+        public static String GITPATH = @"C:\Program Files\Git\cmd\git.exe";
         public static String PROGETTI = @"R:\PROGETTI\";
         public static String DATI = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\";
         public static String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\";

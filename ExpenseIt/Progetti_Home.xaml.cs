@@ -67,8 +67,8 @@ namespace ExpenseIt
                 Environment.Exit(0);
             }
 
-            num_cliente = Globals.CLIENTI.FindIndex(x => x.getSuffisso().Equals(Globals.LAST_CLIENT));
-            string cliente = Globals.CLIENTI.Find(x => x.getSuffisso().Equals(Globals.LAST_CLIENT)).getNomeCliente();
+            num_cliente = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT));
+            string cliente = Globals.CLIENTI.Find(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT)).getNomeCliente();
             if (checkFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
             {
                 initialize();
@@ -90,15 +90,15 @@ namespace ExpenseIt
             readProjects();
             ProgSelezionato = Globals.CLIENTI[num_cliente].getlastId();
             ultimaModifica = new UltimaModifica(Globals.CLIENTI[num_cliente]);
-            if (!ultimaModifica.readByCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv"))
+            if (!ultimaModifica.readByCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
             {
-                MessageBox.Show("E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non saranno caricate da file.");
+                MessageBox.Show("E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non saranno caricate da file.");
             }
             ultimaModifica.aggiornoModifiche(progetti);
             updateList("");
             createList();
             Label titolo = this.FindName("titolo") as Label;
-            titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getSuffisso();
+            titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getNomeCliente();
             PreviewKeyDown += new KeyEventHandler(PreviewKeyDown2);
             initCheck();
             setVisibility();
@@ -151,10 +151,10 @@ namespace ExpenseIt
         {
             Console.WriteLine("Read Projects");
             List<string> lines = new List<string>();
-            //Console.WriteLine(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv");
+            //Console.WriteLine(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv");
             try
             {
-                using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv"))
+                using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv"))
                 {
 
                     while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
@@ -169,13 +169,13 @@ namespace ExpenseIt
                         string tipoOP = lines[0];
                         reader.ReadRow(lines);
                         string data = lines[0];
-                        progetti.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getSuffisso()));
+                        progetti.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getNomeCliente(), Globals.CLIENTI[num_cliente].getSuffisso()));
                     }
                 }
             }
             catch (IOException)
             {
-                MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv" + " non esiste o è aperto da un altro programma");
+                MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv" + " non esiste o è aperto da un altro programma");
             }
         }
 
@@ -183,7 +183,7 @@ namespace ExpenseIt
         private void createList()
         {
             Console.WriteLine("Create List");
-            //string path = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\PROGETTI\" + cliente.getSuffisso();
+            //string path = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\PROGETTI\" + cliente.getNomeCliente();
             //string[] fileEntries = Directory.GetFileSystemEntries(path);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
 
@@ -213,7 +213,7 @@ namespace ExpenseIt
         {
             check_sync();
             Console.WriteLine("Update list1");
-            Progetto primo = new Progetto(0, null, null, null, null, null);
+            Progetto primo = new Progetto(0, null, null, null, null, null, null);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             ultimaModifica.aggiornoModifiche(progetti);
             //Console.WriteLine("filter: <" + filter + ">");
@@ -275,7 +275,7 @@ namespace ExpenseIt
         {
             Globals.CLIENTI[num_cliente].setLastId(ProgSelezionato);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-            string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() + @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + Globals.CLIENTI[num_cliente].getlastId();
+            string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId();
             if (Directory.Exists(path))
             {
                 System.Diagnostics.Process.Start(path);
@@ -320,10 +320,10 @@ namespace ExpenseIt
                     button.Visibility = Visibility.Visible;
                 }
 
-                //Console.WriteLine("PATHHH:  " + Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
-                //@"\" + Globals.CLIENTI[num_cliente].getSuffisso() + Globals.CLIENTI[num_cliente].getlastId() + @"\progetto.docx");
-                string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
-                    @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx";
+                //Console.WriteLine("PATHHH:  " + Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                //@"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId() + @"\progetto.docx");
+                string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                    @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + ProgSelezionato + @"\progetto.docx";
                 if (File.Exists(file))
                 {
                     var doc = Xceed.Words.NET.DocX.Load(file);
@@ -337,8 +337,8 @@ namespace ExpenseIt
                     button.Visibility = Visibility.Hidden;
                 }
 
-                file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
-                   @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\anteprima.jpg";
+                file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                   @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + ProgSelezionato + @"\anteprima.jpg";
                 if (File.Exists(file))
                 {
                     BitmapImage bmi = new BitmapImage();
@@ -373,21 +373,21 @@ namespace ExpenseIt
 
         private void Button_Apri_Docx(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
-                @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx");
+            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + ProgSelezionato + @"\progetto.docx");
         }
 
         private void Apri_Immagine(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() +
-                @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\anteprima.jpg");
+            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + ProgSelezionato + @"\anteprima.jpg");
         }
 
 
         private void Button_Ultime_Modifiche(object sender, RoutedEventArgs e)
         {
             //UltimaModifica u = new UltimaModifica(cliente);
-            //Console.WriteLine(u.modificheByFile(PROGETTI + cliente.getSuffisso() + @"\PATA190"));
+            //Console.WriteLine(u.modificheByFile(PROGETTI + cliente.getNomeCliente() + @"\PATA190"));
             Button buttonModifiche = this.FindName("BottModifiche") as Button;
             Button buttonClone = this.FindName("BottGitClone") as Button;
             Button buttonPush = this.FindName("BottGitPush") as Button;
@@ -398,10 +398,10 @@ namespace ExpenseIt
             buttonMerge.IsEnabled = false;
             Task.Factory.StartNew(() =>
             {
-                ultimaModifica.ricercaLenta(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getSuffisso() + @"\");
-                if (!ultimaModifica.writeInCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv"))
+                ultimaModifica.ricercaLenta(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\");
+                if (!ultimaModifica.writeInCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
                 {
-                    MessageBox.Show("E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma. \n\nNon è stato possibile salvare i dati relativi alle ultime modifiche.");
+                    MessageBox.Show("E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma. \n\nNon è stato possibile salvare i dati relativi alle ultime modifiche.");
                 }
                 ultimaModifica.aggiornoModifiche(progetti);
 
@@ -423,10 +423,10 @@ namespace ExpenseIt
 
         private void check_sync()
         {
-            if (!ultimaModifica.readSync(Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv"))
+            if (!ultimaModifica.readSync(Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
             {
-                //MessageBox.Show("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
-                Console.WriteLine("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
+                //MessageBox.Show("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
+                Console.WriteLine("E05 - Non è possibile effettuare la sincronizzazione. - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.");
             }
             else
             {
@@ -443,7 +443,7 @@ namespace ExpenseIt
             TextBox textBox = this.FindName("TextBox") as TextBox;
             textBox.Focus();
             Sync s = new Sync(progetti, num_cliente);
-            s.readSyncProject(Globals.DATIsync + Globals.CLIENTI[num_cliente].getSuffisso() + ".csv");
+            s.readSyncProject(Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv");
             List<Progetto>[] compare = s.compareSyncProject();
             Console.WriteLine("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
             Form_ShowDifference form = new Form_ShowDifference(compare[1], num_cliente);
@@ -520,7 +520,11 @@ namespace ExpenseIt
             buttonPush.IsEnabled = false;
             buttonMerge.IsEnabled = false;
             GitCommands git = new GitCommands();
-            git.clone();
+            if (git.clone())
+            {
+                
+                    MessageBox.Show("Clone del repository " + Globals.GITURL + " nella cartella"+ Globals.DATIsync +" riuscito correttamente!");
+                            }
             updateList("");
             buttonModifiche.IsEnabled = true;
             buttonClone.IsEnabled = true;

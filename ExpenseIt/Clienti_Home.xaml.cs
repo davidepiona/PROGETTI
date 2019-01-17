@@ -21,7 +21,7 @@ namespace ExpenseIt
     /// </summary>
     public partial class Clienti_Home : Page
     {
-
+        private List<Button> buttonList;
         public Clienti_Home()
         {
             InitializeComponent();
@@ -41,48 +41,121 @@ namespace ExpenseIt
                 }
                 file.Close();
             }
-            int i = Globals.CLIENTI.Count;
-            Button[] buttonArray = new Button[i];
+
+            buttonList = new List<Button>();
             Grid grid = this.FindName("grid") as Grid;
-            int j = Globals.CLIENTI.Count;
-            i = 0;
+            //int j = Globals.CLIENTI.Count;
+            int i = 0;
             foreach (Cliente cliente in Globals.CLIENTI)
             {
-                buttonArray[i] = new Button();
-                buttonArray[i].Width = 140;
-                buttonArray[i].Height = 50;
-                buttonArray[i].Name = "button" + i;
-                buttonArray[i].Content = cliente.getSuffisso();
-                buttonArray[i].Click += new RoutedEventHandler(button_Click);
-                buttonArray[i].Background = Brushes.White;
-                buttonArray[i].Foreground = Brushes.Black;
-
-                Grid.SetColumn(buttonArray[i], i % 4 + 1);
-                Grid.SetRow(buttonArray[i], 1 + (i / 4));
-                grid.Children.Add(buttonArray[i]);
-                Console.WriteLine("\t" + cliente.getSuffisso());
+                Button b = new Button();
+                b.Width = 140;
+                b.Height = 50;
+                b.Name = "button" + i;
+                b.Content = cliente.getNomeCliente();
+                b.Click += new RoutedEventHandler(button_Click);
+                b.Background = Brushes.White;
+                b.Foreground = Brushes.Black;
+                buttonList.Add(b);
+                Grid.SetColumn(buttonList[i], i % 4 + 1);
+                Grid.SetRow(buttonList[i], 1 + (i / 4));
+                grid.Children.Add(buttonList[i]);
+                Console.WriteLine("\t" + cliente.getNomeCliente());
                 i++;
             }
             InitializeComponent();
             setVisibility();
         }
 
+        private void updateClientList(object sender, System.Windows.Forms.FormClosedEventArgs e)
+        {
+            Console.WriteLine("UpdateClientList");
+            Grid grid = this.FindName("grid") as Grid;
+            
+            int i = Globals.CLIENTI.Count-1;
+            Cliente cliente = Globals.CLIENTI[i];
+                Button b = new Button();
+                b.Width = 140;
+                b.Height = 50;
+                b.Name = "button" + i;
+                b.Content = cliente.getNomeCliente();
+                b.Click += new RoutedEventHandler(button_Click);
+                b.Background = Brushes.White;
+                b.Foreground = Brushes.Black;
+                buttonList.Add(b);
+                Grid.SetColumn(buttonList[i], i % 4 + 1);
+                Grid.SetRow(buttonList[i], 1 + (i / 4));
+                grid.Children.Add(buttonList[i]);
+                Console.WriteLine("\t" + cliente.getNomeCliente());
+               
+
+        }
         private void button_Click(object sender, EventArgs e)
         {
             // CAMBIARE PAGINA
             string clienteAttuale = ((Button)sender).Content.ToString();
-            int n = Globals.CLIENTI.FindIndex(x => x.getSuffisso().Equals(clienteAttuale));
-            Globals.LAST_CLIENT = Globals.CLIENTI[n].getSuffisso();
+            int n = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(clienteAttuale));
+            Globals.LAST_CLIENT = Globals.CLIENTI[n].getNomeCliente();
             // se la cartella o il file csv di quel clienteAttualee non esiste
-            if (!System.IO.Directory.Exists(Globals.PROGETTI + clienteAttuale) || !System.IO.File.Exists(Globals.DATI + clienteAttuale + ".csv"))
+            if (!Directory.Exists(Globals.PROGETTI + clienteAttuale) || !File.Exists(Globals.DATI + clienteAttuale + ".csv"))
             {
-                MessageBox.Show("La cartella o il file csv del clienteAttualee " + clienteAttuale + " non è presente");
+                MessageBoxResult mbr = MessageBox.Show("La cartella o il file csv del cliente attuale " + clienteAttuale + " non è presente.\nCrearli?", 
+                    "File inesistenti", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if(mbr == MessageBoxResult.Yes)
+                {
+                    if(!Directory.Exists(Globals.PROGETTI + clienteAttuale))
+                    {
+                        createClientDirectory(clienteAttuale);
+                    }
+                    if(!File.Exists(Globals.DATI + clienteAttuale + ".csv"))
+                    {
+                        createClientCSV(clienteAttuale);
+                    }
+                }
             }
 
             else
             {
                 Progetti_Home progetti_home = new Progetti_Home(n);
                 this.NavigationService.Navigate(progetti_home);
+            }
+        }
+
+        private void createClientCSV(string cliente)
+        {
+            try
+            {
+                //creare nuovo file CSV in DATI
+                File.Create(Globals.DATI+ cliente + ".csv");
+                Console.WriteLine("Creato file: " + Globals.DATI + cliente + ".csv");
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E17 - Il file " + Globals.DATI + cliente + ".csv" + " non è stato creata per un problema");
+            }
+            try
+            {
+                //creare nuovo file CSV in DATI
+                File.Create(Globals.DATI + cliente + "date.csv");
+                Console.WriteLine("Creato file: " + Globals.DATI + cliente + "date.csv");
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E18 - Il file " + Globals.DATI + cliente + "date.csv" + " non è stato creata per un problema");
+            }
+        }
+
+        private void createClientDirectory(string cliente)
+        {
+            try
+            {
+                //creare nuovo cartella in progetti
+                Directory.CreateDirectory(Globals.PROGETTI + cliente);
+                Console.WriteLine("Creata cartella: " + Globals.PROGETTI + cliente);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E16 - La cartella " + Globals.PROGETTI + cliente + " non è stato creata per un problema");
             }
         }
 
@@ -127,6 +200,18 @@ namespace ExpenseIt
             MenuItem ms = this.FindName("Menu_sync_check") as MenuItem;
             ma.IsChecked = Globals.ANTEPRIME;
             ms.IsChecked = Globals.SINCRONIZZAZIONE;
+        }
+
+        private void Button_New_Client(object sender, RoutedEventArgs e)
+        {
+            
+                Console.WriteLine("\nNew Client");
+            Form_nuovoCliente form = new Form_nuovoCliente();
+            //Cliente c = new Cliente("NUOVO", "NU", 1, 1);
+            //Globals.CLIENTI.Add(c);
+                form.FormClosed
+                    += new System.Windows.Forms.FormClosedEventHandler(this.updateClientList);
+                form.ShowDialog();
         }
     }
 }

@@ -15,10 +15,11 @@ namespace ExpenseIt
         public string data { get; set; }
         public string modifica { get; set; }
         public bool? sync { get; set; }
-        public string cliente { get; set; }
+        public string nomeCliente { get; set; }
+        public string suffissoCliente { get; set; }
         public string sigla { get; set; }
 
-        public Progetto(int numero, string nome, string tipoPCL, string tipoOP, string data, string cliente)
+        public Progetto(int numero, string nome, string tipoPCL, string tipoOP, string data, string nomeCliente, string suffissoCliente)
         {
             this.numero = numero;
             this.nome = nome;
@@ -27,15 +28,15 @@ namespace ExpenseIt
             this.data = data;
             modifica = null;
             this.sync = false;
-            this.cliente = cliente; 
-            sigla = cliente + numero;
+            this.nomeCliente = nomeCliente; 
+            sigla = suffissoCliente + numero;
             
         }
 
 
         public override string ToString()
         {
-            return cliente+numero;
+            return nomeCliente+numero;
         }
 
         public int getNumProject()
@@ -45,7 +46,7 @@ namespace ExpenseIt
 
         public string ToName()
         {
-            return cliente+ numero + "\t" + nome + "\t\t" + tipoPLC;
+            return nomeCliente+ numero + "\t" + nome + "\t\t" + tipoPLC;
         }
 
         public override bool Equals(object obj)

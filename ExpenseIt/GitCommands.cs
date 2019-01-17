@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace ExpenseIt
             _processStartInfo.RedirectStandardError = true;
             _processStartInfo.Arguments = "init";
             _processStartInfo.UseShellExecute = false;
-            _processStartInfo.FileName = @"C:\Program Files\Git\cmd\git.exe";
+            _processStartInfo.FileName = Globals.GITPATH;
             var proc = Process.Start(_processStartInfo);
             while (!proc.StandardError.EndOfStream)
             {
@@ -137,27 +138,72 @@ namespace ExpenseIt
             //Process.Start(gitCommand, gitPushArgument);
         }
 
-        public void clone()
+        public bool clone()
         {
             string SourcePath = Globals.DATI;
             string DestinationPath = Globals.DATIsync;
-            var dir = new DirectoryInfo(DestinationPath);
-            if (dir.Exists)
-            {
-                foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+            try {
+
+                var dir = new DirectoryInfo(DestinationPath);
+                if (dir.Exists)
                 {
-                    info.Attributes = FileAttributes.Normal;
+                    foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                    {
+                        info.Attributes = FileAttributes.Normal;
+                    }
+
+                    dir.Delete(true);
+
                 }
-
-                dir.Delete(true);
-
             }
-            Console.WriteLine("Eliminata vecchia cartella DATIsync");
+            catch (IOException)
+            {
+                MessageBox.Show("E15 - Il file " + DestinationPath + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.");
+                return false;
+            }
+    Console.WriteLine("Eliminata vecchia cartella DATIsync");
             Directory.CreateDirectory(DestinationPath);
             string gitCloneArgument = @"clone " + Globals.GITURL + " " + Globals.DATIsync;
             Console.WriteLine(gitCloneArgument);
             //Process.Start(workingDirectory);
-            Process.Start(gitCommand, @gitCloneArgument);
+            //Process.Start(gitCommand, );
+            ProcessStartInfo _processStartInfo = new ProcessStartInfo();
+            _processStartInfo.WorkingDirectory = Globals.DATIsync;
+            _processStartInfo.RedirectStandardOutput = true;
+            _processStartInfo.RedirectStandardInput = true;
+            _processStartInfo.RedirectStandardError = true;
+            _processStartInfo.Arguments = @gitCloneArgument;
+            _processStartInfo.UseShellExecute = false;
+            _processStartInfo.FileName = Globals.GITPATH;
+            try
+            {
+                var proc = Process.Start(_processStartInfo);
+                while (!proc.StandardError.EndOfStream)
+                {
+                    string err = proc.StandardError.ReadLine();
+                    Console.WriteLine("ERR: " + err);
+                    string[] split = err.Split(':');
+                    if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
+                    {
+                        MessageBox.Show("Problemi con il repository git, azione di clone non eseguita");
+
+                        return false;
+                    }
+                    //string[] split = err.Split(':');
+                }
+            }catch(Win32Exception w32e)
+            {
+                MessageBox.Show("Azione di clone non eseguita a causa di errore nel comando:\n"+ w32e.Message);
+                return false;
+            }
+            catch(FileNotFoundException fnfe)
+            {
+                MessageBox.Show("Azione di clone non eseguita a causa di:\n" + fnfe.Message);
+                return false;
+            }
+            //Win32Exception
+            //FileNotFoundException
+            return true;
         }
     }
 }
