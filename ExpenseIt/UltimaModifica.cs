@@ -33,7 +33,7 @@ namespace ExpenseIt
             {
                 if (allDate.TryGetValue(p.nomeCliente + p.numero, out DateTime ultima))
                 {
-                    p.modifica = ultima.ToString();
+                    p.modifica = ultima.ToString("yyyy/MM/dd HH:mm:ss");
                 }
             }
         }
@@ -89,6 +89,7 @@ namespace ExpenseIt
                 foreach (string proj in Directory.GetDirectories(path))
                 {
                     DateTime res = modificheByFile(proj);
+                    
                     allDate.Add(proj.Split('\\').Last(), res);
                     Console.WriteLine("FINE, DATA PIU' RECENTE: <" + res + ">");
                 }
@@ -136,7 +137,7 @@ namespace ExpenseIt
         private void ProcessFile(string path)
         {
             DateTime dt = File.GetLastWriteTime(path);
-
+            
             if (DateTime.Compare(dtNew, dt) < 0)
             {
                 dtNew = dt;

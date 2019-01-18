@@ -120,7 +120,7 @@ namespace ExpenseIt
                   "Uno dei percorsi inseriti non esiste, sei sicuro di voler continuare e salvare le modifiche?",
                   "Percorso inesistente",
                   MessageBoxButton.YesNo,
-                  MessageBoxImage.Question);
+                  MessageBoxImage.Question, MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
                 if (me == MessageBoxResult.No)
                 {
                     return;

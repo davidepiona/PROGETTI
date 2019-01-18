@@ -6,7 +6,22 @@
       xmlns:local="clr-namespace:ExpenseIt"
       mc:Ignorable="d" 
       d:DesignHeight="750" d:DesignWidth="1400"
-      Title="Clienti_Home">
+      Title="Clienti_Home"
+      >
+    <!--<Page.Resources>
+        <Style x:Key="{x:Type Label}" BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Label">
+                        <Border>
+                            <ContentPresenter RecognizesAccessKey="False" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>-->
+    
 
     <Grid x:Name="grid" Margin="10"  ClipToBounds="True" UseLayoutRounding="False">
         <!--Background="#FF2196F3"-->
@@ -33,7 +48,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-
+    
 
         <Label x:Name="titolo" Grid.ColumnSpan="6" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Dubai Medium" 
  FontWeight="Bold" FontSize="50" Foreground="White" >
@@ -43,7 +58,60 @@
         <Border Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="650" Width="900" Background="#FFE0E0E0" CornerRadius="8" OpacityMask="#FF4F1A1A" />
         <Button Grid.Column="5" Grid.Row="3"  Width="150" HorizontalAlignment="Center"
             Height="40" Click="Button_New_Client" Background="Green" Content="Nuovo Cliente" x:Name="BottNuovoCliente"/>
+        <Button Grid.Column="5" Grid.Row="6"  Width="150" HorizontalAlignment="Center"
+Height="40" Click="Open_Folder" Background="Green"  x:Name="BottApri2" Visibility="Hidden">
+            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png" />
+        </Button>
         
+        <TextBox x:Name="TextBox" Grid.Row="6" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" HorizontalAlignment="Center" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
+        <Image Grid.ColumnSpan="6" Grid.Row="6" Height='20' Width='20' HorizontalAlignment="Center" Margin="0,20,210,17" VerticalAlignment="Top" Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\magnifier.png" />
+        <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Auto" Grid.Column="1" Grid.ColumnSpan="4" 
+                  Width="880"  Margin="10,50,22,17" Grid.Row="1" Grid.RowSpan="5"  >
+            <ScrollViewer.Resources>
+                <Style TargetType="{x:Type ScrollBar}">
+                    <Setter Property="Background" Value="White"/>
+                </Style>
+            </ScrollViewer.Resources>
+            <Grid Background="White" x:Name="buttonGrid" >
+                <Grid.ColumnDefinitions >
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                </Grid.RowDefinitions>
+            </Grid>
+        </ScrollViewer>
+        <DataGrid AutoGenerateColumns="False" x:Name="dataGrid" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Left"
+                  Width="880"  Margin="10,50,22,17" Grid.Row="6" Grid.RowSpan="2"  VerticalAlignment="Top" 
+                  IsSynchronizedWithCurrentItem="True" Foreground="#FF222222" IsReadOnly="True" HeadersVisibility="None"
+                  Visibility="Hidden">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=sigla}" Width="105" FontSize="13" ></DataGridTextColumn>
+                <DataGridTextColumn Header="Nome" IsReadOnly="True"  Binding="{Binding Path=nome}" Width="329" FontSize="13" ></DataGridTextColumn>
+                <DataGridTextColumn Header="TipoPLC" IsReadOnly="True"  Binding="{Binding Path=tipoPLC}" Width="100" FontSize="10" ></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="TipoOP" IsReadOnly="True"  Binding="{Binding Path=tipoOP}" Width="115" FontSize="10"></DataGridTextColumn>-->
+                <DataGridTextColumn Header="Creazione" IsReadOnly="True"  Binding="{Binding Path=data}" Width="122" FontSize="10"></DataGridTextColumn>
+                <DataGridTextColumn Header="Modifica" IsReadOnly="True"  Binding="{Binding Path=modifica}" Width="122" FontSize="10"></DataGridTextColumn>
+                <DataGridTextColumn Header="Modifica" IsReadOnly="True" Visibility="Hidden" Binding="{Binding Path=nomeCliente}" Width="122" FontSize="10"></DataGridTextColumn>
+                <!--<DataGridTemplateColumn Header="Sync"  Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+                <DataGridCheckBoxColumn Header="Sync" Binding="{Binding Path=sync}" IsReadOnly="True" CanUserResize="False" Width="60" IsThreeState="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+
         <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0" >
             <MenuItem Width="50" Height="50" FlowDirection="RightToLeft">
                 <MenuItem.Background>

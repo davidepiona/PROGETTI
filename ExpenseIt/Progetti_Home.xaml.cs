@@ -63,7 +63,9 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E01 - Il file " + Globals.DATI + @"\CLIENTI.csv" + " non esiste o è aperto da un altro programma. \n L'APPLICAZIONE SARA' CHIUSA");
+                MessageBox.Show("E01 - Il file " + Globals.DATI + @"\CLIENTI.csv" +
+                    " non esiste o è aperto da un altro programma. \n L'APPLICAZIONE SARA' CHIUSA", "E01"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                 Environment.Exit(0);
             }
 
@@ -79,7 +81,8 @@ namespace ExpenseIt
         {
             if (!System.IO.Directory.Exists(Globals.PROGETTI + cliente) || !System.IO.File.Exists(Globals.DATI + cliente + ".csv"))
             {
-                MessageBox.Show("La cartella o il file csv del cliente attuale " + cliente + " non è presente");
+                MessageBox.Show("La cartella o il file csv del cliente attuale " + cliente + " non è presente", "Informazioni assenti"
+                                     , MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                 back = true;
                 return false;
             }
@@ -92,13 +95,16 @@ namespace ExpenseIt
             ultimaModifica = new UltimaModifica(Globals.CLIENTI[num_cliente]);
             if (!ultimaModifica.readByCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
             {
-                MessageBox.Show("E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non saranno caricate da file.");
+                MessageBox.Show("E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                    "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non " +
+                    "saranno caricate da file.", "E02"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             }
             ultimaModifica.aggiornoModifiche(progetti);
             updateList("");
             createList();
             Label titolo = this.FindName("titolo") as Label;
-            titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getNomeCliente();
+            titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getNomeCliente().Replace("_","__");
             PreviewKeyDown += new KeyEventHandler(PreviewKeyDown2);
             initCheck();
             setVisibility();
@@ -175,7 +181,9 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv" + " non esiste o è aperto da un altro programma");
+                MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                    ".csv" + " non esiste o è aperto da un altro programma", "E03"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             }
         }
 
@@ -401,7 +409,10 @@ namespace ExpenseIt
                 ultimaModifica.ricercaLenta(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\");
                 if (!ultimaModifica.writeInCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
                 {
-                    MessageBox.Show("E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma. \n\nNon è stato possibile salvare i dati relativi alle ultime modifiche.");
+                    MessageBox.Show("E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"
+                        + " non esiste o è aperto da un altro programma. \n\nNon è stato possibile salvare i dati relativi alle" +
+                        " ultime modifiche.", "E04"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                 }
                 ultimaModifica.aggiornoModifiche(progetti);
 
@@ -414,7 +425,9 @@ namespace ExpenseIt
                 buttonPush.IsEnabled = true;
                 buttonMerge.IsEnabled = true;
                 updateList("");
-                MessageBox.Show("Le ultime modifiche di tutti i progetti di " + Globals.CLIENTI[num_cliente].getNomeCliente() + " sono state aggiornate e caricate nel relativo file csv.");
+                MessageBox.Show("Le ultime modifiche di tutti i progetti di " + Globals.CLIENTI[num_cliente].getNomeCliente() + 
+                    " sono state aggiornate e caricate nel relativo file csv.", "Modifiche aggiornate"
+                                     , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
 
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -426,13 +439,17 @@ namespace ExpenseIt
             if (!ultimaModifica.readSync(Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
             {
                 //MessageBox.Show("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
-                Console.WriteLine("E05 - Non è possibile effettuare la sincronizzazione. - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.");
+                Console.WriteLine("E05 - Non è possibile effettuare la sincronizzazione. - Il file " + Globals.DATIsync +
+                    Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.", "E05"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             }
             else
             {
                 if (!ultimaModifica.confrontoSync(progetti))
                 {
-                    MessageBox.Show("E' necessario aver caricato almeno una volta le date di ultime modifiche prima di effettuare la sincronizzazione");
+                    MessageBox.Show("E' necessario aver caricato almeno una volta le date di ultime modifiche prima di effettuare " +
+                        "la sincronizzazione", "Sincronizzazione non avvenuta"
+                                     , MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                 }
 
             }
@@ -499,15 +516,13 @@ namespace ExpenseIt
         {
             if (progetti.Count != 0 && progetti[progetti.Count - 1].numero != Globals.CLIENTI[num_cliente].getMaxId())
             {
-                MessageBox.Show("ALLARME IN INIZIALIZZAZIONE: numero di progetti segnati diverso dal numero di progetti effettivi" +
-                    progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId());
+                MessageBox.Show("Indice ultimo progetto diverso dal numero di progetti di questo cliente" +
+                    progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId(), "Allarme inizializzazione"
+                                     , MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             }
         }
 
-        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
+        
 
         private void Button_GitHubClone(object sender, RoutedEventArgs e)
         {
@@ -523,7 +538,8 @@ namespace ExpenseIt
             if (git.clone())
             {
                 
-                    MessageBox.Show("Clone del repository " + Globals.GITURL + " nella cartella"+ Globals.DATIsync +" riuscito correttamente!");
+                    MessageBox.Show("Clone del repository " + Globals.GITURL + " nella cartella "+ Globals.DATIsync +" riuscito correttamente!", "Clone riuscito"
+                                     , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                             }
             updateList("");
             buttonModifiche.IsEnabled = true;
@@ -541,7 +557,8 @@ namespace ExpenseIt
             buttonClone.IsEnabled = false;
             buttonPush.IsEnabled = false;
             buttonMerge.IsEnabled = false;
-            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler caricare i progetti attuali online", "Caricare online?", MessageBoxButton.YesNo);
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler caricare i progetti attuali online", 
+                "Caricare online?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             if (dialogResult == MessageBoxResult.Yes)
             {
                 GitCommands git = new GitCommands();
@@ -549,7 +566,8 @@ namespace ExpenseIt
                 {
                     if (git.push())
                     {
-                        MessageBox.Show("Upload sul repository " + Globals.GITURL + " riuscito correttamente!");
+                        MessageBox.Show("Upload sul repository " + Globals.GITURL + " riuscito correttamente!", "Upload riuscito"
+                                     , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                     }
                 }
             }

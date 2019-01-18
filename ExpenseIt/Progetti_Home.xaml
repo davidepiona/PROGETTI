@@ -68,9 +68,13 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri">
         </Button>
 
 
-        <TextBox x:Name="TextBox" Grid.Row="1" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" HorizontalAlignment="Center" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
-        <Image Grid.ColumnSpan="6" Grid.Row="1" Height='20' Width='20' HorizontalAlignment="Center" Margin="0,20,210,17" VerticalAlignment="Top" Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\magnifier.png" />
-        <DataGrid AutoGenerateColumns="False" x:Name="dataGrid" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Left" Width="880" Height="566" Margin="10,50,22,17" Grid.Row="1" Grid.RowSpan="9"  VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Foreground="#FF222222" IsReadOnly="True" SelectionChanged="dataGrid_SelectionChanged" >
+        <TextBox x:Name="TextBox" Grid.Row="1" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" 
+                 HorizontalAlignment="Center" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" 
+                 Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
+        <Image Grid.ColumnSpan="6" Grid.Row="1" Height='20' Width='20' HorizontalAlignment="Center" 
+               Margin="0,20,210,17" VerticalAlignment="Top" 
+               Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\magnifier.png" />
+        <DataGrid AutoGenerateColumns="False" x:Name="dataGrid" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Left" Width="880" Height="566" Margin="10,50,22,17" Grid.Row="1" Grid.RowSpan="9"  VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Foreground="#FF222222" IsReadOnly="True" >
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
@@ -108,7 +112,7 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri">
                         <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Imposta repository GitHub" Click="Menu_github" Background="AliceBlue">
+                <MenuItem Header="Impostazioni GitHub" Click="Menu_github" Background="AliceBlue">
                     <MenuItem.Icon>
                         <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\github.png" />
                     </MenuItem.Icon>

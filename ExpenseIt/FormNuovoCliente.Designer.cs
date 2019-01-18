@@ -36,22 +36,22 @@
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F);
-            this.label5.Location = new System.Drawing.Point(338, 206);
-            this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label5.Location = new System.Drawing.Point(184, 112);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(125, 39);
+            this.label5.Size = new System.Drawing.Size(73, 25);
             this.label5.TabIndex = 11;
             this.label5.Text = "Cliente";
             // 
             // FormNuovoCliente
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(436, 244);
             this.Controls.Add(this.label5);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "FormNuovoCliente";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "FormNuovoCliente";
+            this.Text = "Nuovo Cliente";
             this.Load += new System.EventHandler(this.FormNuovoCliente_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

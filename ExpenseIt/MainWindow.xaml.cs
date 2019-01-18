@@ -72,9 +72,9 @@ namespace ExpenseIt
                 MessageBox.Show(
                "E08 - Il file " + Globals.DATI + @"\CLIENTI.csv" + " non esiste o è aperto da un altro programma." +
                " \n\nChiudere i programmi che utilizzano questo file e riprovare.",
-               "Chiusura applicazione",
+               "E08 Chiusura applicazione",
                MessageBoxButton.OK,
-               MessageBoxImage.Stop);
+               MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                 salvaClientiCSV();
             }
         }
@@ -100,7 +100,8 @@ namespace ExpenseIt
             catch (IOException)
             {
                 MessageBox.Show("E11 - non è stato possibile aprire il file " + Directory.GetCurrentDirectory() + @"\SETTINGS.csv" +
-                    " quindi sono state caricate le impostazioni di default");
+                    " quindi sono state caricate le impostazioni di default", "E11"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             }
         }
 
@@ -125,9 +126,9 @@ namespace ExpenseIt
                 MessageBox.Show(
                "E14 - Il file " + Directory.GetCurrentDirectory() + @"\SETTINGS.csv" + " non esiste o è aperto da un altro programma." +
                " \n\nNon è possibile salvare le nuove preferenze.",
-               "File bloccato",
+               "E14 File bloccato",
                MessageBoxButton.OK,
-               MessageBoxImage.Information);
+               MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             }
         }
     }

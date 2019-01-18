@@ -34,11 +34,11 @@ namespace ExpenseIt
             {
                 nonEsiste = "Il percorso impostato per l'eseguibile 'git.exe' non esiste.\n";
             }
-            System.Windows.MessageBoxResult me = System.Windows.MessageBox.Show(
+            MessageBoxResult me = System.Windows.MessageBox.Show(
                   nonEsiste +"Salvare l'attuale percorso dell'eseguibile e l'attuale indirizzo per il repository GitHub usato dall'applicazione?",
                   "Conferma",
                   MessageBoxButton.YesNo,
-                  MessageBoxImage.Question);
+                  MessageBoxImage.Question,  System.Windows.MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
                 if (me == MessageBoxResult.No)
                 {
                     return;

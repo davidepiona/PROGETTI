@@ -18,4 +18,19 @@
     <NavigationWindow.TaskbarItemInfo>
         <TaskbarItemInfo/>
     </NavigationWindow.TaskbarItemInfo>
+    <!--<NavigationWindow.Resources>-->
+        <!--<Style x:Key="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button" >
+                        <Border>
+                            <ContentPresenter RecognizesAccessKey="False" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+                
+            </Setter>
+            
+        </Style>-->
+    <!--</NavigationWindow.Resources>-->
 </NavigationWindow>

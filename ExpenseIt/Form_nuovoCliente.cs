@@ -25,13 +25,38 @@ namespace ExpenseIt
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string nome = textBox1.Text.ToString();
+            String nome = textBox1.Text.ToString();
             string suffisso = textBox2.Text.ToString();
 
             if (nome.Equals(""))
-                nome = ".";
+            {
+                MessageBox.Show("Inserire un nome valido", "Nome assente", 
+                    MessageBoxButtons.OK , MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 ,MessageBoxOptions.RightAlign);
+                return;
+            }
+            
+            //Console.WriteLine("PRIMA: " + nome);
+            nome = nome.Replace(" ", "_");
+
             if (suffisso.Equals(""))
-                suffisso = ".";
+            {
+                MessageBox.Show("Inserire un suffisso valido.", "Suffisso assente", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                return;
+            }
+
+            foreach(char c in suffisso)
+            {
+                if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')&& (c < '1' || c > '9') )
+
+                    {
+                    MessageBox.Show("Inserire un suffisso composto esclusivamente da lettere e numeri.Inserire un suffisso composto esclusivamente da lettere e numeri.Inserire un suffisso composto esclusivamente da lettere e numeri.", "Suffisso non alfanumerico", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+
+                    return;
+
+                    }
+            }
 
             string file = Globals.DATI + @"\CLIENTI.csv";
             try
@@ -49,7 +74,8 @@ namespace ExpenseIt
                     }
                     catch (IOException)
                     {
-                        MessageBox.Show("E16 - La cartella " + Globals.PROGETTI + nome + " non è stato creata per un problema");
+                        MessageBox.Show("E16 - La cartella " + Globals.PROGETTI + nome + " non è stato creata per un problema", "E16"
+                                     ,MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                     }
                 }
                 if (!File.Exists(Globals.DATI + nome + ".csv"))
@@ -62,7 +88,8 @@ namespace ExpenseIt
                     }
                     catch (IOException)
                     {
-                        MessageBox.Show("E17 - Il file " + Globals.DATI + nome + ".csv" + " non è stato creata per un problema");
+                        MessageBox.Show("E17 - Il file " + Globals.DATI + nome + ".csv" + " non è stato creata per un problema", "E17"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                     }
                     try
                     {
@@ -72,7 +99,8 @@ namespace ExpenseIt
                     }
                     catch (IOException)
                     {
-                        MessageBox.Show("E18 - Il file " + Globals.DATI + nome + "date.csv" + " non è stato creata per un problema");
+                        MessageBox.Show("E18 - Il file " + Globals.DATI + nome + "date.csv" + " non è stato creata per un problema", "E18"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                     }
                 }
 
@@ -82,10 +110,12 @@ namespace ExpenseIt
                 m.salvaClientiCSV();
 
                 this.Close();
+                
             }
             catch (IOException)
             {
-                MessageBox.Show("E17 - Il file " + file + " non esiste o è aperto da un altro programma");
+                MessageBox.Show("E19 - Il file " + file + " non esiste o è aperto da un altro programma", "E19"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
             }
         }
     }

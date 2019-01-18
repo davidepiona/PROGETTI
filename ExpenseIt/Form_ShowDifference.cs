@@ -136,7 +136,8 @@ namespace ExpenseIt
                 }
                 catch (IOException)
                 {
-                    MessageBox.Show("E10 - Il file " + file + " non esiste o è aperto da un altro programma");
+                    MessageBox.Show("E10 - Il file " + file + " non esiste o è aperto da un altro programma", "E10"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 }
             }
             this.Close();

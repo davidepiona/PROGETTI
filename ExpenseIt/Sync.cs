@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Forms;
 
 namespace ExpenseIt
 {
@@ -46,7 +46,8 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E09 - Il file " + path + " non esiste o è aperto da un altro programma");
+                MessageBox.Show("E09 - Il file " + path + " non esiste o è aperto da un altro programma", "E09"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
             }
         }
 

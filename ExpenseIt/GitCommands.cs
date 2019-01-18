@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Forms;
 
 namespace ExpenseIt
 {
@@ -39,7 +39,8 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E12 - Il file " + DestinationPath + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.");
+                MessageBox.Show("E12 - Il file " + DestinationPath + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.", "E12"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
             Console.WriteLine("Eliminata vecchia cartella DATIsync");
@@ -57,7 +58,8 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E13 - Il file " + SourcePath + " non esiste o è aperto da un altro programma.\n\nNon è possibile copiare la cartella.");
+                MessageBox.Show("E13 - Il file " + SourcePath + " non esiste o è aperto da un altro programma.\n\nNon è possibile copiare la cartella.", "E13"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
             
@@ -158,7 +160,8 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E15 - Il file " + DestinationPath + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.");
+                MessageBox.Show("E15 - Il file " + DestinationPath + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.", "E15"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
     Console.WriteLine("Eliminata vecchia cartella DATIsync");
@@ -185,7 +188,8 @@ namespace ExpenseIt
                     string[] split = err.Split(':');
                     if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
                     {
-                        MessageBox.Show("Problemi con il repository git, azione di clone non eseguita");
+                        MessageBox.Show("Problemi con il repository git, azione di clone non eseguita", "Problemi con git"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
 
                         return false;
                     }
@@ -193,12 +197,14 @@ namespace ExpenseIt
                 }
             }catch(Win32Exception w32e)
             {
-                MessageBox.Show("Azione di clone non eseguita a causa di errore nel comando:\n"+ w32e.Message);
+                MessageBox.Show("Azione di clone non eseguita a causa di errore nel comando:\n"+ w32e.Message, "Clone non eseguito"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
             catch(FileNotFoundException fnfe)
             {
-                MessageBox.Show("Azione di clone non eseguita a causa di:\n" + fnfe.Message);
+                MessageBox.Show("Azione di clone non eseguita a causa di:\n" + fnfe.Message, "Clone non eseguito"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
             //Win32Exception

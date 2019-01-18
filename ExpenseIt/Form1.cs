@@ -97,8 +97,9 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E09 - La cartella " + Globals.PROGETTI + cliente + @"\" + cliente + numProgetto + " non è stato creata per un problema");
-            }
+                MessageBox.Show("E09 - La cartella " + Globals.PROGETTI + cliente + @"\" + cliente + numProgetto + " non è stata creata per un problema", "E09"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                }
             string fileName = Globals.PROGETTI + cliente + @"\" + cliente + numProgetto + @"\progetto.docx";
             try
             {
@@ -116,7 +117,8 @@ namespace ExpenseIt
                 doc.Save();
             }catch(IOException)
             {
-                MessageBox.Show("E07 - Il file " + fileName + " non è stato creato per un problema");
+                MessageBox.Show("E07 - Il file " + fileName + " non è stato creato per un problema", "E07"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
             }
             Globals.CLIENTI[numCliente].setMaxId(Globals.CLIENTI[numCliente].getMaxId() + 1);
             Globals.CLIENTI[numCliente].setLastId(Globals.CLIENTI[numCliente].getMaxId());
@@ -127,7 +129,8 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E06 - Il file " + file + " non esiste o è aperto da un altro programma");
+                MessageBox.Show("E06 - Il file " + file + " non esiste o è aperto da un altro programma", "E06"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
             }
 
 
