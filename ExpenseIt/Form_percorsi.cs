@@ -74,6 +74,7 @@ namespace ExpenseIt
                 textBox3.Text = path;
             }
         }
+        
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (!Directory.Exists(textBox1.Text.ToString()))
@@ -109,6 +110,7 @@ namespace ExpenseIt
             }
         }
 
+        
         private void button2_Click(object sender, EventArgs e)
         {
             string tb1 = textBox1.Text.ToString();
@@ -126,7 +128,7 @@ namespace ExpenseIt
                     return;
                 }
             }
-            if (!tb1.Equals(Globals.PROGETTI) || !tb2.Equals(Globals.DATI) || !tb3.Equals(Globals.DATIsync))
+            if (!tb1.Equals(Globals.PROGETTI) || !tb2.Equals(Globals.DATI) || !tb3.Equals(Globals.DATIsync) )
             {
                 Globals.PROGETTI = tb1;
                 Globals.DATI = tb2;
@@ -142,5 +144,7 @@ namespace ExpenseIt
         {
             this.Close();
         }
+
+        
     }
 }

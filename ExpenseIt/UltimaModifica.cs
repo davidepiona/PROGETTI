@@ -80,20 +80,27 @@ namespace ExpenseIt
             //}
             return true;
         }
-        public void ricercaLenta(string path)
+        public bool ricercaLenta(string path)
         {
             //string path = PROGETTI + cliente.getNomeCliente() + @"\";
-            allDate = new Dictionary<string, DateTime>();
-            if (Directory.Exists(path))
+            try
             {
-                foreach (string proj in Directory.GetDirectories(path))
+                allDate = new Dictionary<string, DateTime>();
+                if (Directory.Exists(path))
                 {
-                    DateTime res = modificheByFile(proj);
-                    
-                    allDate.Add(proj.Split('\\').Last(), res);
-                    Console.WriteLine("FINE, DATA PIU' RECENTE: <" + res + ">");
+                    foreach (string proj in Directory.GetDirectories(path))
+                    {
+                        DateTime res = modificheByFile(proj);
+
+                        allDate.Add(proj.Split('\\').Last(), res);
+                        Console.WriteLine("FINE, DATA PIU' RECENTE: <" + res + ">");
+                    }
                 }
+            }catch(Exception e) { 
+                            Console.WriteLine("Eccezione nella ricerca ultime modifiche: "+ e);
+                return false;
             }
+            return true;
 
         }
 
@@ -213,8 +220,9 @@ namespace ExpenseIt
                     }
                 }
             }
-            catch (IOException)
+            catch (Exception e)
             {
+                Console.WriteLine("Eccezione non riconosciuta alla lettura del file sync .csv" + e.Message);
                 return false;
             }
             return true;

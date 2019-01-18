@@ -101,7 +101,8 @@ namespace ExpenseIt
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             }
             ultimaModifica.aggiornoModifiche(progetti);
-            updateList("");
+            //updateList("");
+            check_sync();
             createList();
             Label titolo = this.FindName("titolo") as Label;
             titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getNomeCliente().Replace("_","__");
@@ -152,6 +153,7 @@ namespace ExpenseIt
                 Clienti_Home clienti_home = new Clienti_Home();
                 this.NavigationService.Navigate(clienti_home);
             }
+            
         }
         private void readProjects()
         {
@@ -253,10 +255,11 @@ namespace ExpenseIt
 
         private void updateListNewProject(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
-            check_sync();
+            
             Console.WriteLine("UpdateList2");
             progetti = new List<Progetto>();
             readProjects();
+            check_sync();
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             ultimaModifica.aggiornoModifiche(progetti);
             //Console.WriteLine("filter: <" + filter + ">");
@@ -366,7 +369,7 @@ namespace ExpenseIt
             }
             catch (NullReferenceException nre)
             {
-                //Console.WriteLine("ECCEZIONE: " + nre);
+                 //Console.WriteLine("ECCEZIONE: " + nre);
             }
 
         }
@@ -406,16 +409,22 @@ namespace ExpenseIt
             buttonMerge.IsEnabled = false;
             Task.Factory.StartNew(() =>
             {
-                ultimaModifica.ricercaLenta(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\");
-                if (!ultimaModifica.writeInCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
+                if (ultimaModifica.ricercaLenta(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\"))
                 {
-                    MessageBox.Show("E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"
-                        + " non esiste o è aperto da un altro programma. \n\nNon è stato possibile salvare i dati relativi alle" +
-                        " ultime modifiche.", "E04"
-                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    if (!ultimaModifica.writeInCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
+                    {
+                        MessageBox.Show("E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"
+                            + " non esiste o è aperto da un altro programma. \n\nNon è stato possibile salvare i dati relativi alle" +
+                            " ultime modifiche.", "E04"
+                                         , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    }
+                    ultimaModifica.aggiornoModifiche(progetti);
                 }
-                ultimaModifica.aggiornoModifiche(progetti);
-
+                else
+                {
+                    MessageBox.Show("E26 non riuscito aggiornamento ultime modifiche", "E26"
+                                         , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                }
 
             }).ContinueWith(task =>
             {
@@ -562,12 +571,32 @@ namespace ExpenseIt
             if (dialogResult == MessageBoxResult.Yes)
             {
                 GitCommands git = new GitCommands();
-                if (git.copyFolder())
+                if (git.copyFolder(Globals.CLIENTI[num_cliente].getNomeCliente()))
                 {
-                    if (git.push())
+                    List<string> pushInfo = git.push(Globals.CLIENTI[num_cliente].getNomeCliente());
+                    if ( pushInfo!= null)
                     {
-                        MessageBox.Show("Upload sul repository " + Globals.GITURL + " riuscito correttamente!", "Upload riuscito"
-                                     , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+
+                        if (pushInfo.Count != 0)
+                        {
+                            string message = "";
+                            foreach(string f in pushInfo)
+                            {
+                                message +="\n" +f;
+                            }
+                            MessageBox.Show("Upload sul repository " + Globals.GITURL + " riuscito correttamente! File caricati:\n"+message, "Upload riuscito"
+                                         , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Upload sul repository " + Globals.GITURL + " non effettuato perchè non c'era niente da caricare", "Niente da caricare"
+                                        , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Upload sul repository " + Globals.GITURL + " non riuscito.", "Errore upload"
+                                            , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                     }
                 }
             }
@@ -579,6 +608,7 @@ namespace ExpenseIt
             buttonClone.IsEnabled = true;
             buttonPush.IsEnabled = true;
             buttonMerge.IsEnabled = true;
+            updateList("");
 
         }
 

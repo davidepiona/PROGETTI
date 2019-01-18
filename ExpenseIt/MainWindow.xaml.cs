@@ -27,7 +27,9 @@ namespace ExpenseIt
             ShowsNavigationUI = false;
             if (Globals.CLIENTI == null)
             {
-                leggiSETTINGS();
+                Globals.SETTINGS = Directory.GetCurrentDirectory() + @"\SETTINGS.csv";
+                Console.WriteLine(Globals.SETTINGS);
+                leggiSETTINGS(null,null);
             }
         }
 
@@ -79,12 +81,12 @@ namespace ExpenseIt
             }
         }
 
-        public void leggiSETTINGS()
+        public void leggiSETTINGS(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
             Console.WriteLine("Leggo SETTINGS");
             try
             {
-                var file = File.OpenRead(Directory.GetCurrentDirectory() + @"\SETTINGS.csv");
+                var file = File.OpenRead(Globals.SETTINGS);
                 var reader = new StreamReader(file);
                 
                 Globals.GITURL = reader.ReadLine();
@@ -96,12 +98,16 @@ namespace ExpenseIt
                 Globals.SINCRONIZZAZIONE = reader.ReadLine().Equals("True") ? true : false;
                 //Console.WriteLine("<" + reader.ReadLine() + "><" + reader.ReadLine() + ">");
                 file.Close();
+                
             }
             catch (IOException)
             {
-                MessageBox.Show("E11 - non è stato possibile aprire il file " + Directory.GetCurrentDirectory() + @"\SETTINGS.csv" +
-                    " quindi sono state caricate le impostazioni di default", "E11"
+                MessageBox.Show("E11 - non è stato possibile aprire il file " + Globals.SETTINGS +
+                    " indicare il percorso ", "E11"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Form_initialSettings form = new Form_initialSettings();
+                form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.leggiSETTINGS);
+                form.ShowDialog();
             }
         }
 
@@ -119,12 +125,12 @@ namespace ExpenseIt
             lines[6] = Globals.SINCRONIZZAZIONE.ToString();
             try
             {
-                File.WriteAllLines(Directory.GetCurrentDirectory() + @"\SETTINGS.csv", lines);
+                File.WriteAllLines(Globals.SETTINGS, lines);
             }
             catch (IOException)
             {
                 MessageBox.Show(
-               "E14 - Il file " + Directory.GetCurrentDirectory() + @"\SETTINGS.csv" + " non esiste o è aperto da un altro programma." +
+               "E14 - Il file " + Globals.SETTINGS + " non esiste o è aperto da un altro programma." +
                " \n\nNon è possibile salvare le nuove preferenze.",
                "E14 File bloccato",
                MessageBoxButton.OK,
@@ -141,12 +147,12 @@ namespace ExpenseIt
 
         public static String GITURL = "https://github.com/davidepiona/DATIsync.git";
         public static String GITPATH = @"C:\Program Files\Git\cmd\git.exe";
+        public static String SETTINGS = @"";
         public static String PROGETTI = @"R:\PROGETTI\";
         public static String DATI = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\";
         public static String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\";
         public static bool ANTEPRIME = true;
         public static bool SINCRONIZZAZIONE = true;
-        public static bool changed = false;
         //public static readonly String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync";// Unmodifiable
     }
 

@@ -21,7 +21,6 @@ namespace ExpenseIt
             InitializeComponent();
             textBox1.Text = Globals.GITURL;
             textBox2.Text = Globals.GITPATH;
-            Globals.changed = false;
             
         }
 
