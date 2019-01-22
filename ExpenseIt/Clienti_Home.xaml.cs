@@ -17,7 +17,14 @@ using System.Windows.Shapes;
 namespace ExpenseIt
 {
     /// <summary>
-    /// Logica di interazione per ExpenseItViewExpense.xaml
+    /// Logica di interazione per Clienti_Home.xaml
+    /// ORGANIZZAZIONE:
+    /// - COSTRUTTORE
+    /// - FUNZIONI PRINCIPALI
+    /// - CONTROLLI GENERALI
+    /// - BOTTONI
+    /// - INTERAZIONE CON L'UTENTE
+    /// - MENU DI IMPOSTAZIONI
     /// </summary>
     public partial class Clienti_Home : Page
     {
@@ -41,52 +48,54 @@ namespace ExpenseIt
                     {
                         Globals.CLIENTI.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
                     }
-
                 }
                 file.Close();
             }
 
             buttonList = new List<Button>();
             Grid grid = this.FindName("buttonGrid") as Grid;
-            //int j = Globals.CLIENTI.Count;
             int i = 0;
             foreach (Cliente cliente in Globals.CLIENTI)
             {
                 if (i % 4 == 0)
                 {
-                    RowDefinition r = new RowDefinition();
-                    r.Height = new GridLength(140, GridUnitType.Star);
-                    r.MinHeight = 140;
+                    RowDefinition r = new RowDefinition
+                    {
+                        Height = new GridLength(140, GridUnitType.Star),
+                        MinHeight = 140
+                    };
                     grid.RowDefinitions.Add(new RowDefinition());
                 }
-                Button b = new Button();
-                b.Width = 140;
-                
-                b.Height = 50;
-                b.Name = "button" + i;
-                b.Margin = new Thickness(25);
-                b.Content = cliente.getNomeCliente().Replace("_", "__");
-                b.Click += new RoutedEventHandler(button_Click);
+                Button b = new Button
+                {
+                    Width = 140,
+                    Height = 50,
+                    Name = "button" + i,
+                    Margin = new Thickness(25),
+                    Content = cliente.getNomeCliente().Replace("_", "__")
+                };
+                b.Click += new RoutedEventHandler(Button_Click);
                 b.Background = Brushes.White;
                 b.Foreground = Brushes.Black;
                 buttonList.Add(b);
                 Grid.SetColumn(buttonList[i], i % 4);
                 Grid.SetRow(buttonList[i], (i / 4));
-                
                 grid.Children.Add(buttonList[i]);
                 Console.WriteLine("\t" + cliente.getNomeCliente());
                 i++;
             }
             InitializeComponent();
-            setVisibility();
+            SetVisibility();
         }
-
-        public void Clienti_Home_Loaded(object sender, RoutedEventArgs e)
-        {
-            TextBox textBox = this.FindName("TextBox") as TextBox;
-            textBox.Focus();
-        }
-        private void updateClientList(object sender, System.Windows.Forms.FormClosedEventArgs e)
+       
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////                            FUNZIONI PRINCIPALI                             ///////////////////               
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Se è stato aggiunto un nuovo cliente aggiunge il bottone corrispondende nella posizione corretta.
+        /// Ogni 4 bottoni aggiunge una riga. 
+        /// </summary>
+        private void UpdateClientList(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
             if (numClientiTemp >= Globals.CLIENTI.Count)
             {
@@ -98,19 +107,23 @@ namespace ExpenseIt
             int i = Globals.CLIENTI.Count - 1;
             if (i % 4 == 0)
             {
-                RowDefinition r = new RowDefinition();
-                r.Height = new GridLength(140, GridUnitType.Star);
-                r.MinHeight = 140;
+                RowDefinition r = new RowDefinition
+                {
+                    Height = new GridLength(140, GridUnitType.Star),
+                    MinHeight = 140
+                };
                 grid.RowDefinitions.Add(new RowDefinition());
             }
             Cliente cliente = Globals.CLIENTI[i];
-            Button b = new Button();
-            b.Width = 140;
-            b.Height = 50;
-            b.Margin = new Thickness(25);
-            b.Name = "button" + i;
-            b.Content = cliente.getNomeCliente().Replace("_","__") ;
-            b.Click += new RoutedEventHandler(button_Click);
+            Button b = new Button
+            {
+                Width = 140,
+                Height = 50,
+                Margin = new Thickness(25),
+                Name = "button" + i,
+                Content = cliente.getNomeCliente().Replace("_", "__")
+            };
+            b.Click += new RoutedEventHandler(Button_Click);
             b.Background = Brushes.White;
             b.Foreground = Brushes.Black;
             buttonList.Add(b);
@@ -118,167 +131,17 @@ namespace ExpenseIt
             Grid.SetRow(buttonList[i], (i / 4));
             grid.Children.Add(buttonList[i]);
             Console.WriteLine("\t" + cliente.getNomeCliente());
-
-
-        }
-        private void button_Click(object sender, EventArgs e)
-        {
-            // CAMBIARE PAGINA
-            string clienteAttuale = ((Button)sender).Content.ToString().Replace("__", "_");
-            int n = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(clienteAttuale));
-            Globals.LAST_CLIENT = Globals.CLIENTI[n].getNomeCliente();
-            // se la cartella o il file csv di quel clienteAttualee non esiste
-            if (!Directory.Exists(Globals.PROGETTI + clienteAttuale) || !File.Exists(Globals.DATI + clienteAttuale + ".csv"))
-            {
-                MessageBoxResult mbr = MessageBox.Show("La cartella o il file csv del cliente attuale " + clienteAttuale + " non è presente.\nCrearli?",
-                    "File inesistenti", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-                if (mbr == MessageBoxResult.Yes)
-                {
-                    if (!Directory.Exists(Globals.PROGETTI + clienteAttuale))
-                    {
-                        createClientDirectory(clienteAttuale);
-                    }
-                    if (!File.Exists(Globals.DATI + clienteAttuale + ".csv"))
-                    {
-                        createClientCSV(clienteAttuale);
-                    }
-                }
-            }
-
-            else
-            {
-                Progetti_Home progetti_home = new Progetti_Home(n);
-                this.NavigationService.Navigate(progetti_home);
-            }
         }
 
-        private void createClientCSV(string cliente)
-        {
-            try
-            {
-                //creare nuovo file CSV in DATI
-                File.Create(Globals.DATI + cliente + ".csv");
-                Console.WriteLine("Creato file: " + Globals.DATI + cliente + ".csv");
-            }
-            catch (IOException)
-            {
-                MessageBox.Show("E21 - Il file " + Globals.DATI + cliente + ".csv" + " non è stato creata per un problema", "E21"
-                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-            }
-            try
-            {
-                //creare nuovo file CSV in DATI
-                File.Create(Globals.DATI + cliente + "date.csv");
-                Console.WriteLine("Creato file: " + Globals.DATI + cliente + "date.csv");
-            }
-            catch (IOException)
-            {
-                MessageBox.Show("E22 - Il file " + Globals.DATI + cliente + "date.csv" + " non è stato creata per un problema", "E22"
-                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-            }
-        }
-
-        private void createClientDirectory(string cliente)
-        {
-            try
-            {
-                //creare nuovo cartella in progetti
-                Directory.CreateDirectory(Globals.PROGETTI + cliente);
-                Console.WriteLine("Creata cartella: " + Globals.PROGETTI + cliente);
-            }
-            catch (IOException)
-            {
-                MessageBox.Show("E23 - La cartella " + Globals.PROGETTI + cliente + " non è stato creata per un problema", "E23"
-                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-            }
-        }
-
-        private void Menu_percorsi(object sender, RoutedEventArgs e)
-        {
-            Form_percorsi form = new Form_percorsi();
-            form.ShowDialog();
-        }
-        private void Menu_github(object sender, RoutedEventArgs e)
-        {
-            Form_github form = new Form_github();
-            form.ShowDialog();
-        }
-        private void Menu_anteprima(object sender, RoutedEventArgs e)
-        {
-            bool value = ((MenuItem)sender).IsChecked;
-            if (value != Globals.ANTEPRIME)
-            {
-                Globals.ANTEPRIME = value;
-                MainWindow m = new MainWindow();
-                m.scriviSETTINGS();
-            }
-        }
-
-        private void Menu_sync(object sender, RoutedEventArgs e)
-        {
-            bool value = ((MenuItem)sender).IsChecked;
-
-            if (value != Globals.SINCRONIZZAZIONE)
-            {
-                Globals.SINCRONIZZAZIONE = value;
-                MainWindow m = new MainWindow();
-                m.scriviSETTINGS();
-            }
-
-        }
-
-        private void setVisibility()
-        {
-            Console.WriteLine("Set visibility");
-            MenuItem ma = this.FindName("Menu_anteprima_check") as MenuItem;
-            MenuItem ms = this.FindName("Menu_sync_check") as MenuItem;
-            ma.IsChecked = Globals.ANTEPRIME;
-            ms.IsChecked = Globals.SINCRONIZZAZIONE;
-        }
-
-        private void Button_New_Client(object sender, RoutedEventArgs e)
-        {
-
-            Console.WriteLine("\nNew Client");
-            Form_nuovoCliente form = new Form_nuovoCliente();
-            //Cliente c = new Cliente("NUOVO", "NU", 1, 1);
-            //Globals.CLIENTI.Add(c);
-            numClientiTemp = Globals.CLIENTI.Count;
-            form.FormClosed
-                += new System.Windows.Forms.FormClosedEventHandler(this.updateClientList);
-            form.ShowDialog();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-            Button button = this.FindName("BottApri2") as Button;
-            button.Visibility = Visibility.Visible;
-            if (progettiAll == null)
-            {
-                readProjects();
-                dataGrid.Visibility = Visibility.Visible;
-            }
-            Progetto ultimo = updateList(((TextBox)sender).Text);
-            
-            dataGrid.SelectedIndex = 0;
-            dataGrid.ScrollIntoView(ultimo);
-            int j = 1;
-            foreach (Progetto p in progettiAll)
-            {
-                Console.WriteLine(j + ") " + p.ToName());
-                j++;
-            }
-
-        }
-
-        private void readProjects()
+        /// <summary>
+        /// Legge i progetti da TUTTI i file .csv e li salva nella lista progettiAll.
+        /// </summary>
+        private void ReadProjects()
         {
             progettiAll = new List<Progetto>();
             for (int i = 0; i < Globals.CLIENTI.Count; i++)
             {
                 List<string> lines = new List<string>();
-                //Console.WriteLine(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv");
                 try
                 {
                     using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv"))
@@ -308,13 +171,16 @@ namespace ExpenseIt
             }
         }
 
-        private Progetto updateList(string filter)
+        /// <summary>
+        /// Aggiorna gli elementi nella DataGrid:
+        /// - aggiunge tutti i progetti presenti e FILTRATI dopo aver svuotato la DataGrid
+        /// - mentre scorre i progetti restituisce il primo visualizzato per permettere di selezionarlo durante la ricerca
+        /// </summary>
+        private Progetto UpdateList(string filter)
         {
             Console.WriteLine("Update list1");
             Progetto primo = new Progetto(0, null, null, null, null, null, null);
-            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-            //Console.WriteLine("filter: <" + filter + ">");
-            if (dataGrid != null)
+            if (this.FindName("dataGrid") is DataGrid dataGrid)
             {
                 dataGrid.Items.Clear();
                 int i = 0;
@@ -327,13 +193,106 @@ namespace ExpenseIt
                             primo = p;
                         }
                         dataGrid.Items.Add(p);
-
                         i++;
                     }
                 }
             }
             return primo;
         }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////                             CONTROLLI GENERALI                             ///////////////////               
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Dopo aver caricato la pagina da il focus alla textbox.
+        /// </summary>
+        public void Clienti_Home_Loaded(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = this.FindName("TextBox") as TextBox;
+            textBox.Focus();
+        }
+
+        /// <summary>
+        /// Funzione per la creazione dei necessari file .csv in DATI.
+        /// - creazione del file *CLIENTE*.csv
+        /// - creazione del file *CLIENTE*date.csv
+        /// </summary>
+        private void CreateClientCSV(string cliente)
+        {
+            try
+            {
+                File.Create(Globals.DATI + cliente + ".csv");
+                Console.WriteLine("Creato file: " + Globals.DATI + cliente + ".csv");
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E21 - Il file " + Globals.DATI + cliente + ".csv" + " non è stato creata per un problema", "E21"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            }
+            try
+            {
+                File.Create(Globals.DATI + cliente + "date.csv");
+                Console.WriteLine("Creato file: " + Globals.DATI + cliente + "date.csv");
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E22 - Il file " + Globals.DATI + cliente + "date.csv" + " non è stato creato per un problema", "E22"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            }
+        }
+
+        /// <summary>
+        /// Funzione per la creazione di una nuova cartella in progetti.
+        /// </summary>
+        private void CreateClientDirectory(string cliente)
+        {
+            try
+            {
+                Directory.CreateDirectory(Globals.PROGETTI + cliente);
+                Console.WriteLine("Creata cartella: " + Globals.PROGETTI + cliente);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E23 - La cartella " + Globals.PROGETTI + cliente + " non è stata creata per un problema", "E23"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////                        INTERAZIONE CON L'UTENTE                            ///////////////////               
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Al doppio click sulla riga apre la cartella del filesystem.
+        /// </summary>
+        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Open_Folder(null, null);
+        }
+
+        /// <summary>
+        /// Richiamato ogni volta che viene modificato il testo nella TextBox di ricerca.
+        /// Alla prima chiamata rende il bottone visibile e carica per la prima volta i file.
+        /// Aggiorna e filtra la lista e poi seleziona la prima riga visualizzata.
+        /// </summary>
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            Button button = this.FindName("BottApri2") as Button;
+            if (progettiAll == null)
+            {
+                ReadProjects();
+                button.Visibility = Visibility.Visible;
+                dataGrid.Visibility = Visibility.Visible;
+            }
+            Progetto ultimo = UpdateList(((TextBox)sender).Text);
+            dataGrid.SelectedIndex = 0;
+            dataGrid.ScrollIntoView(ultimo);
+        }
+
+        /// <summary>
+        /// Funzioni per consentire di navigare la DataGrid con le freccie su e giù mentre si effettua una ricerca.
+        /// Con invio si apre la cartella del filesystem del progetto selezionato
+        /// </summary>
         private void PreviewKeyDown2(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Up)
@@ -346,7 +305,6 @@ namespace ExpenseIt
                     dataGrid.SelectedIndex = dataGrid.SelectedIndex - 1;
                     dataGrid.ScrollIntoView(dataGrid.SelectedItem);
                 }
-
             }
             if (e.Key == Key.Down)
             {
@@ -361,12 +319,17 @@ namespace ExpenseIt
             if (e.Key == Key.Enter)
             {
                 Console.WriteLine("invio");
-                Open_Folder(null,null);
-
+                Open_Folder(null, null);
             }
-
         }
 
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////                                BOTTONI                                     ///////////////////               
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Bottone apertura cartella del filesystem.
+        /// Imposta questo come ultimo progetto aperto.
+        /// </summary>
         private void Open_Folder(object sender, RoutedEventArgs e)
         {
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
@@ -381,37 +344,120 @@ namespace ExpenseIt
             }
         }
 
-        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
-    {
-          Open_Folder(null,null);
-            
+        /// <summary>
+        /// Funzione che si attiva quando un bottone-cliente viene premuto.
+        /// Cerca di aprire la Progetti_Home del cliente selezionato.
+        /// - sistema il problema degli underscore usati come RecognizesAccessKey
+        /// - cerca il cliente con nome come quello selezionato e lo imposta come ultimo aperto
+        /// - nel caso la cartella di progetto o il file .csv non esistano chiede se si intende crearli
+        /// </summary>
+        private void Button_Click(object sender, EventArgs e)
+        {
+            string clienteAttuale = ((Button)sender).Content.ToString().Replace("__", "_");
+            int n = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(clienteAttuale));
+            Globals.LAST_CLIENT = Globals.CLIENTI[n].getNomeCliente();
+            if (!Directory.Exists(Globals.PROGETTI + clienteAttuale) || !File.Exists(Globals.DATI + clienteAttuale + ".csv"))
+            {
+                MessageBoxResult mbr = MessageBox.Show("La cartella o il file csv del cliente attuale " + clienteAttuale + " non è presente.\nCrearli?",
+                    "File inesistenti", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                if (mbr == MessageBoxResult.Yes)
+                {
+                    if (!Directory.Exists(Globals.PROGETTI + clienteAttuale))
+                    {
+                        CreateClientDirectory(clienteAttuale);
+                    }
+                    if (!File.Exists(Globals.DATI + clienteAttuale + ".csv"))
+                    {
+                        CreateClientCSV(clienteAttuale);
+                    }
+                }
+            }
+            else
+            {
+                Progetti_Home progetti_home = new Progetti_Home(n);
+                this.NavigationService.Navigate(progetti_home);
+            }
+        }
 
+        /// <summary>
+        /// Bottone per la creazione di un nuovo cliente.
+        /// Chiama il FORM Form_nuovoCliente. 
+        /// </summary>
+        private void Button_New_Client(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("\nNew Client");
+            Form_nuovoCliente form = new Form_nuovoCliente();
+            numClientiTemp = Globals.CLIENTI.Count;
+            form.FormClosed
+                += new System.Windows.Forms.FormClosedEventHandler(this.UpdateClientList);
+            form.ShowDialog();
+        }
+        
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////                          MENU DI IMPOSTAZIONI                              ///////////////////               
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Apre il FORM Form_percorsi per modificare i path in cui il programma cerca i file.
+        /// </summary>
+        private void Menu_percorsi(object sender, RoutedEventArgs e)
+        {
+            Form_percorsi form = new Form_percorsi();
+            form.ShowDialog();
+        }
+
+        /// <summary>
+        /// Apre il FORM Form_github per modificare il path di git.exe e del repository github.
+        /// </summary>
+        private void Menu_github(object sender, RoutedEventArgs e)
+        {
+            Form_github form = new Form_github();
+            form.ShowDialog();
+        }
+
+        /// <summary>
+        /// Imposta la visibilità dell'anteprima dell'immagine e del docx.
+        /// Aggiorna la variabile Globals.ANTEPRIME e scrive sul .csv.
+        /// </summary>
+        private void Menu_anteprima(object sender, RoutedEventArgs e)
+        {
+            bool value = ((MenuItem)sender).IsChecked;
+            if (value != Globals.ANTEPRIME)
+            {
+                Globals.ANTEPRIME = value;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
+        }
+
+        /// <summary>
+        /// Aggiorna la variabile Globals.SINCRONIZZAZIONE e scrive sul .csv.
+        /// </summary>
+        private void Menu_sync(object sender, RoutedEventArgs e)
+        {
+            bool value = ((MenuItem)sender).IsChecked;
+
+            if (value != Globals.SINCRONIZZAZIONE)
+            {
+                Globals.SINCRONIZZAZIONE = value;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
+
+        }
+
+        /// <summary>
+        /// Imposta le checkbox delle voci di ANTEPRIME e SINCRONIZZAZIONE nel menù, coerenti con il loro valore in Globals.
+        /// </summary>
+        private void SetVisibility()
+        {
+            Console.WriteLine("Set visibility");
+            MenuItem ma = this.FindName("Menu_anteprima_check") as MenuItem;
+            MenuItem ms = this.FindName("Menu_sync_check") as MenuItem;
+            ma.IsChecked = Globals.ANTEPRIME;
+            ms.IsChecked = Globals.SINCRONIZZAZIONE;
         }
 
     }
 }
 
 
-//string[] lines = System.IO.File.ReadAllLines(@"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI.txt");
-//// Display the file contents by using a foreach loop.
-//System.Console.WriteLine("Contents of WriteLines2.txt = ");
-//            Button[] buttonArray = new Button[lines.Length];
-//int i = 0;
-//Grid grid = this.FindName("grid") as Grid;
-
-//            foreach (string line in lines)
-//            {
-//                // Use a tab to indent each line of the file.
-                
-//                buttonArray[i] = new Button();
-//buttonArray[i].Width = 125;
-//                buttonArray[i].Height = 30;
-//                buttonArray[i].Name = "button" + i;
-//                buttonArray[i].Content = line;
-//                buttonArray[i].Click += new RoutedEventHandler(button_Click);
-//Grid.SetColumn(buttonArray[i], i%4);
-//                Grid.SetRow(buttonArray[i], 1+ (i/4));
-//                grid.Children.Add(buttonArray[i]);
-//                Console.WriteLine("\t" + line);
-//                i++;
-//            }

@@ -8,6 +8,11 @@ namespace ExpenseIt
 {
     public class Cliente
     {
+        /// <summary>
+        /// Classe Cliente composta dagli elementi presenti nel file CLIENTI.csv
+        /// Getter e Setter classici. 
+        /// </summary>
+
         private String nomeCliente;
         private String suffisso;
         private int maxId;
@@ -34,6 +39,7 @@ namespace ExpenseIt
         {
             return maxId;
         }
+
         public int getlastId()
         {
             return lastId;
@@ -48,8 +54,5 @@ namespace ExpenseIt
         {
             this.lastId = lastId;
         }
-
-       
-
     }
 }

@@ -10,14 +10,18 @@ using System.Windows.Forms;
 
 namespace ExpenseIt
 {
+    /// <summary>
+    /// Classe per la gestione delle operazioni che comprendono:
+    /// - clone degli elementi presenti nel repository Globals.GITURL
+    /// - copia degli elementi da DATI a DATIsync
+    /// - push degli elementi sul repository Globals.GITURL
+    /// </summary>
     class GitCommands
     {
-        private string workingDirectory;
-        public GitCommands()
-        {
-            //workingDirectory = Directory.GetParent(Directory.GetParent(Globals.DATI).ToString()).ToString();
-            //Console.WriteLine( + "\n" + System.IO.Directory.GetParent(Globals.DATI).FullName);
-        }
+        /// <summary>
+        /// Elimina i file *cliente*.csv e *cliente*date.csv dalla cartella DATIsync.
+        /// Se l'operazione riesce copia gli stessi file dalla cartella DATI a DATIsync.
+        /// </summary>
         public bool copyFolder(string cliente)
         {
             try
@@ -51,7 +55,7 @@ namespace ExpenseIt
                                 File.Delete(fileName);
                             }
                         }
-                        catch(IOException)
+                        catch (IOException)
                         {
                             MessageBox.Show("E25 - Non è possibile eliminare un file tra " + cliente + ".csv e " + cliente + "date.csv.\n" +
                                 "La ricerca è avvenuta in " + Globals.DATIsync + ".", "E25"
@@ -59,8 +63,6 @@ namespace ExpenseIt
                             return false;
                         }
                     }
-
-                    
                 }
             }
             catch (IOException)
@@ -69,15 +71,10 @@ namespace ExpenseIt
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
-            Console.WriteLine("Eliminati file "+ cliente+".csv e "+cliente+"date.csv in DATIsync");
-            //Now Create all of the directories
+
+            Console.WriteLine("Eliminati file " + cliente + ".csv e " + cliente + "date.csv in DATIsync");
             try
             {
-                //foreach (string dirPath in Directory.GetDirectories(Globals.DATI, "*",
-                //    SearchOption.AllDirectories))
-                //    Directory.CreateDirectory(dirPath.Replace(Globals.DATI, Globals.DATIsync));
-                //Directory.CreateDirectory(Globals.DATIsync);
-                //Copy all the files & Replaces any files with the same name
                 File.Copy(Globals.DATI + cliente + ".csv", Globals.DATIsync + cliente + ".csv");
                 File.Copy(Globals.DATI + cliente + "date.csv", Globals.DATIsync + cliente + "date.csv");
             }
@@ -87,19 +84,20 @@ namespace ExpenseIt
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
-            
             Console.WriteLine("Copiato DATI in DATIsync");
             return true;
-
         }
 
+        /// <summary>
+        /// Esegue i comandi shell necessari per effettuare un commit e un push, restituendo una lista dei file caricati
+        /// - aggiunge tutti i fine di tipo cliente*
+        /// - colleziona la lista dei file aggiunti (la restituirà in caso di successo del push)
+        /// - crea un commit
+        /// - effettua il push 
+        /// - SE l'ultimo output inizia con "To https" o "Everything up-to-date" ritrona la lista di file altrimenti 'null'
+        /// </summary>
         public List<string> push(string cliente)
         {
-            //string gitAddOrigin = @"remote add origin " + @Globals.GITURL;
-            string gitAddArgument = @"add " + @Globals.DATIsync;
-            string gitCommitArgument = @"commit -m ""cambiamento"" ";
-            string gitPushArgument = @"push -f origin master";
-
             ProcessStartInfo _processStartInfo = new ProcessStartInfo();
             _processStartInfo.WorkingDirectory = Globals.DATIsync;
             _processStartInfo.RedirectStandardError = true;
@@ -107,79 +105,60 @@ namespace ExpenseIt
             _processStartInfo.UseShellExecute = false;
             _processStartInfo.CreateNoWindow = true;
             _processStartInfo.FileName = Globals.GITPATH;
-            //var proc = Process.Start(_processStartInfo);
-            //while (!proc.StandardError.EndOfStream)
-            //{
-            //    string err = proc.StandardError.ReadLine();
-            //    Console.WriteLine("ERR: " + err);
-            //    string[] split = err.Split(':');
-            //}
 
-            //_processStartInfo.Arguments = gitAddOrigin;
-            //proc = Process.Start(_processStartInfo);
-            //while (!proc.StandardError.EndOfStream)
-            //{
-            //    string err = proc.StandardError.ReadLine();
-            //    Console.WriteLine("ERR: " + err);
-            //    string[] split = err.Split(':');
-            //}
-            _processStartInfo.Arguments = gitAddArgument + cliente + "*";
+            string gitAddArgument = @"add " + @Globals.DATIsync + cliente + "*";
+            _processStartInfo.Arguments = gitAddArgument;
             var proc = Process.Start(_processStartInfo);
             while (!proc.StandardOutput.EndOfStream)
             {
                 string info = proc.StandardOutput.ReadLine();
                 Console.WriteLine("OUT: " + info);
             }
-            //_processStartInfo.Arguments = gitAddArgument + cliente + "date.csv";
-            //proc = Process.Start(_processStartInfo);
             List<string> commitInfo = new List<string>();
-            _processStartInfo.Arguments = @"commit --dry-run --short";
+            string gitDryRunArgument = @"commit --dry-run --short";
+            _processStartInfo.Arguments = gitDryRunArgument;
             proc = Process.Start(_processStartInfo);
-            
             while (!proc.StandardOutput.EndOfStream)
             {
                 string info = proc.StandardOutput.ReadLine();
                 //string[] split = info.Split(':');
-                Console.WriteLine("OUT: " + info + "info[0]: <"+info[0]+"> quindi: "+ !info[0].Equals(' '));
+                Console.WriteLine("OUT: " + info + "info[0]: <" + info[0] + "> quindi: " + !info[0].Equals(' '));
                 if (!info[0].Equals(' '))
                 {
                     commitInfo.Add(info);
                 }
             }
-
+            string gitCommitArgument = @"commit -m ""cambiamento"" ";
             _processStartInfo.Arguments = gitCommitArgument;
             proc = Process.Start(_processStartInfo);
-
+            string gitPushArgument = @"push -f origin master";
             _processStartInfo.Arguments = gitPushArgument;
             proc = Process.Start(_processStartInfo);
             while (!proc.StandardError.EndOfStream)
             {
                 string err = proc.StandardError.ReadLine();
                 string[] split = err.Split(':');
-                Console.WriteLine("ERRUltim: " + err+">");
-                
+                Console.WriteLine("ERRUltim: " + err + ">");
+
                 if (split[0].Equals("To https") || split[0].Equals("Everything up-to-date"))
                 {
                     Console.WriteLine("numero elementi:" + commitInfo.Count);
                     return commitInfo;
                 }
             }
-                return null;
-          
-
-
-
-            //Process.Start(_processStartInfo);
-            //Process.Start(gitCommand, gitAddOrigin);
-            //Process.Start(gitCommand, gitAddArgument);
-            //Process.Start(gitCommand, gitCommitArgument);
-            //Process.Start(gitCommand, gitPushArgument);
+            return null;
         }
 
+        /// <summary>
+        /// Esegue i comandi shell necessari per effettuare un clone, restituendo un bool che rappresenta l'esito
+        /// - elimina la cartella DATIsync
+        /// - esegue un clone del repository Globals.GITURL
+        /// - se non vengono sollevate eccezioni ritorna true
+        /// </summary>
         public bool clone()
         {
-            try {
-                 
+            try
+            {
                 var dir = new DirectoryInfo(Globals.DATIsync);
                 if (dir.Exists)
                 {
@@ -189,7 +168,6 @@ namespace ExpenseIt
                     }
 
                     dir.Delete(true);
-                    
                 }
                 Console.WriteLine("Eliminata vecchia cartella DATIsync");
             }
@@ -197,14 +175,10 @@ namespace ExpenseIt
             {
                 MessageBox.Show("E15 - Il file " + Globals.DATIsync + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.", "E15"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
-               
             }
-   
             Directory.CreateDirectory(Globals.DATIsync);
             string gitCloneArgument = @"clone " + Globals.GITURL + " " + Globals.DATIsync;
             Console.WriteLine(gitCloneArgument);
-            //Process.Start(workingDirectory);
-            //Process.Start(gitCommand, );
             ProcessStartInfo _processStartInfo = new ProcessStartInfo();
             _processStartInfo.WorkingDirectory = Globals.DATIsync;
             _processStartInfo.RedirectStandardOutput = true;
@@ -225,25 +199,22 @@ namespace ExpenseIt
                     {
                         MessageBox.Show("Problemi con il repository git, azione di clone non eseguita", "Problemi con git"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
-
                         return false;
                     }
-                    //string[] split = err.Split(':');
                 }
-            }catch(Win32Exception w32e)
+            }
+            catch (Win32Exception w32e)
             {
-                MessageBox.Show("Azione di clone non eseguita a causa di errore nel comando:\n"+ w32e.Message, "Clone non eseguito"
+                MessageBox.Show("Azione di clone non eseguita a causa di errore nel comando:\n" + w32e.Message, "Clone non eseguito"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
-            catch(FileNotFoundException fnfe)
+            catch (FileNotFoundException fnfe)
             {
                 MessageBox.Show("Azione di clone non eseguita a causa di:\n" + fnfe.Message, "Clone non eseguito"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
-            //Win32Exception
-            //FileNotFoundException
             return true;
         }
     }

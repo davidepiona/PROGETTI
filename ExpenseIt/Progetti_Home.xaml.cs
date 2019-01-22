@@ -170,7 +170,7 @@ namespace ExpenseIt
         {
             Console.WriteLine("Create List");
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-            dataGrid.SelectionChanged += new SelectionChangedEventHandler(changePreview);
+            dataGrid.SelectionChanged += new SelectionChangedEventHandler(ChangePreview);
             dataGrid.Items.Clear();
             int i = 0;
             foreach (Progetto p in progetti)
@@ -627,7 +627,7 @@ namespace ExpenseIt
         /// NullReferenceException spesso sollevata perchè quando si cerca si ricarica la DataGrid e 
         /// per un momento non c'è nessun progetto selezionato. 
         /// </summary>
-        private void changePreview(object sender, EventArgs e)
+        private void ChangePreview(object sender, EventArgs e)
         {
             Console.WriteLine("Change Preview");
             try
@@ -675,7 +675,7 @@ namespace ExpenseIt
                 }
 
             }
-            catch (NullReferenceException nre) 
+            catch (NullReferenceException) 
             {
                 //Console.WriteLine("ECCEZIONE: " + nre);
             }
