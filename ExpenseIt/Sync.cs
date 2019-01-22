@@ -8,23 +8,35 @@ using System.Windows.Forms;
 
 namespace ExpenseIt
 {
+    /// <summary>
+    /// Classe per la gestione della sicronizzazione dei progetti locali con quelli in DATIsync
+    /// - legge le date memorizzate nei file *CLIENTE*date.csv e le memorizza in progettiSync
+    /// - confronta le date in progetti con quelle in progettiSync
+    /// </summary>
     class Sync
     {
+
         private List<Progetto> progetti = new List<Progetto>();
         private List<Progetto> progettiSync = new List<Progetto>();
         private int num_cliente;
 
+        /// <summary>
+        /// Costruttore classico, inizializza gli attributi con i valori che gli vengono passati
+        /// </summary>
         public Sync(List<Progetto> progetti, int num_cliente)
         {
             this.progetti = progetti;
             this.num_cliente = num_cliente;
         }
 
+        /// <summary>
+        /// Legge dai file contenenti i progetti di un cliente tutte le informazioni e le scrive in progettiSync.
+        /// Pensato per leggere i file contenuti nella cartella DATIsync e confrontarli con quelli in DATI.
+        /// </summary>
         public void readSyncProject(string path)
         {
             Console.WriteLine("Read Sync Projects");
             List<string> lines = new List<string>();
-            //Console.WriteLine(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv");
             try
             {
                 using (var reader = new CsvFileReader(path))
@@ -51,11 +63,15 @@ namespace ExpenseIt
             }
         }
 
+        /// <summary>
+        /// Confronta le date di ultima modifica dei progetti in progetti e in progettiSync.
+        /// Restituisce un array contenente 3 liste di progetti
+        /// - array[0] = contiene i progetti uguali
+        /// - array[1] = contiene i progetti mancanti localmente
+        /// - array[2] = contiene i progetti in più
+        /// </summary>
         public List<Progetto>[] compareSyncProject()
         {
-            /* se l'array che ritorna si chiama "compare"
-             * Console.WriteLine("Progetti uguali = "+ compare[0].Count +"\nProgetti mancanti localmente = "+ compare[1].Count + "\nProgetti in più = "+ compare[2].Count);
-             */
             List<Progetto>[] list = new List<Progetto>[3];
             list[0] = new List<Progetto>();
             list[1] = new List<Progetto>();
@@ -84,11 +100,5 @@ namespace ExpenseIt
             }
             return list;
         }
-
-        private List<Progetto> progettiUguali(){
-           return null;
-        }
-
-        
     }
 }
