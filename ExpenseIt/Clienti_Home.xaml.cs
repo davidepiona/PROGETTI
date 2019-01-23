@@ -68,7 +68,7 @@ namespace ExpenseIt
                 }
                 Button b = new Button
                 {
-                    Width = 140,
+                    Width = 165,
                     Height = 50,
                     Name = "button" + i,
                     Margin = new Thickness(25),
@@ -117,7 +117,7 @@ namespace ExpenseIt
             Cliente cliente = Globals.CLIENTI[i];
             Button b = new Button
             {
-                Width = 140,
+                Width = 165,
                 Height = 50,
                 Margin = new Thickness(25),
                 Name = "button" + i,
