@@ -144,6 +144,7 @@ namespace ExpenseIt
                 List<string> lines = new List<string>();
                 try
                 {
+                    Console.WriteLine("Leggo:" + Globals.CLIENTI[i].getNomeCliente());
                     using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv"))
                     {
 

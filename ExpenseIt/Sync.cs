@@ -9,9 +9,9 @@ using System.Windows.Forms;
 namespace ExpenseIt
 {
     /// <summary>
-    /// Classe per la gestione della sicronizzazione dei progetti locali con quelli in DATIsync
-    /// - legge le date memorizzate nei file *CLIENTE*date.csv e le memorizza in progettiSync
-    /// - confronta le date in progetti con quelle in progettiSync
+    /// Classe per la gestione della sicronizzazione dei progetti locali con quelli in DATIsync che consente di scoprire quali progetti sono assenti
+    /// - legge i progetti memorizzati nei file selezionati (pensato per quelli interni alla cartella DATIsync) e li memorizza in progettiSync
+    /// - confronta progetti e progettiSync (guardando la data di creazione)
     /// </summary>
     class Sync
     {
@@ -64,7 +64,7 @@ namespace ExpenseIt
         }
 
         /// <summary>
-        /// Confronta le date di ultima modifica dei progetti in progetti e in progettiSync.
+        /// Confronta le date di CREAZIONE dei progetti in progetti e in progettiSync.
         /// Restituisce un array contenente 3 liste di progetti
         /// - array[0] = contiene i progetti uguali
         /// - array[1] = contiene i progetti mancanti localmente

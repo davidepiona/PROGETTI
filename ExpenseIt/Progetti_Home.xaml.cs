@@ -632,7 +632,7 @@ namespace ExpenseIt
             Console.WriteLine("Change Preview");
             try
             {
-                ProgSelezionato = ((Progetto)((DataGrid)sender).SelectedValue).getNumProject();
+                ProgSelezionato = (((Progetto)((DataGrid)sender).SelectedValue).numero);
                 RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
                 Button button = this.FindName("buttonOpenDocx") as Button;
                 Image image = this.FindName("image") as Image;

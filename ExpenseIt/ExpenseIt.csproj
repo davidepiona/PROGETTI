@@ -135,12 +135,7 @@
       <DependentUpon>Form_ShowDifference.cs</DependentUpon>
     </Compile>
     <Compile Include="GitCommands.cs" />
-    <Compile Include="ShowDifference.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ShowDifference.Designer.cs">
-      <DependentUpon>ShowDifference.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Progetto.cs" />
     <Compile Include="Sync.cs" />
     <Compile Include="UltimaModifica.cs" />
     <Page Include="ExpenseItHome.xaml">
@@ -186,7 +181,6 @@
     <Compile Include="Progetti_Home.xaml.cs">
       <DependentUpon>Progetti_Home.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Progetto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -224,9 +218,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ShowDifference.resx">
-      <DependentUpon>ShowDifference.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ExpenseIt_TemporaryKey.pfx" />
     <None Include="packages.config" />
