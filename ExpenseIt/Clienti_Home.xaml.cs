@@ -141,16 +141,17 @@ namespace ExpenseIt
             progettiAll = new List<Progetto>();
             for (int i = 0; i < Globals.CLIENTI.Count; i++)
             {
+                int j = 0;
                 List<string> lines = new List<string>();
                 try
-                {
+                {   
                     Console.WriteLine("Leggo:" + Globals.CLIENTI[i].getNomeCliente());
                     using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv"))
                     {
 
                         while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
                         {
-                            //Console.WriteLine(lines[0]);
+                            
                             int num = Int32.Parse(lines[0]);
                             reader.ReadRow(lines);
                             string nome = lines[0];
@@ -161,6 +162,7 @@ namespace ExpenseIt
                             reader.ReadRow(lines);
                             string data = lines[0];
                             progettiAll.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[i].getNomeCliente(), Globals.CLIENTI[i].getSuffisso()));
+                            j++;
                         }
                     }
                 }
@@ -168,6 +170,11 @@ namespace ExpenseIt
                 {
                     //MessageBox.Show("E17 - Il file " + Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv" + " non esiste o è aperto da un altro programma");
                     Console.WriteLine("E17 - Il file " + Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv" + " non esiste o è aperto da un altro programma");
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("E30 - Il file " + Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv" + " è in un formato non corretto" +
+                        "\nProblema riscontrato al progetto numero: "+ j);
                 }
             }
         }

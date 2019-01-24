@@ -38,7 +38,7 @@ namespace ExpenseIt
             Console.WriteLine("Aggiorno Modifiche");
             foreach (Progetto p in progetti)
             {
-                if (allDate.TryGetValue(p.nomeCliente + p.numero, out DateTime ultima))
+                if (allDate.TryGetValue(p.sigla, out DateTime ultima))
                 {
                     p.modifica = ultima.ToString("yyyy/MM/dd HH:mm:ss");
                 }
@@ -137,8 +137,8 @@ namespace ExpenseIt
             }
             foreach (Progetto p in progetti)
             {
-                bool pc = allDate.TryGetValue(p.nomeCliente + p.numero, out DateTime datePc);
-                bool sync = allDateSync.TryGetValue(p.nomeCliente + p.numero, out DateTime dateSync);
+                bool pc = allDate.TryGetValue(p.sigla, out DateTime datePc);
+                bool sync = allDateSync.TryGetValue(p.sigla, out DateTime dateSync);
                 //Console.WriteLine("SY: " + p.numero + "  pc: " + datePc + "  sync: " + dateSync);
                 if (pc & sync)
                 {
@@ -179,12 +179,14 @@ namespace ExpenseIt
         {
             //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
             List<string> lines = new List<string>();
+            int j = 0;
             try
             {
                 using (var reader = new CsvFileReader(file))
                 {
                     while (reader.ReadRow(lines))
                     {
+                        j++;
                         if (lines.Count != 0)
                         {
                             allDate.Add(lines[0], DateTime.Parse(lines[1]));
@@ -198,6 +200,12 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
+                Console.WriteLine("E28 - Il file " + file + " non esiste o è aperto da un altro programma");
+                return false;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("E33 - Il file " + file + " è in un formato non corretto.\nProblema riscontrato all riga numero: " + j);
                 return false;
             }
             return true;
@@ -212,12 +220,14 @@ namespace ExpenseIt
             //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
             allDateSync = new Dictionary<string, DateTime>();
             List<string> lines = new List<string>();
+            int j = 0;
             try
             {
                 using (var reader = new CsvFileReader(file))
                 {
                     while (reader.ReadRow(lines))
                     {
+                        j++;
                         if (lines.Count != 0)
                         {
                             allDateSync.Add(lines[0], DateTime.Parse(lines[1]));
@@ -228,6 +238,16 @@ namespace ExpenseIt
                         }
                     }
                 }
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("E29 - Il file " + file + " non esiste o è aperto da un altro programma");
+                return false;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("E33 - Il file " + file + " è in un formato non corretto.\nProblema riscontrato all riga numero: " + j);
+                return false;
             }
             catch (Exception e)
             {

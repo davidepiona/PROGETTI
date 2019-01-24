@@ -42,10 +42,11 @@ namespace ExpenseIt
         {
             InitializeComponent();
             Loaded += Progetti_Home_Loaded;
+            int j = 0;
             try
             {
                 if (Globals.CLIENTI == null)
-                {
+                {   
                     var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
                     var reader = new StreamReader(file);
                     reader.ReadLine();
@@ -58,20 +59,33 @@ namespace ExpenseIt
                         {
                             Globals.CLIENTI.Add(new Cliente(line[0], line[1], Int32.Parse(line[2]), Int32.Parse(line[3])));
                         }
+                        j++;
                     }
                     file.Close();
                 }
             }
             catch (IOException)
             {
-                MessageBox.Show("E01 - Il file " + Globals.DATI + @"\CLIENTI.csv" +
+                MessageBox.Show("E01 - Il file " + Globals.DATI + @"CLIENTI.csv" +
                     " non esiste o è aperto da un altro programma. \n L'APPLICAZIONE SARA' CHIUSA", "E01"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                 Environment.Exit(0);
             }
-
-            num_cliente = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT));
-            string cliente = Globals.CLIENTI.Find(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT)).getNomeCliente();
+            catch (FormatException)
+            {
+                MessageBox.Show("E35 - Il file " + Globals.DATI + @"CLIENTI.csv" +
+                    " è in un formato non corretto. \nProblema riscontrato al cliente numero: " + j, "E35", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            }
+            try
+            {
+                num_cliente = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT));
+                string cliente = Globals.CLIENTI.Find(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT)).getNomeCliente();
+            }catch(NullReferenceException)
+            {
+                MessageBox.Show("E34 - non è possibile raggiungere alcune informazioni relative al cliente"+ Globals.LAST_CLIENT + ". \nL'applicazione sarà chiusa", "E34"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Environment.Exit(0);
+            }
             if (CheckFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
             {
                 initialize();
@@ -135,6 +149,7 @@ namespace ExpenseIt
         {
             Console.WriteLine("Read Projects");
             List<string> lines = new List<string>();
+            int j = 0;
             try
             {
                 using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv"))
@@ -151,6 +166,7 @@ namespace ExpenseIt
                         reader.ReadRow(lines);
                         string data = lines[0];
                         progetti.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getNomeCliente(), Globals.CLIENTI[num_cliente].getSuffisso()));
+                        j++;
                     }
                 }
             }
@@ -159,6 +175,11 @@ namespace ExpenseIt
                 MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
                     ".csv" + " non esiste o è aperto da un altro programma", "E03"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("E31 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +".csv" +
+                    " è in un formato non corretto.\nProblema riscontrato al progetto numero: " + j, "E31", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             }
         }
 
@@ -369,7 +390,8 @@ namespace ExpenseIt
         private void Button_Open_Folder(object sender, RoutedEventArgs e)
         {
             Globals.CLIENTI[num_cliente].setLastId(ProgSelezionato);
-            string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + Globals.CLIENTI[num_cliente].getlastId();
+            string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + Globals.CLIENTI[num_cliente].getlastId();
+            MessageBox.Show(path);
             if (Directory.Exists(path))
             {
                 System.Diagnostics.Process.Start(path);
@@ -402,7 +424,7 @@ namespace ExpenseIt
         private void Button_Apri_Docx(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + ProgSelezionato + @"\progetto.docx");
+                @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx");
         }
 
         /// <summary>
@@ -411,7 +433,7 @@ namespace ExpenseIt
         private void Apri_Immagine(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + ProgSelezionato + @"\anteprima.jpg");
+                @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\anteprima.jpg");
         }
 
         /// <summary>
@@ -642,7 +664,7 @@ namespace ExpenseIt
                     button.Visibility = Visibility.Visible;
                 }
                 string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                              @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + ProgSelezionato + @"\progetto.docx";
+                              @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx";
                 if (File.Exists(file))
                 {
                     var doc = Xceed.Words.NET.DocX.Load(file);
@@ -657,7 +679,7 @@ namespace ExpenseIt
                 }
 
                 file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                   @"\" + Globals.CLIENTI[num_cliente].getNomeCliente() + ProgSelezionato + @"\anteprima.jpg";
+                   @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\anteprima.jpg";
                 if (File.Exists(file))
                 {
                     BitmapImage bmi = new BitmapImage();

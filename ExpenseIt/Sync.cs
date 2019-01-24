@@ -37,6 +37,7 @@ namespace ExpenseIt
         {
             Console.WriteLine("Read Sync Projects");
             List<string> lines = new List<string>();
+            int j = 0;
             try
             {
                 using (var reader = new CsvFileReader(path))
@@ -53,12 +54,18 @@ namespace ExpenseIt
                         reader.ReadRow(lines);
                         string data = lines[0];
                         progettiSync.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getNomeCliente(), Globals.CLIENTI[num_cliente].getSuffisso()));
+                        j++;
                     }
                 }
             }
             catch (IOException)
             {
                 MessageBox.Show("E09 - Il file " + path + " non esiste o è aperto da un altro programma", "E09"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("E32 - Il file " + path + " è in un formato non corretto.\nProblema riscontrato al progetto numero: " + j, "E32"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
             }
         }

@@ -52,13 +52,13 @@ namespace ExpenseIt
             lines[0] = "CLIENTE,SUFFISSO,LAST_ID,MAX_ID";
             lines[1] = Globals.LAST_CLIENT;
             Cliente cl = Globals.CLIENTI.Find(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT));
-            lines[2] = cl.getNomeCliente() + "," + cl.getNomeCliente() + "," + cl.getlastId() + "," + cl.getMaxId();
+            lines[2] = cl.getNomeCliente() + "," + cl.getSuffisso() + "," + cl.getlastId() + "," + cl.getMaxId();
             int i = 3;
             foreach (Cliente c in Globals.CLIENTI)
             {
                 if (!c.getNomeCliente().Equals(Globals.LAST_CLIENT))
                 {
-                    lines[i] = c.getNomeCliente() + "," + c.getNomeCliente() + "," + c.getlastId() + "," + c.getMaxId();
+                    lines[i] = c.getNomeCliente() + "," + c.getSuffisso() + "," + c.getlastId() + "," + c.getMaxId();
                     i++;
                 }
                 //Console.WriteLine(c.getNomeCliente() + "," + c.getNomeCliente() + "," + c.getlastId() + "," + c.getMaxId());
@@ -109,6 +109,13 @@ namespace ExpenseIt
                 form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.leggiSETTINGS);
                 form.ShowDialog();
             }
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("E36 - Il file " + Globals.SETTINGS +
+                    " non è nel formato richiesto. \nVerranno caricate alcune impostazioni di base ma la funzionalità non è garantita.", "E36"
+                    , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            }
+        
         }
 
         public void scriviSETTINGS()
