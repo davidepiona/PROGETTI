@@ -12,8 +12,15 @@ using System.Windows.Forms;
 
 namespace ExpenseIt
 {
-    public partial class Form_percorsi: Form
+    /// <summary>
+    /// Form per il cambio del percorso delle cartelle PROGETTI, DATI e DATIsync
+    /// - verifica che i percorsi portino a delle caselle esistenti
+    /// </summary>
+    public partial class Form_percorsi : Form
     {
+        /// <summary>
+        /// Costruttore classico in cui vengono impostati i valori delle textbox
+        /// </summary>
         public Form_percorsi()
         {
             InitializeComponent();
@@ -22,6 +29,10 @@ namespace ExpenseIt
             textBox3.Text = Globals.DATIsync;
         }
 
+        /// <summary>
+        /// Apre la finestra per navigare il filesystem e scrive il risultato nella textbox
+        /// Se il percorso termina senza '\', ne aggiunge una (compatibilità col resto del codice)
+        /// </summary>
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = textBox1.Text;
@@ -33,10 +44,14 @@ namespace ExpenseIt
                 {
                     path = path + "\\";
                 }
-                textBox1.Text= path;
+                textBox1.Text = path;
             }
         }
 
+        /// <summary>
+        /// Apre la finestra per navigare il filesystem e scrive il risultato nella textbox
+        /// Se il percorso termina senza '\', ne aggiunge una (compatibilità col resto del codice)
+        /// </summary>
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = textBox2.Text;
@@ -52,6 +67,10 @@ namespace ExpenseIt
             }
         }
 
+        /// <summary>
+        /// Apre la finestra per navigare il filesystem e scrive il risultato nella textbox
+        /// Se il percorso termina senza '\', ne aggiunge una (compatibilità col resto del codice)
+        /// </summary>
         private void pictureBox3_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = textBox3.Text;
@@ -63,11 +82,14 @@ namespace ExpenseIt
                 {
                     path = path + "\\";
                 }
-
                 textBox3.Text = path;
             }
         }
-        
+
+        /// <summary>
+        /// Quando viene modificato il testo della textbox verifica se esiste la cartella specificata.
+        /// Di conseguenza imposta o no l'icona X
+        /// </summary>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (!Directory.Exists(textBox1.Text.ToString()))
@@ -79,6 +101,11 @@ namespace ExpenseIt
                 pictureBox4.Visible = false;
             }
         }
+
+        /// <summary>
+        /// Quando viene modificato il testo della textbox verifica se esiste la cartella specificata.
+        /// Di conseguenza imposta o no l'icona X
+        /// </summary>
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             if (!Directory.Exists(textBox2.Text.ToString()))
@@ -91,6 +118,10 @@ namespace ExpenseIt
             }
         }
 
+        /// <summary>
+        /// Quando viene modificato il testo della textbox verifica se esiste la cartella specificata.
+        /// Di conseguenza imposta o no l'icona X
+        /// </summary>
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             if (!Directory.Exists(textBox3.Text.ToString()))
@@ -103,27 +134,37 @@ namespace ExpenseIt
             }
         }
 
-        
+        /// <summary>
+        /// Esce dal form senza apportare modifiche
+        /// </summary>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// Da all'utente la possibilità di scegliere se apportare le modifiche o no.
+        /// In seguito aggiorna Globals.PROGETTI, Globals.DATI e Globals.DATIsync(se modificati) e riscrive il file SETTINGS.csv
+        /// Chiude il form
+        /// </summary>
         private void button2_Click(object sender, EventArgs e)
         {
             string tb1 = textBox1.Text.ToString();
             string tb2 = textBox2.Text.ToString();
             string tb3 = textBox3.Text.ToString();
-
-            if (!Directory.Exists(tb1) || !Directory.Exists(tb2) || !Directory.Exists(tb3)){
+            if (!Directory.Exists(tb1) || !Directory.Exists(tb2) || !Directory.Exists(tb3))
+            {
                 string msg = "Uno dei percorsi inseriti non esiste, sei sicuro di voler continuare e salvare le modifiche?";
                 System.Windows.MessageBoxResult me = System.Windows.MessageBox.Show(
-                  msg,
-                  "Percorso inesistente",
-                  MessageBoxButton.YesNo,
-                  MessageBoxImage.Question, MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
+                    msg, "Percorso inesistente", MessageBoxButton.YesNo,
+                    MessageBoxImage.Question, MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
                 Globals.log.Warn(msg);
                 if (me == MessageBoxResult.No)
                 {
                     return;
                 }
             }
-            if (!tb1.Equals(Globals.PROGETTI) || !tb2.Equals(Globals.DATI) || !tb3.Equals(Globals.DATIsync) )
+            if (!tb1.Equals(Globals.PROGETTI) || !tb2.Equals(Globals.DATI) || !tb3.Equals(Globals.DATIsync))
             {
                 Globals.PROGETTI = tb1;
                 Globals.DATI = tb2;
@@ -132,15 +173,7 @@ namespace ExpenseIt
                 m.scriviSETTINGS();
                 Globals.log.Info("Percorsi settings");
             }
-
             this.Close();
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        
     }
 }

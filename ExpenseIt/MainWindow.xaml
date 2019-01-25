@@ -14,7 +14,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Closing="MainWindow_Closing"
-        Title="TitoloApp" Height="900" Width="1400" Source="Progetti_Home.xaml" WindowStartupLocation="CenterScreen" Icon="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\IconApp.ico">
+        Title="DATA" Height="900" Width="1400" Source="Progetti_Home.xaml" WindowStartupLocation="CenterScreen" Icon="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\IconApp.ico">
     <NavigationWindow.TaskbarItemInfo>
         <TaskbarItemInfo/>
     </NavigationWindow.TaskbarItemInfo>

@@ -11,6 +11,12 @@ using System.Windows.Forms;
 
 namespace ExpenseIt
 {
+    /// <summary>
+    /// Form per la creazione di un nuovo cliente
+    /// - verifica che siano immessi dati adeguati
+    /// - aggiunge il cliente alla lista e al file .csv CLIENTI
+    /// - crea la cartella e i file .csv
+    /// </summary>
     public partial class Form_nuovoCliente : Form
     {
         public Form_nuovoCliente()
@@ -18,51 +24,57 @@ namespace ExpenseIt
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Esce dal form senza apportare modifiche
+        /// </summary>
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// Metodo che prova a creare un nuovo cliente.
+        /// - verifica che nome e suffisso non siano stringhe vuote e che il suffisso non abbia caratteri non alfanumerici
+        /// - aggiunge il cliente al file CLIENTI.csv
+        /// - crea la cartella per i progetti (se non esiste)
+        /// - crea i file *CLIENTE*.csv e *CLIENTE*data.csv (se non esistono)
+        /// Chiude il form
+        /// </summary>
         private void button2_Click(object sender, EventArgs e)
         {
-            String nome = textBox1.Text.ToString();
+            string nome = textBox1.Text.ToString();
             string suffisso = textBox2.Text.ToString();
-
             if (nome.Equals(""))
             {
-                MessageBox.Show("Inserire un nome valido", "Nome assente", 
-                    MessageBoxButtons.OK , MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 ,MessageBoxOptions.RightAlign);
+                MessageBox.Show("Inserire un nome valido", "Nome assente",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 Globals.log.Warn("Nome cliente assente");
                 return;
             }
-            nome = nome.Replace(" ", "_");
-
             if (suffisso.Equals(""))
             {
-                MessageBox.Show("Inserire un suffisso valido.", "Suffisso assente", 
+                MessageBox.Show("Inserire un suffisso valido.", "Suffisso assente",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 Globals.log.Warn("Suffisso cliente assente");
                 return;
             }
-
-            foreach(char c in suffisso)
+            foreach (char c in suffisso)
             {
-                if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')&& (c < '1' || c > '9') )
-
-                    {
-                    MessageBox.Show("Inserire un suffisso composto esclusivamente da lettere e numeri." , "Suffisso non alfanumerico", 
+                if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c < '1' || c > '9'))
+                {
+                    MessageBox.Show("Inserire un suffisso composto esclusivamente da lettere e numeri.", "Suffisso non alfanumerico",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                     Globals.log.Warn("Suffisso cliente non alfanumerico");
                     return;
-
-                    }
+                }
             }
-
+            nome = nome.Replace(" ", "_");
             string file = Globals.DATI + @"\CLIENTI.csv";
             try
             {
-                string clientDetails = nome + ","+ suffisso+ ","+ 0 + ","+ 0;
+                string clientDetails = nome + "," + suffisso + "," + 0 + "," + 0;
                 File.AppendAllText(file, clientDetails);
+                Globals.CLIENTI.Add(new Cliente(nome, suffisso, 0, 0));
                 Console.WriteLine("Nuovo cliente= " + clientDetails);
                 Globals.log.Info("Nuovo cliente= " + clientDetails);
                 if (!Directory.Exists(Globals.PROGETTI + nome))
@@ -78,7 +90,7 @@ namespace ExpenseIt
                     {
                         string msg = "E16 - La cartella " + Globals.PROGETTI + nome + " non è stato creata per un problema";
                         MessageBox.Show(msg, "E16"
-                                     ,MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                         Globals.log.Error(msg);
                     }
                 }
@@ -113,16 +125,12 @@ namespace ExpenseIt
                         Globals.log.Error(msg);
                     }
                 }
-                Globals.CLIENTI.Add(new Cliente(nome, suffisso, 0, 0));
-                MainWindow m = new MainWindow();
-                m.salvaClientiCSV();
                 this.Close();
             }
             catch (IOException)
             {
                 string msg = "E19 - Il file " + file + " non esiste o è aperto da un altro programma";
-                MessageBox.Show(msg, "E19"
-                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                MessageBox.Show(msg, "E19", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 Globals.log.Error(msg);
             }
         }

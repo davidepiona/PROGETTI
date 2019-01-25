@@ -13,50 +13,36 @@ using System.Windows.Forms;
 
 namespace ExpenseIt
 {
+    /// <summary>
+    /// Form per il cambio del percorso dell'eseguibile git.exe e il cambio del repository github
+    /// - verifica che il percorso per l'eseguibile porti ad un file esistente
+    /// - verifica se il repository all'indirizzo fornito è raggiungibile
+    /// </summary>
     public partial class Form_github : Form
     {
         string valoreIniziale = "@@@";
+
+        /// <summary>
+        /// Costruttore classico in cui vengono impostati i valori delle textbox
+        /// </summary>
         public Form_github()
         {
             InitializeComponent();
             textBox1.Text = Globals.GITURL;
             textBox2.Text = Globals.GITPATH;
-            
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string tb1 = textBox1.Text.ToString();
-            string tb2 = textBox2.Text.ToString();
-            string nonEsiste = "";
-            if (!File.Exists(tb2))
-            {
-                nonEsiste = "Il percorso impostato per l'eseguibile 'git.exe' non esiste.\n";
-            }
-            MessageBoxResult me = System.Windows.MessageBox.Show(
-                  nonEsiste +"Salvare l'attuale percorso dell'eseguibile e l'attuale indirizzo per il repository GitHub usato dall'applicazione?",
-                  "Conferma",
-                  MessageBoxButton.YesNo,
-                  MessageBoxImage.Question,  System.Windows.MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
-                if (me == MessageBoxResult.No)
-                {
-                    return;
-                }
-            if (!tb1.Equals(Globals.GITURL) || !tb1.Equals(Globals.GITPATH))
-            {
-                Globals.GITURL = tb1;
-                Globals.GITPATH = tb2;
-                MainWindow m = new MainWindow();
-                m.scriviSETTINGS();
-                Globals.log.Info("Github settings");
-            }
-            this.Close();
-        }
-
+        /// <summary>
+        /// Metodo che si attiva quando viene modificato il testo nella textbox del repository
+        /// - controlla se il valore iniziale è '@@@' (ciò indicherebbe che è già in corso una verifica dell'indirizzo, quindi interrompe il metodo)
+        /// - toglie entrambe le icone V e X
+        /// - NUOVO TASK 
+        ///     - git ls-remote GITURL
+        ///     - se restituisce un messaggio che inizia con "fatal", "remote" o "git" allora NON esiste, altrimenti SI --> imposto le icone X e V
+        ///     - se uscendo mi accorgo che nel frattempo è cambiata la stringa chiamo il metodo secondoGiro
+        /// </summary>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            //Console.WriteLine("Entrato text changed box1: " + pictureBox1.Visible + " box2: "+pictureBox2.Visible);
-            //if (!pictureBox1.Visible && !pictureBox2.Visible)
             Console.WriteLine("VALORE INIZIALE: <" + valoreIniziale + ">");
             if (!valoreIniziale.Equals("@@@"))
             {
@@ -93,7 +79,6 @@ namespace ExpenseIt
                         trovata = false;
                     }
                 }
-
             }).ContinueWith(task =>
             {
                 if (!trovata)
@@ -107,7 +92,6 @@ namespace ExpenseIt
                     pictureBox2.Visible = true;
                 }
                 Console.WriteLine("USCENDO VEDO: "+textBox1.Text.ToString()+ "  PRIMA VEDEVO: "+ valoreIniziale);
-
                 if (!textBox1.Text.ToString().Equals(valoreIniziale))
                     {
                         Console.WriteLine("ALTRO GIRO");
@@ -117,11 +101,14 @@ namespace ExpenseIt
                 {
                     valoreIniziale = "@@@";
                 }
-                
-                
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
+        /// <summary>
+        /// Esegue continuamente la verifica se l'attuale indirizzo è raggiungibile fino a quando al termine della
+        /// verifica non trova la stessa stringa che ha appena verificato. 
+        /// Al termine reimposta la stringa '@@@' in modo che sia nuovamente accessibile il metodo textBox1_TextChanged
+        /// </summary>
         private void secondoGiro()
         {
             bool trovata = true;
@@ -140,7 +127,6 @@ namespace ExpenseIt
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
                         RedirectStandardInput = true,
-
                         CreateNoWindow = true
                     }
                 };
@@ -155,7 +141,6 @@ namespace ExpenseIt
                         trovata = false;
                     }
                 }
-
             }).ContinueWith(task =>
             {
                 if (!trovata)
@@ -169,7 +154,6 @@ namespace ExpenseIt
                     pictureBox2.Visible = true;
                 }
                 Console.WriteLine("2) USCENDO VEDO: " + textBox1.Text.ToString() + "  PRIMA VEDEVO: " + valoreIniziale2);
-
                 if (!textBox1.Text.ToString().Equals(valoreIniziale2))
                 {
                     Console.WriteLine("2) ALTRO GIRO");
@@ -179,20 +163,13 @@ namespace ExpenseIt
                 {
                     valoreIniziale = "@@@";
                 }
-
-
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// Quando viene modificato il testo della textbox verifica se esiste il file nel percorso specificato.
+        /// Di conseguenza imposta o no l'icona X
+        /// </summary>
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             if (!File.Exists(textBox2.Text.ToString()))
@@ -205,6 +182,9 @@ namespace ExpenseIt
             }
         }
 
+        /// <summary>
+        /// Apre la finestra per navigare il filesystem e scrive il risultato nella textbox
+        /// </summary>
         private void pictureBox3_Click(object sender, EventArgs e)
         {
             openFileDialog1.InitialDirectory = textBox2.Text;
@@ -218,9 +198,44 @@ namespace ExpenseIt
             
         }
 
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        /// <summary>
+        /// Esce dal form senza apportare modifiche
+        /// </summary>
+        private void button1_Click(object sender, EventArgs e)
         {
+            this.Close();
+        }
 
+        /// <summary>
+        /// Da all'utente la possibilità di scegliere se apportare le modifiche o no.
+        /// In seguito aggiorna Globals.GITURL e Globals.GITPATH (se modificati) e riscrive il file SETTINGS.csv
+        /// Chiude il form
+        /// </summary>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string tb1 = textBox1.Text.ToString();
+            string tb2 = textBox2.Text.ToString();
+            string nonEsiste = "";
+            if (!File.Exists(tb2))
+            {
+                nonEsiste = "Il percorso impostato per l'eseguibile 'git.exe' non esiste.\n";
+            }
+            MessageBoxResult me = System.Windows.MessageBox.Show(
+                  nonEsiste + "Salvare l'attuale percorso dell'eseguibile e l'attuale indirizzo per il repository GitHub usato dall'applicazione?",
+                  "Conferma", MessageBoxButton.YesNo, MessageBoxImage.Question, System.Windows.MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
+            if (me == MessageBoxResult.No)
+            {
+                return;
+            }
+            if (!tb1.Equals(Globals.GITURL) || !tb1.Equals(Globals.GITPATH))
+            {
+                Globals.GITURL = tb1;
+                Globals.GITPATH = tb2;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+                Globals.log.Info("Github settings");
+            }
+            this.Close();
         }
     }
 }

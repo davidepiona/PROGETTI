@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1146FF97-C8A5-45D5-8C2E-9FFACE13E183}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ExpenseIt</RootNamespace>
-    <AssemblyName>ExpenseIt</AssemblyName>
+    <RootNamespace>DATA</RootNamespace>
+    <AssemblyName>DATA</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -141,10 +141,6 @@
     <Compile Include="Progetto.cs" />
     <Compile Include="Sync.cs" />
     <Compile Include="UltimaModifica.cs" />
-    <Page Include="ExpenseItHome.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Clienti_Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -159,9 +155,6 @@
     </Compile>
     <Compile Include="Cliente.cs" />
     <Compile Include="CsvManager.cs" />
-    <Compile Include="ExpenseItHome.xaml.cs">
-      <DependentUpon>ExpenseItHome.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Clienti_Home.xaml.cs">
       <DependentUpon>Clienti_Home.xaml</DependentUpon>
     </Compile>

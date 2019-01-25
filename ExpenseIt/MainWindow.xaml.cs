@@ -17,32 +17,39 @@ using System.Windows.Shapes;
 namespace ExpenseIt
 {
     /// <summary>
-    /// Logica di interazione per MainWindow.xaml
+    /// Classe della finestra principale che gestisce le operazioni comuni
+    /// - legge il file di settings
+    /// - avvia i log
+    /// - effettua operazioni in chiusura
+    /// - scrive (salva) il file CLIENTI.csv
+    /// - legge e scrive il file SETTINGS.csv
     /// </summary>
     public partial class MainWindow : NavigationWindow
     {
-        //public StreamWriter sw;
+        /// <summary>
+        /// Costruttore
+        /// - disabilita la barra di navigazione
+        /// - legge SETTINGS.csv
+        /// - imposta i log, dando come cartella di destinazione quella di SETTINGS
+        /// </summary>
         public MainWindow()
         {
-            //FileStream fs = new FileStream("Test.txt", FileMode.Create);
-            //// First, save the standard output.
-            //TextWriter tmp = Console.Out;
-            //sw = new StreamWriter(fs);
-            //Console.SetOut(sw);
-            
             ShowsNavigationUI = false;
             if (Globals.CLIENTI == null)
             {
                 Globals.SETTINGS = Directory.GetCurrentDirectory() + @"\SETTINGS.csv";
                 Console.WriteLine("Settings lette da: "+ Globals.SETTINGS);
                 leggiSETTINGS(null,null);
-                log4net.GlobalContext.Properties["LogFileName"] = Directory.GetCurrentDirectory() + @"\APP.log"; 
+                log4net.GlobalContext.Properties["LogFileName"] = Directory.GetCurrentDirectory() + @"\DATA.log"; 
                 Globals.log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
                 Globals.log.Info("Settings lette da: " + Globals.SETTINGS);
                 InitializeComponent();
             }
         }
 
+        /// <summary>
+        /// Operazioni alla chiusura del programma: log e scrive CLIENTI.csv
+        /// </summary>
         public void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Console.WriteLine("Closing called");
@@ -50,6 +57,12 @@ namespace ExpenseIt
             salvaClientiCSV();
         }
 
+        /// <summary>
+        /// Scrittura di CLIENTI.csv
+        /// Prima riga descrittiva, la seconda l'ultimo cliente aperto
+        /// Poi tutti gli altri mettendo per primo l'ultimo che è stato aperto
+        /// (in questo modo nei primi bottoni ci sono i clienti più frequenti)
+        /// </summary>
         public void salvaClientiCSV()
         {
             string[] lines = new string[2 + Globals.CLIENTI.Count];
@@ -81,40 +94,51 @@ namespace ExpenseIt
             }
         }
 
+        /// <summary>
+        /// Lettura di SETTINGS.csv
+        /// Se non è possibile aprire il file si apre il Form_initialSettings
+        /// Se ci sono errori nel formato del file si utilizzano le impostazioni di defaut
+        /// No logging perchè viene effettuato prima di aver impostato il logger
+        /// </summary>
         public void leggiSETTINGS(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
             Console.WriteLine("Leggo SETTINGS");
-            try
+            if (!Globals.DEFAULT)
             {
-                var file = File.OpenRead(Globals.SETTINGS);
-                var reader = new StreamReader(file);
-                Globals.GITURL = reader.ReadLine();
-                Globals.GITPATH = reader.ReadLine();
-                Globals.PROGETTI = reader.ReadLine();
-                Globals.DATI = reader.ReadLine();
-                Globals.DATIsync = reader.ReadLine();
-                Globals.ANTEPRIME = reader.ReadLine().Equals("True") ? true : false;
-                Globals.SINCRONIZZAZIONE = reader.ReadLine().Equals("True") ? true : false;
-                file.Close();
+                try
+                {
+                    var file = File.OpenRead(Globals.SETTINGS);
+                    var reader = new StreamReader(file);
+                    Globals.GITURL = reader.ReadLine();
+                    Globals.GITPATH = reader.ReadLine();
+                    Globals.PROGETTI = reader.ReadLine();
+                    Globals.DATI = reader.ReadLine();
+                    Globals.DATIsync = reader.ReadLine();
+                    Globals.ANTEPRIME = reader.ReadLine().Equals("True") ? true : false;
+                    Globals.SINCRONIZZAZIONE = reader.ReadLine().Equals("True") ? true : false;
+                    file.Close();
+                }
+                catch (IOException)
+                {
+                    MessageBox.Show("E11 - non è stato possibile aprire il file " + Globals.SETTINGS +
+                        " indicare il percorso ", "E11"
+                                         , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    Form_initialSettings form = new Form_initialSettings();
+                    form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.leggiSETTINGS);
+                    form.ShowDialog();
+                }
+                catch (NullReferenceException)
+                {
+                    MessageBox.Show("E36 - Il file " + Globals.SETTINGS +
+                        " non è nel formato richiesto. \nVerranno caricate alcune impostazioni di base ma la funzionalità non è garantita.", "E36"
+                        , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                }
             }
-            catch (IOException)
-            {
-                MessageBox.Show("E11 - non è stato possibile aprire il file " + Globals.SETTINGS +
-                    " indicare il percorso ", "E11"
-                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-                Form_initialSettings form = new Form_initialSettings();
-                form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.leggiSETTINGS);
-                form.ShowDialog();
-            }
-            catch (NullReferenceException)
-            {
-                MessageBox.Show("E36 - Il file " + Globals.SETTINGS +
-                    " non è nel formato richiesto. \nVerranno caricate alcune impostazioni di base ma la funzionalità non è garantita.", "E36"
-                    , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-            }
-        
         }
 
+        /// <summary>
+        /// Scrive il file SETTINGS.csv
+        /// </summary>
         public void scriviSETTINGS()
         {
             Console.WriteLine("Scrivo SETTINGS");
@@ -141,6 +165,10 @@ namespace ExpenseIt
             }
         }
     }
+
+    /// <summary>
+    /// Classe statica che contiene oggetti accessibili da tutte le altre classi
+    /// </summary>
     public static class Globals
     {
         //public const Int32 BUFFER_SIZE = 512; // Unmodifiable
@@ -156,12 +184,9 @@ namespace ExpenseIt
         public static String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\";
         public static bool ANTEPRIME = true;
         public static bool SINCRONIZZAZIONE = true;
+        public static bool DEFAULT = false;
         //public static readonly String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync";// Unmodifiable
 
         public static log4net.ILog log; 
     }
-
-
-
-
 }

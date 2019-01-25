@@ -45,7 +45,6 @@ namespace ExpenseIt
         /// <summary>
         /// Utilizzato per cercare i progetti nella lista
         /// </summary>
-        /// <returns></returns>
         public string ToName()
         {
             return nomeCliente+ numero + "\t" + nome + "\t\t" + tipoPLC;

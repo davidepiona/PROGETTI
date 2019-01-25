@@ -168,12 +168,10 @@ namespace ExpenseIt
             this.label2.Size = new System.Drawing.Size(243, 67);
             this.label2.TabIndex = 54;
             this.label2.Text = "Percorso git";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // Form_github
             // 
