@@ -43,28 +43,35 @@
         <Border Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="650" Width="900" Background="#FFE0E0E0" CornerRadius="8" OpacityMask="#FF4F1A1A" />
 
         <Button Grid.Column="5" Grid.Row="2"  Width="150" HorizontalAlignment="Center"
-Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png" />
+Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri" 
+                ToolTip="Apre nel filesystem la cartella del progetto selezionato" ToolTipService.InitialShowDelay="2000">
+            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png"/>
         </Button>
         <Button Grid.Column="5" Grid.Row="3"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_New_Project" Background="Green" Content="Nuovo Progetto" x:Name="BottNuovo"/>
+            Height="40" Click="Button_New_Project" Background="Green" Content="Nuovo Progetto" x:Name="BottNuovo"
+                ToolTip="Apre il form che permette di creare un nuovo progetto" ToolTipService.InitialShowDelay="2000"/>
         <Button Grid.Column="5" Grid.Row="7"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_Merge" Background="Green" Content="Merge" x:Name="BottMerge"/>
+            Height="40" Click="Button_Merge" Background="Green" Content="Merge" x:Name="BottMerge"
+                ToolTip="Confronta i progetti del cliente attuale memorizzati in &#x0a;DATI con quelli memorizzati in DATIsync. &#x0a;Poi apre il form che permette di aggiungere quelli nuovi" ToolTipService.InitialShowDelay="2000"/>
         <Button Grid.Column="5" Grid.Row="5"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_Ultime_Modifiche" Background="Green" Content="Modifiche" x:Name="BottModifiche" />
+            Height="40" Click="Button_Ultime_Modifiche" Background="Green" Content="Modifiche" x:Name="BottModifiche" 
+                ToolTip="Aggiorna le ultime modifiche di ogni progetto: &#x0a; - cerca l'ultima modifica di ogni cartella &#x0a; - le scrive nel csv apposito &#x0a; - aggiorna i valori dei progetti &#x0a; - aggiorna la tabella" ToolTipService.InitialShowDelay="2000"/>
         <!--<Button Grid.Column="5" Grid.Row="6"  Width="150" HorizontalAlignment="Center"
             Height="40" Click="Sync" Background="Green" Content="Sync" x:Name="BottSync"/>-->
         <Button Grid.Column="5" Grid.Row="6"  Width="75" HorizontalAlignment="Left" Margin="30,0,0,0"
-            Height="40" Click="Button_GitHubClone" Background="Green"  x:Name="BottGitClone">
+            Height="40" Click="Button_GitHubClone" Background="Green"  x:Name="BottGitClone"
+                ToolTip="Checkout dei file del CLIENTE attuale in DATIsync: &#x0a; - elimina i file del CLIENTE attuale da DATIsync &#x0a; - git fetch &#x0a; - git checkout CLIENTE* " ToolTipService.InitialShowDelay="2000">
             <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\arrow-down.png" />
         </Button>
         <Button Grid.Column="5" Grid.Row="6"  Width="75" HorizontalAlignment="Right" Margin="0,0,30,0"
-            Height="40" Click="Button_GitHubPush" Background="Green" x:Name="BottGitPush">
+            Height="40" Click="Button_GitHubPush" Background="Green" x:Name="BottGitPush"
+                ToolTip="Push sul repository dei csv del CLIENTE attuale: &#x0a; - elimina i file del CLIENTE attuale da DATIsync &#x0a; - copia i file del CLIENTE attuale da DATI a DATIsync &#x0a; - git add CLIENTE* &#x0a; - git commit &#x0a; - git push (x2)" ToolTipService.InitialShowDelay="2000">
             <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\arrow-up.png" />
         </Button>
         <Button Grid.Column="1" Grid.Row="0"  Width="70" HorizontalAlignment="Left"
-            Height="70" Click="Button_Cambia_Pagina" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" >
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\cravatta.ico" ></Image>
+            Height="70" Click="Button_Cambia_Pagina" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" 
+                ToolTip="Torna alla schermata Clienti" ToolTipService.InitialShowDelay="2000">
+            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\cravatta.ico"></Image>
         </Button>
 
 
@@ -98,11 +105,14 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri">
             </DataGrid.Columns>
         </DataGrid>
 
-        <Image x:Name="image" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Margin="5,5,5,5" MouseDown="Apri_Immagine" />
+        <Image x:Name="image" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Margin="5,5,5,5" MouseDown="Apri_Immagine" 
+               ToolTip="Apre l'immagine visualizzata in anteprima" ToolTipService.InitialShowDelay="2000"/>
         <RichTextBox x:Name="richTextBox" Grid.Column="0" Grid.Row="4" Grid.RowSpan="3" Margin="5,5,5,5" IsReadOnly="True" Visibility="Hidden" ></RichTextBox>
         <Button x:Name="buttonOpenDocx" Grid.Column="0" Grid.Row="7"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_Apri_Docx" Background="Green" Content="Apri Docx" Visibility="Hidden"/>
-        <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0" >
+            Height="40" Click="Button_Apri_Docx" Background="Green" Content="Apri Docx" Visibility="Hidden"
+                ToolTip="Apre in Word il file docx visualizzato in anteprima" ToolTipService.InitialShowDelay="2000"/>
+        <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
+              Margin="0,0,40,0">
             <MenuItem Width="50" Height="50" FlowDirection="RightToLeft">
                 <MenuItem.Background>
                     <ImageBrush ImageSource="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\3lines.png"/>

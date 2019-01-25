@@ -186,22 +186,25 @@ namespace ExpenseIt
         /// </summary>
         private Progetto UpdateList(string filter)
         {
-            Console.WriteLine("Update list1");
             Progetto primo = new Progetto(0, null, null, null, null, null, null);
-            if (this.FindName("dataGrid") is DataGrid dataGrid)
+            if (progettiAll != null)
             {
-                dataGrid.Items.Clear();
-                int i = 0;
-                foreach (Progetto p in progettiAll)
+                Console.WriteLine("Update list1");
+                if (this.FindName("dataGrid") is DataGrid dataGrid)
                 {
-                    if (p.ToName().IndexOf(filter, 0, StringComparison.CurrentCultureIgnoreCase) != -1)
+                    dataGrid.Items.Clear();
+                    int i = 0;
+                    foreach (Progetto p in progettiAll)
                     {
-                        if (i == 0)
+                        if (p.ToName().IndexOf(filter, 0, StringComparison.CurrentCultureIgnoreCase) != -1)
                         {
-                            primo = p;
+                            if (i == 0)
+                            {
+                                primo = p;
+                            }
+                            dataGrid.Items.Add(p);
+                            i++;
                         }
-                        dataGrid.Items.Add(p);
-                        i++;
                     }
                 }
             }
@@ -400,7 +403,83 @@ namespace ExpenseIt
                 += new System.Windows.Forms.FormClosedEventHandler(this.UpdateClientList);
             form.ShowDialog();
         }
-        
+
+        /// <summary>
+        /// Bottone che effettua il clone del repository online.
+        /// Poi aggiorna la DataGrid. 
+        /// [Disabilita i bottoni di sincronizzazione] 
+        /// </summary>
+        private void Button_GitHubCloneAll(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler SCARICARE TUTTI i progetti sul repository online e salvarli sul tuo computer?",
+                "Caricare online?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                GitCommands git = new GitCommands();
+                if (git.clone())
+                {
+                    MessageBox.Show("Clone del repository " + Globals.GITURL + " nella cartella " + Globals.DATIsync + " riuscito correttamente!", "Clone riuscito"
+                                     , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                }
+                UpdateList("");
+            }
+        }
+
+        /// <summary>
+        /// Bottone che effettua il push dei file del cliente in DATI, mettendoli sul repository online.
+        /// - chiede conferma
+        /// - sostituisce nella cartella DATIsync
+        /// - effettua il push e da all'utente informazioni sull'esito
+        /// - ricarica la DataGrid
+        /// [Disabilita i bottoni di sincronizzazione] 
+        /// </summary>
+        private void Button_GitHubPushAll(object sender, RoutedEventArgs e)
+        {
+            Button buttonClone = this.FindName("BottGitClone2") as Button;
+            Button buttonPush = this.FindName("BottGitPush2") as Button;
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler CARICARE TUTTI i progetti attuali online?",
+                "Caricare online?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                
+                buttonClone.IsEnabled = false;
+                buttonPush.IsEnabled = false;
+                GitCommands git = new GitCommands();
+                if (git.copyFolder())
+                {
+                    List<string> pushInfo = git.push("");
+                    if (pushInfo != null)
+                    {
+
+                        if (pushInfo.Count != 0)
+                        {
+                            string message = "";
+                            foreach (string f in pushInfo)
+                            {
+                                message += "\n" + f;
+                            }
+                            MessageBox.Show("Upload sul repository " + Globals.GITURL + " riuscito correttamente! File caricati:\n" + message, "Upload riuscito"
+                                         , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Upload sul repository " + Globals.GITURL + " non effettuato perchè non c'era niente da caricare", "Niente da caricare"
+                                        , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Upload sul repository " + Globals.GITURL + " non riuscito.", "Errore upload"
+                                            , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    }
+                }
+            }
+            //else if (dialogResult == MessageBoxResult.No) { }
+            buttonClone.IsEnabled = true;
+            buttonPush.IsEnabled = true;
+            UpdateList("");
+        }
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////                          MENU DI IMPOSTAZIONI                              ///////////////////               
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -443,14 +522,24 @@ namespace ExpenseIt
         private void Menu_sync(object sender, RoutedEventArgs e)
         {
             bool value = ((MenuItem)sender).IsChecked;
-
             if (value != Globals.SINCRONIZZAZIONE)
             {
                 Globals.SINCRONIZZAZIONE = value;
                 MainWindow m = new MainWindow();
                 m.scriviSETTINGS();
             }
-
+            Button buttonClone = this.FindName("BottGitClone2") as Button;
+            Button buttonPush = this.FindName("BottGitPush2") as Button;
+            if (value)
+            {
+                buttonClone.Visibility = Visibility.Visible;
+                buttonPush.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                buttonClone.Visibility = Visibility.Hidden;
+                buttonPush.Visibility = Visibility.Hidden;
+            }
         }
 
         /// <summary>
@@ -463,6 +552,13 @@ namespace ExpenseIt
             MenuItem ms = this.FindName("Menu_sync_check") as MenuItem;
             ma.IsChecked = Globals.ANTEPRIME;
             ms.IsChecked = Globals.SINCRONIZZAZIONE;
+            if (!Globals.SINCRONIZZAZIONE)
+            {
+                Button buttonClone = this.FindName("BottGitClone2") as Button;
+                Button buttonPush = this.FindName("BottGitPush2") as Button;
+                buttonClone.Visibility = Visibility.Hidden;
+                buttonPush.Visibility = Visibility.Hidden;
+            }
         }
 
     }

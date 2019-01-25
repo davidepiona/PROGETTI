@@ -22,7 +22,7 @@ namespace ExpenseIt
         /// Elimina i file *cliente*.csv e *cliente*date.csv dalla cartella DATIsync.
         /// Se l'operazione riesce copia gli stessi file dalla cartella DATI a DATIsync.
         /// </summary>
-        public bool copyFolder(string cliente)
+        public bool copyFile(string cliente)
         {
             try
             {
@@ -89,12 +89,37 @@ namespace ExpenseIt
         }
 
         /// <summary>
+        /// Copia (sostituendo se presenti) tutti i file dalla cartella DATI a DATIsync.
+        /// Restituisce false se viene sollevata una IOException.
+        /// </summary>
+        public bool copyFolder()
+        {
+            string SourcePath = Globals.DATI;
+            string DestinationPath = Globals.DATIsync;
+            try
+            {
+                foreach (string newPath in Directory.GetFiles(SourcePath, "*.*",
+                    SearchOption.AllDirectories))
+                    File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("E40 - Il file " + SourcePath + " non esiste o è aperto da un altro programma.\n\nNon è possibile copiare la cartella.", "E42"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                return false;
+            }
+            Console.WriteLine("Sostituito file in DATIsync con quelli in DATI");
+            return true;
+        }
+
+        /// <summary>
         /// Esegue i comandi shell necessari per effettuare un commit e un push, restituendo una lista dei file caricati
         /// - aggiunge tutti i fine di tipo cliente*
         /// - colleziona la lista dei file aggiunti (la restituirà in caso di successo del push)
         /// - crea un commit
         /// - effettua il push 
         /// - SE l'ultimo output inizia con "To https" o "Everything up-to-date" ritrona la lista di file altrimenti 'null'
+        /// - EFFETTUO DUE VOLTE IL PUSH PERCHE' (PER MOTIVO SCONOSCIUTO) NON SEMPRE AL PRIMO RIESCE A CARICARLO (--> DA TROVARE SOLUZIONE PIU' VELOCE)
         /// </summary>
         public List<string> push(string cliente)
         {
@@ -107,6 +132,10 @@ namespace ExpenseIt
             _processStartInfo.FileName = Globals.GITPATH;
 
             string gitAddArgument = @"add " + @Globals.DATIsync + cliente + "*";
+            if (cliente.Equals(""))
+            {
+                gitAddArgument = @"add *";
+            }
             _processStartInfo.Arguments = gitAddArgument;
             var proc = Process.Start(_processStartInfo);
             while (!proc.StandardOutput.EndOfStream)
@@ -123,7 +152,7 @@ namespace ExpenseIt
                 string info = proc.StandardOutput.ReadLine();
                 //string[] split = info.Split(':');
                 Console.WriteLine("OUT: " + info + "info[0]: <" + info[0] + "> quindi: " + !info[0].Equals(' '));
-                if (!info[0].Equals(' '))
+                if (!info[0].Equals(' ') && !info[0].Equals('?'))
                 {
                     commitInfo.Add(info);
                 }
@@ -138,7 +167,21 @@ namespace ExpenseIt
             {
                 string err = proc.StandardError.ReadLine();
                 string[] split = err.Split(':');
-                Console.WriteLine("ERRUltim: " + err + ">");
+                Console.WriteLine("ERRPenultimo: " + err + ">");
+
+                if (split[0].Equals("To https"))
+                {
+                    Console.WriteLine("numero elementi:" + commitInfo.Count);
+                    return commitInfo;
+                }
+            }
+            _processStartInfo.Arguments = gitPushArgument;
+            proc = Process.Start(_processStartInfo);
+            while (!proc.StandardError.EndOfStream)
+            {
+                string err = proc.StandardError.ReadLine();
+                string[] split = err.Split(':');
+                Console.WriteLine("ERRUltimo: " + err + ">");
 
                 if (split[0].Equals("To https") || split[0].Equals("Everything up-to-date"))
                 {
@@ -215,6 +258,24 @@ namespace ExpenseIt
                                      , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 return false;
             }
+            return true;
+        }
+
+        public bool Checkout(string cliente)
+        {
+            
+            ProcessStartInfo _processStartInfo = new ProcessStartInfo();
+            _processStartInfo.WorkingDirectory = Globals.DATIsync;
+            _processStartInfo.RedirectStandardOutput = true;
+            _processStartInfo.RedirectStandardInput = true;
+            _processStartInfo.RedirectStandardError = true;
+            _processStartInfo.UseShellExecute = false;
+            _processStartInfo.FileName = Globals.GITPATH;
+            string gitFetch = @"fetch";
+            _processStartInfo.Arguments = gitFetch;
+
+            string gitCheckout = @"checkout origin/master -- "+ cliente+ "*";
+            _processStartInfo.Arguments = gitCheckout;
             return true;
         }
     }

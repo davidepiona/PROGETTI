@@ -57,10 +57,22 @@
         <!--<Canvas  Grid.Column="1" Grid.ColumnSpan="3"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="750" Width="900" Background="#FFE0E0E0" ClipToBounds="True" UseLayoutRounding="True"/>-->
         <Border Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="650" Width="900" Background="#FFE0E0E0" CornerRadius="8" OpacityMask="#FF4F1A1A" />
         <Button Grid.Column="5" Grid.Row="3"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_New_Client" Background="Green" Content="Nuovo Cliente" x:Name="BottNuovoCliente"/>
-        <Button Grid.Column="5" Grid.Row="6"  Width="150" HorizontalAlignment="Center"
+            Height="40" Click="Button_New_Client" Background="Green" Content="Nuovo Cliente" x:Name="BottNuovoCliente"
+                ToolTip="Apre il form che permette di creare un nuovo cliente" ToolTipService.InitialShowDelay="2000"/>
+        <Button Grid.Column="5" Grid.Row="7"  Width="150" HorizontalAlignment="Center"
 Height="40" Click="Open_Folder" Background="Green"  x:Name="BottApri2" Visibility="Hidden">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png" />
+            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png"
+                   ToolTip="Apre nel filesystem la cartella del progetto selezionato" ToolTipService.InitialShowDelay="2000"/>
+        </Button>
+        <Button Grid.Column="5" Grid.Row="6"  Width="75" HorizontalAlignment="Left" Margin="30,0,0,0"
+            Height="40" Click="Button_GitHubCloneAll" Background="#7c1228"  x:Name="BottGitClone2"
+                ToolTip="Clone del repository in DATIsync: &#x0a; - elimina tutti i file in DATIsync &#x0a; - effettua git clone" ToolTipService.InitialShowDelay="2000">
+            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\arrow-down.png" />
+        </Button>
+        <Button Grid.Column="5" Grid.Row="6"  Width="75" HorizontalAlignment="Right" Margin="0,0,30,0"
+            Height="40" Click="Button_GitHubPushAll" Background="	#7c1228" x:Name="BottGitPush2"
+                ToolTip="Push sul repository di tutti i csv in DATIsync: &#x0a; - elimina tutti i file in DATIsync &#x0a; - copia tutti da DATI a DATIsync &#x0a; - git add * &#x0a; - git commit &#x0a; - git push (x2)" ToolTipService.InitialShowDelay="2000">
+            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\arrow-up.png" />
         </Button>
         
         <TextBox x:Name="TextBox" Grid.Row="6" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" HorizontalAlignment="Center" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
@@ -112,7 +124,8 @@ Height="40" Click="Open_Folder" Background="Green"  x:Name="BottApri2" Visibilit
         </DataGrid>
 
 
-        <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0" >
+        <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center" 
+              Margin="0,0,40,0" >
             <MenuItem Width="50" Height="50" FlowDirection="RightToLeft">
                 <MenuItem.Background>
                     <ImageBrush ImageSource="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\3lines.png"/>
@@ -129,7 +142,6 @@ Height="40" Click="Open_Folder" Background="Green"  x:Name="BottApri2" Visibilit
                 </MenuItem>
                 <MenuItem Header="Mostra anteprima e docx" Click="Menu_anteprima" IsCheckable="True" Name="Menu_anteprima_check" Background="AliceBlue"/>
                 <MenuItem Header="Mostra azioni sincronizzazione" Click="Menu_sync" IsCheckable="True" Name="Menu_sync_check" Background="AliceBlue"/>
-
             </MenuItem>
         </Menu>
     </Grid>

@@ -64,7 +64,7 @@ namespace ExpenseIt
                         DateTime res = modificheByFile(proj);
 
                         allDate.Add(proj.Split('\\').Last(), res);
-                        Console.WriteLine("FINE, DATA PIU' RECENTE: <" + res + ">");
+                        Console.WriteLine("CARTELLA: <" +proj+ "> - DATA PIU' RECENTE: <" + res + ">");
                     }
                 }
             }catch(Exception e) { 
@@ -80,7 +80,6 @@ namespace ExpenseIt
         /// </summary>
         public DateTime modificheByFile(string proj)
         {
-            Console.WriteLine("valuto la cartella " + proj);
             dtNew = new DateTime();
             if (Directory.Exists(proj))
             {
@@ -106,8 +105,6 @@ namespace ExpenseIt
             string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
             foreach (string subdirectory in subdirectoryEntries)
                 ProcessDirectory(subdirectory);
-
-
         }
 
         /// <summary>

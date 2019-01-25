@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ExpenseIt
 {
@@ -391,7 +384,6 @@ namespace ExpenseIt
         {
             Globals.CLIENTI[num_cliente].setLastId(ProgSelezionato);
             string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + Globals.CLIENTI[num_cliente].getlastId();
-            MessageBox.Show(path);
             if (Directory.Exists(path))
             {
                 System.Diagnostics.Process.Start(path);
@@ -404,10 +396,13 @@ namespace ExpenseIt
         /// </summary>
         private void Button_New_Project(object sender, RoutedEventArgs e)
         {
+            Globals.log.Info("info informazioneeeeeeeeeeeeeeeeee");
+            Globals.log.Error("error informazioneeeeeeeeeeeeeeeeee");
+            Globals.log.Fatal("fatal informazioneeeeeeeeeeeeeeeeee");
             if (CheckFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
             {
                 Console.WriteLine("\nNew Project");
-                Form1 testDialog = new Form1(Globals.CLIENTI[num_cliente]);
+                Form1 testDialog = new Form1(Globals.CLIENTI[num_cliente], progetti[progetti.Count - 1].numero);
                 testDialog.FormClosed
                     += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
                 testDialog.ShowDialog();
@@ -524,7 +519,7 @@ namespace ExpenseIt
             buttonPush.IsEnabled = false;
             buttonMerge.IsEnabled = false;
             GitCommands git = new GitCommands();
-            if (git.clone())
+            if (git.Checkout(Globals.CLIENTI[num_cliente].getNomeCliente()))
             {
 
                 MessageBox.Show("Clone del repository " + Globals.GITURL + " nella cartella " + Globals.DATIsync + " riuscito correttamente!", "Clone riuscito"
@@ -555,12 +550,12 @@ namespace ExpenseIt
             buttonClone.IsEnabled = false;
             buttonPush.IsEnabled = false;
             buttonMerge.IsEnabled = false;
-            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler caricare i progetti attuali online",
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler caricare i progetti di"+ Globals.CLIENTI[num_cliente].getNomeCliente() +" online?",
                 "Caricare online?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             if (dialogResult == MessageBoxResult.Yes)
             {
                 GitCommands git = new GitCommands();
-                if (git.copyFolder(Globals.CLIENTI[num_cliente].getNomeCliente()))
+                if (git.copyFile(Globals.CLIENTI[num_cliente].getNomeCliente()))
                 {
                     List<string> pushInfo = git.push(Globals.CLIENTI[num_cliente].getNomeCliente());
                     if (pushInfo != null)
@@ -616,7 +611,6 @@ namespace ExpenseIt
         {
             if (e.Key == Key.Up)
             {
-                Console.WriteLine("su");
                 DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
                 dataGrid.Focus();
                 if (dataGrid.SelectedIndex > 0)
@@ -628,7 +622,6 @@ namespace ExpenseIt
             if (e.Key == Key.Down)
             {
                 DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-                Console.WriteLine("giu");
                 dataGrid.SelectedIndex = dataGrid.SelectedIndex + 1;
                 if (dataGrid.SelectedItem != null)
                 {
@@ -637,7 +630,6 @@ namespace ExpenseIt
             }
             if (e.Key == Key.Enter)
             {
-                Console.WriteLine("invio");
                 Button_Open_Folder(null, null);
             }
         }
@@ -662,38 +654,39 @@ namespace ExpenseIt
                 {
                     richTextBox.Visibility = Visibility.Visible;
                     button.Visibility = Visibility.Visible;
-                }
-                string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                              @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx";
-                if (File.Exists(file))
-                {
-                    var doc = Xceed.Words.NET.DocX.Load(file);
-                    richTextBox.Document.Blocks.Clear();
-                    richTextBox.AppendText(doc.Text);
-                }
-                else
-                {
-                    richTextBox.Document.Blocks.Clear();
-                    richTextBox.Visibility = Visibility.Hidden;
-                    button.Visibility = Visibility.Hidden;
-                }
 
-                file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                   @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\anteprima.jpg";
-                if (File.Exists(file))
-                {
-                    BitmapImage bmi = new BitmapImage();
-                    bmi.BeginInit();
-                    bmi.CacheOption = BitmapCacheOption.OnLoad;
-                    bmi.UriSource = new Uri(file, UriKind.Absolute);
-                    bmi.DecodePixelWidth = 320;
-                    bmi.EndInit();
-                    bmi.Freeze(); // important
-                    image.Source = bmi;
-                }
-                else
-                {
-                    image.Source = null;
+                    string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                                  @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx";
+                    if (File.Exists(file))
+                    {
+                        var doc = Xceed.Words.NET.DocX.Load(file);
+                        richTextBox.Document.Blocks.Clear();
+                        richTextBox.AppendText(doc.Text);
+                    }
+                    else
+                    {
+                        richTextBox.Document.Blocks.Clear();
+                        richTextBox.Visibility = Visibility.Hidden;
+                        button.Visibility = Visibility.Hidden;
+                    }
+
+                    file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                       @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\anteprima.jpg";
+                    if (File.Exists(file))
+                    {
+                        BitmapImage bmi = new BitmapImage();
+                        bmi.BeginInit();
+                        bmi.CacheOption = BitmapCacheOption.OnLoad;
+                        bmi.UriSource = new Uri(file, UriKind.Absolute);
+                        bmi.DecodePixelWidth = 320;
+                        bmi.EndInit();
+                        bmi.Freeze(); // important
+                        image.Source = bmi;
+                    }
+                    else
+                    {
+                        image.Source = null;
+                    }
                 }
 
             }
@@ -746,11 +739,19 @@ namespace ExpenseIt
             RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
             Button button = this.FindName("buttonOpenDocx") as Button;
             Image image = this.FindName("image") as Image;
+            if (value != Globals.ANTEPRIME)
+            {
+                Globals.ANTEPRIME = value;
+                MainWindow m = new MainWindow();
+                m.scriviSETTINGS();
+            }
             if (value)
             {
                 button.Visibility = Visibility.Visible;
                 richTextBox.Visibility = Visibility.Visible;
                 image.Visibility = Visibility.Visible;
+                DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+                ChangePreview(dataGrid, null);
             }
             else
             {
@@ -758,12 +759,7 @@ namespace ExpenseIt
                 button.Visibility = Visibility.Hidden;
                 image.Visibility = Visibility.Hidden;
             }
-            if (value != Globals.ANTEPRIME)
-            {
-                Globals.ANTEPRIME = value;
-                MainWindow m = new MainWindow();
-                m.scriviSETTINGS();
-            }
+            
         }
 
         /// <summary>

@@ -13,8 +13,8 @@ namespace ExpenseIt
 {
     public partial class Form1: Form
     {
-        
-        public Form1(Cliente cliente)
+        private int ultimoProgetto;
+        public Form1(Cliente cliente, int ultimoProgetto)
         {
             InitializeComponent();
 
@@ -23,6 +23,7 @@ namespace ExpenseIt
 
                 this.comboBox1.Items.Add(c.getNomeCliente());
                     }
+            this.ultimoProgetto = ultimoProgetto;
             this.comboBox1.SelectedItem = cliente.getNomeCliente();
         }
 
@@ -82,7 +83,7 @@ namespace ExpenseIt
                 }
                 i++;
             }
-            string numProgetto = (Globals.CLIENTI[numCliente].getMaxId()+1).ToString();
+            string numProgetto = (ultimoProgetto+1).ToString();
             
             
             string file = Globals.DATI + cliente + ".csv";
@@ -132,8 +133,6 @@ namespace ExpenseIt
                 MessageBox.Show("E06 - Il file " + file + " non esiste o è aperto da un altro programma", "E06"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
             }
-
-
         }
         
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)

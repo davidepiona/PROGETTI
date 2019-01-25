@@ -21,15 +21,24 @@ namespace ExpenseIt
     /// </summary>
     public partial class MainWindow : NavigationWindow
     {
+        //public StreamWriter sw;
         public MainWindow()
         {
-            InitializeComponent();
+            //FileStream fs = new FileStream("Test.txt", FileMode.Create);
+            //// First, save the standard output.
+            //TextWriter tmp = Console.Out;
+            //sw = new StreamWriter(fs);
+            //Console.SetOut(sw);
+            
             ShowsNavigationUI = false;
             if (Globals.CLIENTI == null)
             {
                 Globals.SETTINGS = Directory.GetCurrentDirectory() + @"\SETTINGS.csv";
                 Console.WriteLine(Globals.SETTINGS);
                 leggiSETTINGS(null,null);
+                log4net.GlobalContext.Properties["LogFileName"] = Directory.GetCurrentDirectory() + @"\APP.log"; 
+                Globals.log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+                InitializeComponent();
             }
         }
 
@@ -37,6 +46,7 @@ namespace ExpenseIt
         {
             Console.WriteLine("Closing called");
             salvaClientiCSV();
+            //sw.Close();
             // If data is dirty, notify user and ask for a response
             //if (Globals.IS_DATA_DIRTY)
             //{
@@ -161,6 +171,8 @@ namespace ExpenseIt
         public static bool ANTEPRIME = true;
         public static bool SINCRONIZZAZIONE = true;
         //public static readonly String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync";// Unmodifiable
+
+        public static log4net.ILog log; 
     }
 
 
