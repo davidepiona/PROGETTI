@@ -15,7 +15,6 @@ namespace ExpenseIt
     /// </summary>
     class Sync
     {
-
         private List<Progetto> progetti = new List<Progetto>();
         private List<Progetto> progettiSync = new List<Progetto>();
         private int num_cliente;
@@ -36,6 +35,7 @@ namespace ExpenseIt
         public void readSyncProject(string path)
         {
             Console.WriteLine("Read Sync Projects");
+            Globals.log.Info("Read Sync Projects");
             List<string> lines = new List<string>();
             int j = 0;
             try
@@ -60,13 +60,17 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E09 - Il file " + path + " non esiste o è aperto da un altro programma", "E09"
+                string msg = "E09 - Il file " + path + " non esiste o è aperto da un altro programma";
+                MessageBox.Show(msg, "E09"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
             catch (FormatException)
             {
-                MessageBox.Show("E32 - Il file " + path + " è in un formato non corretto.\nProblema riscontrato al progetto numero: " + j, "E32"
+                string msg = "E32 - Il file " + path + " è in un formato non corretto.\nProblema riscontrato al progetto numero: " + j;
+                MessageBox.Show(msg, "E32"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
         }
 
@@ -94,6 +98,7 @@ namespace ExpenseIt
                 else
                 {
                     Console.WriteLine("Un progetto in più: " + p.sigla + " -->"+ p.data);
+                    Globals.log.Info("Un progetto in più: " + p.sigla + " -->"+ p.data);
                     list[2].Add(p);
                 }
             }
@@ -102,6 +107,7 @@ namespace ExpenseIt
                 if (ps.sync==false)
                 {
                     Console.WriteLine("Un progetto mancante localmente: " + ps.sigla + " -->" + ps.data);
+                    Globals.log.Info("Un progetto mancante localmente: " + ps.sigla + " -->" + ps.data);
                     list[1].Add(ps);
                 }
             }

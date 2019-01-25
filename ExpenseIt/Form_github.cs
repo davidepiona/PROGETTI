@@ -48,6 +48,7 @@ namespace ExpenseIt
                 Globals.GITPATH = tb2;
                 MainWindow m = new MainWindow();
                 m.scriviSETTINGS();
+                Globals.log.Info("Github settings");
             }
             this.Close();
         }
@@ -78,7 +79,6 @@ namespace ExpenseIt
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
                         RedirectStandardInput = true,
-
                         CreateNoWindow = true
                     }
                 };
@@ -100,7 +100,6 @@ namespace ExpenseIt
                 {
                     pictureBox2.Visible = false;
                     pictureBox1.Visible = true;
-                    //MessageBox.Show("non trovate");
                 }
                 else
                 {
@@ -163,7 +162,6 @@ namespace ExpenseIt
                 {
                     pictureBox2.Visible = false;
                     pictureBox1.Visible = true;
-                    //MessageBox.Show("non trovate");
                 }
                 else
                 {

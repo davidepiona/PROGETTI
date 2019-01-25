@@ -65,7 +65,6 @@
             this.label1.Size = new System.Drawing.Size(302, 67);
             this.label1.TabIndex = 2;
             this.label1.Text = "Titolo Progetto";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // textBox1
             // 
@@ -84,7 +83,6 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(308, 55);
             this.textBox2.TabIndex = 4;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label2
             // 
@@ -97,7 +95,6 @@
             this.label2.Size = new System.Drawing.Size(188, 67);
             this.label2.TabIndex = 4;
             this.label2.Text = "Tipo PLC";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // textBox3
             // 
@@ -107,7 +104,6 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(308, 55);
             this.textBox3.TabIndex = 3;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
             // label3
             // 
@@ -120,7 +116,6 @@
             this.label3.Size = new System.Drawing.Size(171, 67);
             this.label3.TabIndex = 6;
             this.label3.Text = "Tipo OP";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label5
             // 
@@ -133,7 +128,6 @@
             this.label5.Size = new System.Drawing.Size(153, 67);
             this.label5.TabIndex = 10;
             this.label5.Text = "Cliente";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // comboBox1
             // 
@@ -148,7 +142,6 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(308, 56);
             this.comboBox1.TabIndex = 1;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // button1
             // 
@@ -184,7 +177,6 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Nuovo Progetto";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

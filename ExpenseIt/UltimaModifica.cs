@@ -36,6 +36,7 @@ namespace ExpenseIt
         public void aggiornoModifiche(List<Progetto> progetti)
         {
             Console.WriteLine("Aggiorno Modifiche");
+            Globals.log.Info("Aggiorno Modifiche");
             foreach (Progetto p in progetti)
             {
                 if (allDate.TryGetValue(p.sigla, out DateTime ultima))
@@ -65,10 +66,14 @@ namespace ExpenseIt
 
                         allDate.Add(proj.Split('\\').Last(), res);
                         Console.WriteLine("CARTELLA: <" +proj+ "> - DATA PIU' RECENTE: <" + res + ">");
+                        Globals.log.Info("CARTELLA: <" +proj+ "> - DATA PIU' RECENTE: <" + res + ">");
                     }
                 }
-            }catch(Exception e) { 
-                            Console.WriteLine("Eccezione nella ricerca ultime modifiche: "+ e);
+            }catch(Exception e)
+            {
+                string msg = "Eccezione nella ricerca ultime modifiche: " + e;
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
                 return false;
             }
             return true;
@@ -128,6 +133,7 @@ namespace ExpenseIt
         public bool confrontoSync(List<Progetto> progetti)
         {
             Console.WriteLine("Syncronizzo");
+            Globals.log.Info("Syncronizzo");
             if (allDate.Count == 0 || allDateSync.Count == 0)
             {
                 return false;
@@ -169,12 +175,11 @@ namespace ExpenseIt
         ///////////////////                             SCRIVI E LEGGI CSV                             ///////////////////               
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Metodo che legge le date da file *CLIENTE*date.csv e le scrive in allDate
+        /// Metodo che legge le date da file *CLIENTE*date.csv in DATI e le scrive in allDate
         /// Restituisce false se per qualche ragione è stata sollevata un IOException
         /// </summary>
         public bool readByCSV(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
             List<string> lines = new List<string>();
             int j = 0;
             try
@@ -197,24 +202,28 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                Console.WriteLine("E28 - Il file " + file + " non esiste o è aperto da un altro programma");
+                string msg = "E28 - Il file " + file + " non esiste o è aperto da un altro programma";
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
                 return false;
             }
             catch (FormatException)
             {
-                Console.WriteLine("E33 - Il file " + file + " è in un formato non corretto.\nProblema riscontrato all riga numero: " + j);
+                string msg = "E33 - Il file " + file + " è in un formato non corretto.\nProblema riscontrato all riga numero: " + j;
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
                 return false;
             }
+            Globals.log.Info("Date lette da DATI");
             return true;
         }
 
         /// <summary>
-        /// Metodo che legge le date da file *CLIENTE*date.csv e le scrive in allDateSync
+        /// Metodo che legge le date da file *CLIENTE*date.csv da DATIsync e le scrive in allDateSync
         /// Restituisce false se per qualche ragione è stata sollevata un IOException
         /// </summary>
         public bool readSync(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
             allDateSync = new Dictionary<string, DateTime>();
             List<string> lines = new List<string>();
             int j = 0;
@@ -238,19 +247,26 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                Console.WriteLine("E29 - Il file " + file + " non esiste o è aperto da un altro programma");
+                string msg = "E29 - Il file " + file + " non esiste o è aperto da un altro programma";
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
                 return false;
             }
             catch (FormatException)
             {
-                Console.WriteLine("E33 - Il file " + file + " è in un formato non corretto.\nProblema riscontrato all riga numero: " + j);
+                string msg = "E33 - Il file " + file + " è in un formato non corretto.\nProblema riscontrato all riga numero: " + j;
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
                 return false;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Eccezione non riconosciuta alla lettura del file sync .csv" + e.Message);
+                string msg = "Eccezione non riconosciuta alla lettura del file sync .csv" + e.Message;
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
                 return false;
             }
+            Globals.log.Info("Date lette da DATIsync");
             return true;
         }
 
@@ -260,7 +276,7 @@ namespace ExpenseIt
         /// </summary>
         public bool writeInCSV(string file)
         {
-            //string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
+            
             string projectDate = "";
             foreach (KeyValuePair<string, DateTime> i in allDate)
             {
@@ -274,6 +290,7 @@ namespace ExpenseIt
             {
                 return false;
             }
+            Globals.log.Info("Date scritte in DATI");
             return true;
         }
     }

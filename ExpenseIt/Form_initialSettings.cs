@@ -28,14 +28,15 @@ namespace ExpenseIt
         private void button2_Click(object sender, EventArgs e)
         {
             string tb1 = textBox1.Text.ToString();
-           
+
             if (!File.Exists(tb1))
             {
+                string msg = "Il percorso impostato per il file 'SETTINGS.csv' non esiste.\n";
                 MessageBoxResult me = System.Windows.MessageBox.Show(
-      "Il percorso impostato per il file 'SETTINGS.csv' non esiste.\n",
-      "Percorso inesistente",
-      MessageBoxButton.OK,
-      MessageBoxImage.Error, System.Windows.MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
+                msg,
+                "Percorso inesistente",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error, System.Windows.MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
                 return;
             }
             if (!tb1.Equals(Globals.SETTINGS))

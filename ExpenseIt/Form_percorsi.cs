@@ -22,13 +22,6 @@ namespace ExpenseIt
             textBox3.Text = Globals.DATIsync;
         }
 
-        private void Form_percorsi_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.SelectedPath = textBox1.Text;
@@ -118,11 +111,13 @@ namespace ExpenseIt
             string tb3 = textBox3.Text.ToString();
 
             if (!Directory.Exists(tb1) || !Directory.Exists(tb2) || !Directory.Exists(tb3)){
+                string msg = "Uno dei percorsi inseriti non esiste, sei sicuro di voler continuare e salvare le modifiche?";
                 System.Windows.MessageBoxResult me = System.Windows.MessageBox.Show(
-                  "Uno dei percorsi inseriti non esiste, sei sicuro di voler continuare e salvare le modifiche?",
+                  msg,
                   "Percorso inesistente",
                   MessageBoxButton.YesNo,
                   MessageBoxImage.Question, MessageBoxResult.No, System.Windows.MessageBoxOptions.RightAlign);
+                Globals.log.Warn(msg);
                 if (me == MessageBoxResult.No)
                 {
                     return;
@@ -135,6 +130,7 @@ namespace ExpenseIt
                 Globals.DATIsync = tb3;
                 MainWindow m = new MainWindow();
                 m.scriviSETTINGS();
+                Globals.log.Info("Percorsi settings");
             }
 
             this.Close();

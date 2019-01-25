@@ -38,6 +38,7 @@ namespace ExpenseIt
             Loaded += Clienti_Home_Loaded;
             if (Globals.CLIENTI == null)
             {
+                Globals.log.Info("Lettura CLIENTI.csv");
                 var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
                 var reader = new StreamReader(file); string info = reader.ReadLine();
                 Globals.LAST_CLIENT = reader.ReadLine();
@@ -81,7 +82,6 @@ namespace ExpenseIt
                 Grid.SetColumn(buttonList[i], i % 4);
                 Grid.SetRow(buttonList[i], (i / 4));
                 grid.Children.Add(buttonList[i]);
-                Console.WriteLine("\t" + cliente.getNomeCliente());
                 i++;
             }
             InitializeComponent();
@@ -102,6 +102,7 @@ namespace ExpenseIt
                 return;
             }
             Console.WriteLine("UpdateClientList");
+            Globals.log.Info("UpdateClientList");
             Grid grid = this.FindName("buttonGrid") as Grid;
 
             int i = Globals.CLIENTI.Count - 1;
@@ -130,7 +131,8 @@ namespace ExpenseIt
             Grid.SetColumn(buttonList[i], i % 4);
             Grid.SetRow(buttonList[i], (i / 4));
             grid.Children.Add(buttonList[i]);
-            Console.WriteLine("\t" + cliente.getNomeCliente());
+            Console.WriteLine("Nuovo cliente: " + cliente.getNomeCliente());
+            Globals.log.Info("Nuovo cliente: " + cliente.getNomeCliente());
         }
 
         /// <summary>
@@ -138,6 +140,7 @@ namespace ExpenseIt
         /// </summary>
         private void ReadProjects()
         {
+            Globals.log.Info("Read all projects");
             progettiAll = new List<Progetto>();
             for (int i = 0; i < Globals.CLIENTI.Count; i++)
             {
@@ -148,7 +151,6 @@ namespace ExpenseIt
                     Console.WriteLine("Leggo:" + Globals.CLIENTI[i].getNomeCliente());
                     using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv"))
                     {
-
                         while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
                         {
                             
@@ -168,13 +170,17 @@ namespace ExpenseIt
                 }
                 catch (IOException)
                 {
-                    //MessageBox.Show("E17 - Il file " + Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv" + " non esiste o è aperto da un altro programma");
-                    Console.WriteLine("E17 - Il file " + Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv" + " non esiste o è aperto da un altro programma");
+                    string msg = "E17 - Il file " + Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv" + " non esiste o è aperto da un altro programma";
+                    //MessageBox.Show(msg);
+                    Console.WriteLine(msg);
+                    Globals.log.Error(msg);
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("E30 - Il file " + Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv" + " è in un formato non corretto" +
-                        "\nProblema riscontrato al progetto numero: "+ j);
+                    string msg = "E30 - Il file " + Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv" + " è in un formato non corretto" +
+                        "\nProblema riscontrato al progetto numero: " + j;
+                    Console.WriteLine(msg);
+                    Globals.log.Error(msg);
                 }
             }
         }
@@ -190,6 +196,7 @@ namespace ExpenseIt
             if (progettiAll != null)
             {
                 Console.WriteLine("Update list1");
+                Globals.log.Info("Update list1");
                 if (this.FindName("dataGrid") is DataGrid dataGrid)
                 {
                     dataGrid.Items.Clear();
@@ -233,22 +240,30 @@ namespace ExpenseIt
             try
             {
                 File.Create(Globals.DATI + cliente + ".csv");
-                Console.WriteLine("Creato file: " + Globals.DATI + cliente + ".csv");
+                string msg = "Creato file: " + Globals.DATI + cliente + ".csv";
+                Console.WriteLine(msg);
+                Globals.log.Info(msg);
             }
             catch (IOException)
             {
-                MessageBox.Show("E21 - Il file " + Globals.DATI + cliente + ".csv" + " non è stato creata per un problema", "E21"
+                string msg = "E21 - Il file " + Globals.DATI + cliente + ".csv" + " non è stato creata per un problema";
+                MessageBox.Show(msg, "E21"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
             try
             {
                 File.Create(Globals.DATI + cliente + "date.csv");
-                Console.WriteLine("Creato file: " + Globals.DATI + cliente + "date.csv");
+                string msg = "Creato file: " + Globals.DATI + cliente + "date.csv";
+                Console.WriteLine(msg);
+                Globals.log.Info(msg);
             }
             catch (IOException)
             {
-                MessageBox.Show("E22 - Il file " + Globals.DATI + cliente + "date.csv" + " non è stato creato per un problema", "E22"
+                string msg = "E22 - Il file " + Globals.DATI + cliente + "date.csv" + " non è stato creato per un problema";
+                MessageBox.Show(msg, "E22"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
         }
 
@@ -260,12 +275,16 @@ namespace ExpenseIt
             try
             {
                 Directory.CreateDirectory(Globals.PROGETTI + cliente);
-                Console.WriteLine("Creata cartella: " + Globals.PROGETTI + cliente);
+                string msg = "Creata cartella: " + Globals.PROGETTI + cliente;
+                Console.WriteLine(msg);
+                Globals.log.Info(msg);
             }
             catch (IOException)
             {
-                MessageBox.Show("E23 - La cartella " + Globals.PROGETTI + cliente + " non è stata creata per un problema", "E23"
+                string msg = "E23 - La cartella " + Globals.PROGETTI + cliente + " non è stata creata per un problema";
+                MessageBox.Show(msg, "E23"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
         }
 
@@ -397,6 +416,7 @@ namespace ExpenseIt
         private void Button_New_Client(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("\nNew Client");
+            Globals.log.Info("\nNew Client");
             Form_nuovoCliente form = new Form_nuovoCliente();
             numClientiTemp = Globals.CLIENTI.Count;
             form.FormClosed
@@ -411,15 +431,24 @@ namespace ExpenseIt
         /// </summary>
         private void Button_GitHubCloneAll(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler SCARICARE TUTTI i progetti sul repository online e salvarli sul tuo computer?",
-                "Caricare online?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler SCARICARE TUTTI i progetti dal repository online e salvarli sul tuo computer in DATIsync?",
+                "Effettuare clone?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             if (dialogResult == MessageBoxResult.Yes)
             {
                 GitCommands git = new GitCommands();
                 if (git.clone())
                 {
-                    MessageBox.Show("Clone del repository " + Globals.GITURL + " nella cartella " + Globals.DATIsync + " riuscito correttamente!", "Clone riuscito"
+                    string msg = "Clone del repository " + Globals.GITURL + " nella cartella " + Globals.DATIsync + " riuscito correttamente!";
+                    MessageBox.Show(msg, "Clone riuscito"
                                      , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    Globals.log.Info(msg);
+                }
+                else
+                {
+                    string msg = "Clone del repository " + Globals.GITURL + " nella cartella " + Globals.DATIsync + " NON riuscito.";
+                    MessageBox.Show(msg, "Clone non riuscito"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    Globals.log.Error(msg);
                 }
                 UpdateList("");
             }
@@ -437,13 +466,12 @@ namespace ExpenseIt
         {
             Button buttonClone = this.FindName("BottGitClone2") as Button;
             Button buttonPush = this.FindName("BottGitPush2") as Button;
+            buttonClone.IsEnabled = false;
+            buttonPush.IsEnabled = false;
             MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler CARICARE TUTTI i progetti attuali online?",
                 "Caricare online?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             if (dialogResult == MessageBoxResult.Yes)
             {
-                
-                buttonClone.IsEnabled = false;
-                buttonPush.IsEnabled = false;
                 GitCommands git = new GitCommands();
                 if (git.copyFolder())
                 {
@@ -458,19 +486,25 @@ namespace ExpenseIt
                             {
                                 message += "\n" + f;
                             }
-                            MessageBox.Show("Upload sul repository " + Globals.GITURL + " riuscito correttamente! File caricati:\n" + message, "Upload riuscito"
+                            string msg = "Upload sul repository " + Globals.GITURL + " riuscito correttamente! File caricati:\n" + message;
+                            MessageBox.Show(msg, "Upload riuscito"
                                          , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                            Globals.log.Info(msg);
                         }
                         else
                         {
-                            MessageBox.Show("Upload sul repository " + Globals.GITURL + " non effettuato perchè non c'era niente da caricare", "Niente da caricare"
+                            string msg = "Upload sul repository " + Globals.GITURL + " non effettuato perchè non c'era niente da caricare";
+                            MessageBox.Show(msg, "Niente da caricare"
                                         , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                            Globals.log.Info(msg);
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Upload sul repository " + Globals.GITURL + " non riuscito.", "Errore upload"
+                        string msg = "Upload sul repository " + Globals.GITURL + " non riuscito.";
+                        MessageBox.Show(msg, "Errore upload"
                                             , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                        Globals.log.Error(msg);
                     }
                 }
             }
@@ -548,6 +582,7 @@ namespace ExpenseIt
         private void SetVisibility()
         {
             Console.WriteLine("Set visibility");
+            Globals.log.Info("Set visibility");
             MenuItem ma = this.FindName("Menu_anteprima_check") as MenuItem;
             MenuItem ms = this.FindName("Menu_sync_check") as MenuItem;
             ma.IsChecked = Globals.ANTEPRIME;

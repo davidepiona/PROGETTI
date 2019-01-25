@@ -34,10 +34,11 @@ namespace ExpenseIt
             if (Globals.CLIENTI == null)
             {
                 Globals.SETTINGS = Directory.GetCurrentDirectory() + @"\SETTINGS.csv";
-                Console.WriteLine(Globals.SETTINGS);
+                Console.WriteLine("Settings lette da: "+ Globals.SETTINGS);
                 leggiSETTINGS(null,null);
                 log4net.GlobalContext.Properties["LogFileName"] = Directory.GetCurrentDirectory() + @"\APP.log"; 
                 Globals.log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+                Globals.log.Info("Settings lette da: " + Globals.SETTINGS);
                 InitializeComponent();
             }
         }
@@ -45,19 +46,12 @@ namespace ExpenseIt
         public void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Console.WriteLine("Closing called");
+            Globals.log.Info("Closing called");
             salvaClientiCSV();
-            //sw.Close();
-            // If data is dirty, notify user and ask for a response
-            //if (Globals.IS_DATA_DIRTY)
-            //{
-            //    Console.WriteLine("Data is dirty");
-
-            //}
         }
 
         public void salvaClientiCSV()
         {
-            //Console.WriteLine("COsa è?? " + Globals.LAST_CLIENT);
             string[] lines = new string[2 + Globals.CLIENTI.Count];
             lines[0] = "CLIENTE,SUFFISSO,LAST_ID,MAX_ID";
             lines[1] = Globals.LAST_CLIENT;
@@ -71,22 +65,18 @@ namespace ExpenseIt
                     lines[i] = c.getNomeCliente() + "," + c.getSuffisso() + "," + c.getlastId() + "," + c.getMaxId();
                     i++;
                 }
-                //Console.WriteLine(c.getNomeCliente() + "," + c.getNomeCliente() + "," + c.getlastId() + "," + c.getMaxId());
             }
             try
             {
                 File.WriteAllLines(Globals.DATI + @"\CLIENTI.csv", lines);
-                
-              
             }
             catch (IOException)
             {
-                MessageBox.Show(
-               "E08 - Il file " + Globals.DATI + @"\CLIENTI.csv" + " non esiste o è aperto da un altro programma." +
-               " \n\nChiudere i programmi che utilizzano questo file e riprovare.",
-               "E08 Chiusura applicazione",
-               MessageBoxButton.OK,
-               MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                string msg = "E08 - Il file " + Globals.DATI + @"\CLIENTI.csv" + " non esiste o è aperto da un altro programma." +
+                " \n\nChiudere i programmi che utilizzano questo file e riprovare.";
+                MessageBox.Show(msg, "E08 Chiusura applicazione", MessageBoxButton.OK,
+                                MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
                 salvaClientiCSV();
             }
         }
@@ -98,7 +88,6 @@ namespace ExpenseIt
             {
                 var file = File.OpenRead(Globals.SETTINGS);
                 var reader = new StreamReader(file);
-                
                 Globals.GITURL = reader.ReadLine();
                 Globals.GITPATH = reader.ReadLine();
                 Globals.PROGETTI = reader.ReadLine();
@@ -106,9 +95,7 @@ namespace ExpenseIt
                 Globals.DATIsync = reader.ReadLine();
                 Globals.ANTEPRIME = reader.ReadLine().Equals("True") ? true : false;
                 Globals.SINCRONIZZAZIONE = reader.ReadLine().Equals("True") ? true : false;
-                //Console.WriteLine("<" + reader.ReadLine() + "><" + reader.ReadLine() + ">");
                 file.Close();
-                
             }
             catch (IOException)
             {
@@ -131,7 +118,7 @@ namespace ExpenseIt
         public void scriviSETTINGS()
         {
             Console.WriteLine("Scrivo SETTINGS");
-
+            Globals.log.Info("Scrivo SETTINGS");
             string[] lines = new string[7];
             lines[0] = Globals.GITURL;
             lines[1] = Globals.GITPATH;
@@ -146,12 +133,11 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show(
-               "E14 - Il file " + Globals.SETTINGS + " non esiste o è aperto da un altro programma." +
-               " \n\nNon è possibile salvare le nuove preferenze.",
-               "E14 File bloccato",
-               MessageBoxButton.OK,
-               MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                string msg = "E14 - Il file " + Globals.SETTINGS + " non esiste o è aperto da un altro programma." +
+                " \n\nNon è possibile salvare le nuove preferenze.";
+                MessageBox.Show(msg,"E14 File bloccato", MessageBoxButton.OK,
+                                MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
         }
     }

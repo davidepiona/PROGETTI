@@ -29,11 +29,6 @@ namespace ExpenseIt
 
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private void createDataGridView()
         {
             dataGridView1.ColumnCount = 4;
@@ -124,34 +119,25 @@ namespace ExpenseIt
                         index++;
                     }
 
-
-                    Console.WriteLine("INDICE: " + i);
+                    
                     Globals.CLIENTI[num_cliente].setMaxId(Globals.CLIENTI[num_cliente].getMaxId() + i);
                     Globals.CLIENTI[num_cliente].setLastId(Globals.CLIENTI[num_cliente].getMaxId());
                     Console.WriteLine("MAX: " + Globals.CLIENTI[num_cliente].getMaxId());
                     MainWindow m = new MainWindow();
                     m.salvaClientiCSV();
-
-
+                    string msg = "Merge effettuato: sono stati aggiunti " + i + " nuovi progetti";
+                    Console.WriteLine(msg);
+                    Globals.log.Info(msg);
                 }
                 catch (IOException)
                 {
-                    MessageBox.Show("E10 - Il file " + file + " non esiste o è aperto da un altro programma", "E10"
+                    string msg = "E10 - Il file " + file + " non esiste o è aperto da un altro programma";
+                    MessageBox.Show(msg, "E10"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                    Globals.log.Error(msg);
                 }
             }
             this.Close();
-
-        }
-
-        private void Form_ShowDifference_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }

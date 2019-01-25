@@ -39,7 +39,8 @@ namespace ExpenseIt
             try
             {
                 if (Globals.CLIENTI == null)
-                {   
+                {
+                    Globals.log.Info("Lettura CLIENTI.csv");
                     var file = File.OpenRead(Globals.DATI + @"\CLIENTI.csv");
                     var reader = new StreamReader(file);
                     reader.ReadLine();
@@ -59,15 +60,19 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E01 - Il file " + Globals.DATI + @"CLIENTI.csv" +
-                    " non esiste o è aperto da un altro programma. \n L'APPLICAZIONE SARA' CHIUSA", "E01"
+                string msg = "E01 - Il file " + Globals.DATI + @"CLIENTI.csv" +
+                    " non esiste o è aperto da un altro programma. \n L'APPLICAZIONE SARA' CHIUSA";
+                MessageBox.Show(msg, "E01"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Fatal(msg);
                 Environment.Exit(0);
             }
             catch (FormatException)
             {
-                MessageBox.Show("E35 - Il file " + Globals.DATI + @"CLIENTI.csv" +
-                    " è in un formato non corretto. \nProblema riscontrato al cliente numero: " + j, "E35", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                string msg = "E35 - Il file " + Globals.DATI + @"CLIENTI.csv" +
+                    " è in un formato non corretto. \nProblema riscontrato al cliente numero: " + j;
+                MessageBox.Show(msg, "E35", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
             try
             {
@@ -75,8 +80,10 @@ namespace ExpenseIt
                 string cliente = Globals.CLIENTI.Find(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT)).getNomeCliente();
             }catch(NullReferenceException)
             {
-                MessageBox.Show("E34 - non è possibile raggiungere alcune informazioni relative al cliente"+ Globals.LAST_CLIENT + ". \nL'applicazione sarà chiusa", "E34"
+                string msg = "E34 - non è possibile raggiungere alcune informazioni relative al cliente" + Globals.LAST_CLIENT + ". \nL'applicazione sarà chiusa";
+                MessageBox.Show(msg, "E34"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Fatal(msg);
                 Environment.Exit(0);
             }
             if (CheckFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
@@ -112,15 +119,16 @@ namespace ExpenseIt
             readProjects();
             ProgSelezionato = Globals.CLIENTI[num_cliente].getlastId();
             ultimaModifica = new UltimaModifica(Globals.CLIENTI[num_cliente]);
+            Globals.log.Info("Leggo date.csv");
             if (!ultimaModifica.readByCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
             {
-                MessageBox.Show("E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                string msg = "E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
                     "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non " +
-                    "saranno caricate da file.", "E02"
-                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    "saranno caricate da file.";
+                MessageBox.Show(msg, "E02", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
             ultimaModifica.aggiornoModifiche(progetti);
-            //updateList("");
             CheckBox_sync_ultima_modifica();
             createList();
             Label titolo = this.FindName("titolo") as Label;
@@ -128,7 +136,6 @@ namespace ExpenseIt
             PreviewKeyDown += new KeyEventHandler(PreviewKeyDown2);
             InitCheck();
             SetVisibility();
-
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,6 +148,7 @@ namespace ExpenseIt
         private void readProjects()
         {
             Console.WriteLine("Read Projects");
+            Globals.log.Info("Read Projects");
             List<string> lines = new List<string>();
             int j = 0;
             try
@@ -165,14 +173,18 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                    ".csv" + " non esiste o è aperto da un altro programma", "E03"
+                string msg = "E03 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                    ".csv" + " non esiste o è aperto da un altro programma";
+                MessageBox.Show(msg, "E03"
                                      , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
             catch (FormatException)
             {
-                MessageBox.Show("E31 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +".csv" +
-                    " è in un formato non corretto.\nProblema riscontrato al progetto numero: " + j, "E31", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                string msg = "E31 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv" +
+                    " è in un formato non corretto.\nProblema riscontrato al progetto numero: " + j;
+                MessageBox.Show(msg, "E31", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
         }
 
@@ -183,6 +195,7 @@ namespace ExpenseIt
         private void createList()
         {
             Console.WriteLine("Create List");
+            Globals.log.Info("Create List");
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             dataGrid.SelectionChanged += new SelectionChangedEventHandler(ChangePreview);
             dataGrid.Items.Clear();
@@ -210,6 +223,7 @@ namespace ExpenseIt
         {
             CheckBox_sync_ultima_modifica();
             Console.WriteLine("Update list1");
+            Globals.log.Info("Update list1");
             Progetto primo = new Progetto(0, null, null, null, null, null, null);
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             ultimaModifica.aggiornoModifiche(progetti);
@@ -249,6 +263,7 @@ namespace ExpenseIt
         private void updateListNewProject(object sender, System.Windows.Forms.FormClosedEventArgs e)
         {
             Console.WriteLine("UpdateList2");
+            Globals.log.Info("UpdateList2");
             progetti = new List<Progetto>();
             readProjects();
             CheckBox_sync_ultima_modifica();
@@ -281,8 +296,10 @@ namespace ExpenseIt
         {
             if (!System.IO.Directory.Exists(Globals.PROGETTI + cliente) || !System.IO.File.Exists(Globals.DATI + cliente + ".csv"))
             {
-                MessageBox.Show("La cartella o il file csv del cliente attuale " + cliente + " non è presente", "Informazioni assenti"
+                string msg = "La cartella o il file csv del cliente attuale " + cliente + " non è presente";
+                MessageBox.Show(msg, "Informazioni assenti"
                                      , MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Warn(msg);
                 back = true;
                 return false;
             }
@@ -310,18 +327,20 @@ namespace ExpenseIt
         {
             if (!ultimaModifica.readSync(Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
             {
-                //MessageBox.Show("E05 - Il file " + Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.\n\nNon è possibile effettuare la sincronizzazione.");
-                Console.WriteLine("E05 - Non è possibile effettuare la sincronizzazione. - Il file " + Globals.DATIsync +
-                    Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.", "E05"
-                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                string msg = "E05 - Non è possibile effettuare la sincronizzazione. - Il file " + Globals.DATIsync +
+                    Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv" + " non esiste o è aperto da un altro programma.";
+                //MessageBox.Show(msg , "E05" , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
             }
             else
             {
                 if (!ultimaModifica.confrontoSync(progetti))
                 {
-                    MessageBox.Show("E' necessario aver caricato almeno una volta le date di ultime modifiche prima di effettuare " +
-                        "la sincronizzazione", "Sincronizzazione non avvenuta"
+                    string msg = "E' necessario aver caricato almeno una volta le date di ultime modifiche prima di effettuare la sincronizzazione";
+                    MessageBox.Show(msg, "Sincronizzazione non avvenuta"
                                      , MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    Globals.log.Error(msg);
                 }
             }
         }
@@ -333,9 +352,11 @@ namespace ExpenseIt
         {
             if (progetti.Count != 0 && progetti[progetti.Count - 1].numero != Globals.CLIENTI[num_cliente].getMaxId())
             {
-                MessageBox.Show("Indice ultimo progetto diverso dal numero di progetti di questo cliente" +
-                    progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId(), "Allarme inizializzazione"
+                string msg = "Indice ultimo progetto diverso dal numero di progetti di questo cliente" +
+                    progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId();
+                MessageBox.Show(msg, "Allarme inizializzazione"
                                      , MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Warn(msg);
             }
         }
 
@@ -345,6 +366,7 @@ namespace ExpenseIt
         private void SetVisibility()
         {
             Console.WriteLine("Set visibility");
+            Globals.log.Info("Set visibility");
             MenuItem ma = this.FindName("Menu_anteprima_check") as MenuItem;
             MenuItem ms = this.FindName("Menu_sync_check") as MenuItem;
             ma.IsChecked = Globals.ANTEPRIME;
@@ -396,12 +418,10 @@ namespace ExpenseIt
         /// </summary>
         private void Button_New_Project(object sender, RoutedEventArgs e)
         {
-            Globals.log.Info("info informazioneeeeeeeeeeeeeeeeee");
-            Globals.log.Error("error informazioneeeeeeeeeeeeeeeeee");
-            Globals.log.Fatal("fatal informazioneeeeeeeeeeeeeeeeee");
             if (CheckFolderandCsv(Globals.CLIENTI[num_cliente].getNomeCliente()))
             {
-                Console.WriteLine("\nNew Project");
+                Console.WriteLine("New Project");
+                Globals.log.Info("New Project");
                 Form1 testDialog = new Form1(Globals.CLIENTI[num_cliente], progetti[progetti.Count - 1].numero);
                 testDialog.FormClosed
                     += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
@@ -462,17 +482,21 @@ namespace ExpenseIt
                 {
                     if (!ultimaModifica.writeInCSV(Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"))
                     {
-                        MessageBox.Show("E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"
+                        string msg = "E04 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + "date.csv"
                             + " non esiste o è aperto da un altro programma. \n\nNon è stato possibile salvare i dati relativi alle" +
-                            " ultime modifiche.", "E04"
+                            " ultime modifiche.";
+                        MessageBox.Show(msg, "E04"
                                          , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                        Globals.log.Error(msg);
                     }
                     ultimaModifica.aggiornoModifiche(progetti);
                 }
                 else
                 {
-                    MessageBox.Show("E26 non riuscito aggiornamento ultime modifiche", "E26"
+                    string msg = "E26 non riuscito aggiornamento ultime modifiche";
+                    MessageBox.Show(msg, "E26"
                                          , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    Globals.log.Error(msg);
                 }
 
             }).ContinueWith(task =>
@@ -482,9 +506,11 @@ namespace ExpenseIt
                 buttonPush.IsEnabled = true;
                 buttonMerge.IsEnabled = true;
                 updateList("");
-                MessageBox.Show("Le ultime modifiche di tutti i progetti di " + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                    " sono state aggiornate e caricate nel relativo file csv.", "Modifiche aggiornate"
+                string msg = "Le ultime modifiche di tutti i progetti di " + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                    " sono state aggiornate e caricate nel relativo file csv.";
+                MessageBox.Show(msg, "Modifiche aggiornate"
                                      , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Info(msg);
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
@@ -498,6 +524,7 @@ namespace ExpenseIt
             s.readSyncProject(Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv");
             List<Progetto>[] compare = s.compareSyncProject();
             Console.WriteLine("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
+            Globals.log.Info("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
             Form_ShowDifference form = new Form_ShowDifference(compare[1], num_cliente);
             form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
             form.ShowDialog();
@@ -519,11 +546,24 @@ namespace ExpenseIt
             buttonPush.IsEnabled = false;
             buttonMerge.IsEnabled = false;
             GitCommands git = new GitCommands();
-            if (git.Checkout(Globals.CLIENTI[num_cliente].getNomeCliente()))
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler SCARICARE i progetti di questo cliente dal repository online e salvarli sul tuo computer in DATIsync?",
+                "Effettuare checkout?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            if (dialogResult == MessageBoxResult.Yes)
             {
-
-                MessageBox.Show("Clone del repository " + Globals.GITURL + " nella cartella " + Globals.DATIsync + " riuscito correttamente!", "Clone riuscito"
-                                 , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                if (git.Checkout(Globals.CLIENTI[num_cliente].getNomeCliente()))
+                {
+                    string msg = "Checkout dal repository " + Globals.GITURL + " nella cartella " + Globals.DATIsync + " riuscito correttamente!";
+                    MessageBox.Show(msg, "Checkout riuscito"
+                                     , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    Globals.log.Info(msg);
+                }
+                else
+                {
+                    string msg = "Checkout dal repository " + Globals.GITURL + " nella cartella " + Globals.DATIsync + "NON riuscito";
+                    MessageBox.Show(msg, "Checkout non riuscito"
+                                     , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    Globals.log.Error(msg);
+                }
             }
             buttonModifiche.IsEnabled = true;
             buttonClone.IsEnabled = true;
@@ -568,19 +608,25 @@ namespace ExpenseIt
                             {
                                 message += "\n" + f;
                             }
-                            MessageBox.Show("Upload sul repository " + Globals.GITURL + " riuscito correttamente! File caricati:\n" + message, "Upload riuscito"
+                            string msg = "Upload sul repository " + Globals.GITURL + " riuscito correttamente! File caricati:\n" + message;
+                            MessageBox.Show(msg, "Upload riuscito"
                                          , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                            Globals.log.Info(msg);
                         }
                         else
                         {
-                            MessageBox.Show("Upload sul repository " + Globals.GITURL + " non effettuato perchè non c'era niente da caricare", "Niente da caricare"
+                            string msg = "Upload sul repository " + Globals.GITURL + " non effettuato perchè non c'era niente da caricare";
+                            MessageBox.Show(msg, "Niente da caricare"
                                         , MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                            Globals.log.Info(msg);
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Upload sul repository " + Globals.GITURL + " non riuscito.", "Errore upload"
+                        string msg = "Upload sul repository " + Globals.GITURL + " non riuscito.";
+                        MessageBox.Show(msg, "Errore upload"
                                             , MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                        Globals.log.Error(msg);
                     }
                 }
             }
@@ -644,6 +690,7 @@ namespace ExpenseIt
         private void ChangePreview(object sender, EventArgs e)
         {
             Console.WriteLine("Change Preview");
+            Globals.log.Info("Change Preview");
             try
             {
                 ProgSelezionato = (((Progetto)((DataGrid)sender).SelectedValue).numero);
@@ -690,9 +737,10 @@ namespace ExpenseIt
                 }
 
             }
-            catch (NullReferenceException) 
+            catch (NullReferenceException nre) 
             {
                 //Console.WriteLine("ECCEZIONE: " + nre);
+                Globals.log.Warn("Eccezione in changePreview: " + nre);
             }
         }
 

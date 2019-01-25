@@ -32,16 +32,16 @@ namespace ExpenseIt
             {
                 MessageBox.Show("Inserire un nome valido", "Nome assente", 
                     MessageBoxButtons.OK , MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 ,MessageBoxOptions.RightAlign);
+                Globals.log.Warn("Nome cliente assente");
                 return;
             }
-            
-            //Console.WriteLine("PRIMA: " + nome);
             nome = nome.Replace(" ", "_");
 
             if (suffisso.Equals(""))
             {
                 MessageBox.Show("Inserire un suffisso valido.", "Suffisso assente", 
                     MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Warn("Suffisso cliente assente");
                 return;
             }
 
@@ -50,9 +50,9 @@ namespace ExpenseIt
                 if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')&& (c < '1' || c > '9') )
 
                     {
-                    MessageBox.Show("Inserire un suffisso composto esclusivamente da lettere e numeri.Inserire un suffisso composto esclusivamente da lettere e numeri.Inserire un suffisso composto esclusivamente da lettere e numeri.", "Suffisso non alfanumerico", 
+                    MessageBox.Show("Inserire un suffisso composto esclusivamente da lettere e numeri." , "Suffisso non alfanumerico", 
                         MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
-
+                    Globals.log.Warn("Suffisso cliente non alfanumerico");
                     return;
 
                     }
@@ -63,59 +63,67 @@ namespace ExpenseIt
             {
                 string clientDetails = nome + ","+ suffisso+ ","+ 0 + ","+ 0;
                 File.AppendAllText(file, clientDetails);
-                Console.WriteLine("\n Nuovo cliente= " + clientDetails);
+                Console.WriteLine("Nuovo cliente= " + clientDetails);
+                Globals.log.Info("Nuovo cliente= " + clientDetails);
                 if (!Directory.Exists(Globals.PROGETTI + nome))
                 {
                     try
                     {
-                        //creare nuova cartella in progetti
                         Directory.CreateDirectory(Globals.PROGETTI + nome);
-                        Console.WriteLine("Creata cartella: " + Globals.PROGETTI + nome);
+                        string msg = "Creata cartella: " + Globals.PROGETTI + nome;
+                        Console.WriteLine(msg);
+                        Globals.log.Info(msg);
                     }
                     catch (IOException)
                     {
-                        MessageBox.Show("E16 - La cartella " + Globals.PROGETTI + nome + " non è stato creata per un problema", "E16"
+                        string msg = "E16 - La cartella " + Globals.PROGETTI + nome + " non è stato creata per un problema";
+                        MessageBox.Show(msg, "E16"
                                      ,MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                        Globals.log.Error(msg);
                     }
                 }
                 if (!File.Exists(Globals.DATI + nome + ".csv"))
                 {
                     try
                     {
-                        //creare nuovo file CSV in DATI
                         File.Create(Globals.DATI + nome + ".csv");
-                        Console.WriteLine("Creato file: " + Globals.DATI + nome + ".csv");
+                        string msg = "Creato file: " + Globals.DATI + nome + ".csv";
+                        Console.WriteLine(msg);
+                        Globals.log.Info(msg);
                     }
                     catch (IOException)
                     {
-                        MessageBox.Show("E17 - Il file " + Globals.DATI + nome + ".csv" + " non è stato creata per un problema", "E17"
+                        string msg = "E17 - Il file " + Globals.DATI + nome + ".csv" + " non è stato creata per un problema";
+                        MessageBox.Show(msg, "E17"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                        Globals.log.Error(msg);
                     }
                     try
                     {
-                        //creare nuovo file CSV in DATI
                         File.Create(Globals.DATI + nome + "date.csv");
-                        Console.WriteLine("Creato file: " + Globals.DATI + nome + "date.csv");
+                        string msg = "Creato file: " + Globals.DATI + nome + "date.csv";
+                        Console.WriteLine(msg);
+                        Globals.log.Info(msg);
                     }
                     catch (IOException)
                     {
-                        MessageBox.Show("E18 - Il file " + Globals.DATI + nome + "date.csv" + " non è stato creata per un problema", "E18"
+                        string msg = "E18 - Il file " + Globals.DATI + nome + "date.csv" + " non è stato creata per un problema";
+                        MessageBox.Show(msg, "E18"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                        Globals.log.Error(msg);
                     }
                 }
-
-
                 Globals.CLIENTI.Add(new Cliente(nome, suffisso, 0, 0));
                 MainWindow m = new MainWindow();
                 m.salvaClientiCSV();
-
                 this.Close();
-                
             }
             catch (IOException)
             {
-                MessageBox.Show("E19 - Il file " + file + " non esiste o è aperto da un altro programma", "E19"
+                string msg = "E19 - Il file " + file + " non esiste o è aperto da un altro programma";
+                MessageBox.Show(msg, "E19"
                                      , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
         }
     }

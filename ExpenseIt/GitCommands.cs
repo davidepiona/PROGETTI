@@ -57,9 +57,11 @@ namespace ExpenseIt
                         }
                         catch (IOException)
                         {
-                            MessageBox.Show("E25 - Non è possibile eliminare un file tra " + cliente + ".csv e " + cliente + "date.csv.\n" +
-                                "La ricerca è avvenuta in " + Globals.DATIsync + ".", "E25"
+                            string msg = "E25 - Non è possibile eliminare un file tra " + cliente + ".csv e " + cliente + "date.csv.\n" +
+                                "La ricerca è avvenuta in " + Globals.DATIsync + ".";
+                            MessageBox.Show(msg, "E25"
                                 , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                            Globals.log.Error(msg);
                             return false;
                         }
                     }
@@ -67,12 +69,14 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E12 - Il file " + Globals.DATIsync + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.", "E12"
-                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                string msg = "E12 - Il file " + Globals.DATIsync + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.";
+                MessageBox.Show(msg, "E12", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
                 return false;
             }
 
             Console.WriteLine("Eliminati file " + cliente + ".csv e " + cliente + "date.csv in DATIsync");
+            Globals.log.Info("Eliminati file " + cliente + ".csv e " + cliente + "date.csv in DATIsync");
             try
             {
                 File.Copy(Globals.DATI + cliente + ".csv", Globals.DATIsync + cliente + ".csv");
@@ -80,11 +84,13 @@ namespace ExpenseIt
             }
             catch (IOException ioe)
             {
-                MessageBox.Show("E13 - Il file non esiste o è aperto da un altro programma.\n\nNon è possibile copiare la cartella." + ioe.Message, "E13"
-                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                string msg = "E13 - Il file non esiste o è aperto da un altro programma.\n\nNon è possibile copiare la cartella." + ioe.Message;
+                MessageBox.Show(msg, "E13", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
                 return false;
             }
             Console.WriteLine("Copiato DATI in DATIsync");
+            Globals.log.Info("Copiato DATI in DATIsync");
             return true;
         }
 
@@ -104,11 +110,13 @@ namespace ExpenseIt
             }
             catch (IOException)
             {
-                MessageBox.Show("E40 - Il file " + SourcePath + " non esiste o è aperto da un altro programma.\n\nNon è possibile copiare la cartella.", "E42"
-                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                string msg = "E40 - Il file " + SourcePath + " non esiste o è aperto da un altro programma.\n\nNon è possibile copiare la cartella.";
+                MessageBox.Show(msg, "E42", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
                 return false;
             }
             Console.WriteLine("Sostituito file in DATIsync con quelli in DATI");
+            Globals.log.Info("Sostituito file in DATIsync con quelli in DATI");
             return true;
         }
 
@@ -152,6 +160,7 @@ namespace ExpenseIt
                 string info = proc.StandardOutput.ReadLine();
                 //string[] split = info.Split(':');
                 Console.WriteLine("OUT: " + info + "info[0]: <" + info[0] + "> quindi: " + !info[0].Equals(' '));
+                Globals.log.Info("OUT: " + info + "info[0]: <" + info[0] + "> quindi: " + !info[0].Equals(' '));
                 if (!info[0].Equals(' ') && !info[0].Equals('?'))
                 {
                     commitInfo.Add(info);
@@ -168,10 +177,12 @@ namespace ExpenseIt
                 string err = proc.StandardError.ReadLine();
                 string[] split = err.Split(':');
                 Console.WriteLine("ERRPenultimo: " + err + ">");
+                Globals.log.Info("ERRPenultimo: " + err + ">");
 
                 if (split[0].Equals("To https"))
                 {
-                    Console.WriteLine("numero elementi:" + commitInfo.Count);
+                    Console.WriteLine("Fine push, numero elementi:" + commitInfo.Count);
+                    Globals.log.Info("Fine push, numero elementi:" + commitInfo.Count);
                     return commitInfo;
                 }
             }
@@ -182,10 +193,12 @@ namespace ExpenseIt
                 string err = proc.StandardError.ReadLine();
                 string[] split = err.Split(':');
                 Console.WriteLine("ERRUltimo: " + err + ">");
+                Globals.log.Info("ERRUltimo: " + err + ">");
 
                 if (split[0].Equals("To https") || split[0].Equals("Everything up-to-date"))
                 {
-                    Console.WriteLine("numero elementi:" + commitInfo.Count);
+                    Console.WriteLine("Fine push, numero elementi:" + commitInfo.Count);
+                    Globals.log.Info("Fine push, numero elementi:" + commitInfo.Count);
                     return commitInfo;
                 }
             }
@@ -213,15 +226,18 @@ namespace ExpenseIt
                     dir.Delete(true);
                 }
                 Console.WriteLine("Eliminata vecchia cartella DATIsync");
+                Globals.log.Info("Eliminata vecchia cartella DATIsync");
             }
             catch (IOException)
             {
-                MessageBox.Show("E15 - Il file " + Globals.DATIsync + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.", "E15"
-                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                string msg = "E15 - Il file " + Globals.DATIsync + " è aperto da un altro programma (o non esiste).\n\nNon è possibile eliminare la cartella.";
+                MessageBox.Show(msg, "E15", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
             }
             Directory.CreateDirectory(Globals.DATIsync);
             string gitCloneArgument = @"clone " + Globals.GITURL + " " + Globals.DATIsync;
-            Console.WriteLine(gitCloneArgument);
+            Console.WriteLine("Clone argument: "+gitCloneArgument);
+            Globals.log.Info("Clone argument: "+gitCloneArgument);
             ProcessStartInfo _processStartInfo = new ProcessStartInfo();
             _processStartInfo.WorkingDirectory = Globals.DATIsync;
             _processStartInfo.RedirectStandardOutput = true;
@@ -237,25 +253,30 @@ namespace ExpenseIt
                 {
                     string err = proc.StandardError.ReadLine();
                     Console.WriteLine("ERR: " + err);
+                    Globals.log.Info("ERR: " + err);
                     string[] split = err.Split(':');
                     if (split[0].Equals("remote") || split[0].Equals("fatal") || split[0].Equals("git"))
                     {
-                        MessageBox.Show("Problemi con il repository git, azione di clone non eseguita", "Problemi con git"
-                                     , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                        string msg = "Problemi con il repository git, azione di clone non eseguita";
+                        MessageBox.Show(msg, "Problemi con git", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                        Globals.log.Error(msg);
                         return false;
                     }
                 }
             }
             catch (Win32Exception w32e)
             {
-                MessageBox.Show("Azione di clone non eseguita a causa di errore nel comando:\n" + w32e.Message, "Clone non eseguito"
-                                     , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                string msg = "Azione di clone non eseguita a causa di errore nel comando:\n" + w32e.Message;
+                MessageBox.Show(msg, "Clone non eseguito", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
                 return false;
             }
             catch (FileNotFoundException fnfe)
             {
-                MessageBox.Show("Azione di clone non eseguita a causa di:\n" + fnfe.Message, "Clone non eseguito"
-                                     , MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                string msg = "Azione di clone non eseguita a causa di:\n" + fnfe.Message;
+                MessageBox.Show(msg, "Clone non eseguito"
+                                     , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
                 return false;
             }
             return true;
@@ -263,7 +284,6 @@ namespace ExpenseIt
 
         public bool Checkout(string cliente)
         {
-            
             ProcessStartInfo _processStartInfo = new ProcessStartInfo();
             _processStartInfo.WorkingDirectory = Globals.DATIsync;
             _processStartInfo.RedirectStandardOutput = true;
@@ -271,11 +291,21 @@ namespace ExpenseIt
             _processStartInfo.RedirectStandardError = true;
             _processStartInfo.UseShellExecute = false;
             _processStartInfo.FileName = Globals.GITPATH;
-            string gitFetch = @"fetch";
-            _processStartInfo.Arguments = gitFetch;
+            try
+            {
+                string gitFetch = @"fetch";
+                _processStartInfo.Arguments = gitFetch;
 
-            string gitCheckout = @"checkout origin/master -- "+ cliente+ "*";
-            _processStartInfo.Arguments = gitCheckout;
+                string gitCheckout = @"checkout origin/master -- " + cliente + "*";
+                _processStartInfo.Arguments = gitCheckout;
+            }
+            catch (Win32Exception w32e)
+            {
+                string msg = "Azione di clone non eseguita a causa di errore nel comando:\n" + w32e.Message;
+                MessageBox.Show(msg, "Clone non eseguito", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
+                return false;
+            }
             return true;
         }
     }
