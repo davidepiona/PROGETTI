@@ -163,7 +163,7 @@ namespace ExpenseIt
                             string tipoOP = lines[0];
                             reader.ReadRow(lines);
                             string data = lines[0];
-                            progettiAll.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[i].getNomeCliente(), Globals.CLIENTI[i].getSuffisso()));
+                            progettiAll.Add(new Progetto(num, nome, tipoPLC, tipoOP, data, Globals.CLIENTI[i].getNomeCliente(), Globals.CLIENTI[i].getSuffisso()));
                             j++;
                         }
                     }
@@ -597,6 +597,9 @@ namespace ExpenseIt
             }
         }
 
+        /// <summary>
+        /// Apre il FORM Form_aggiornaCSV importare file .csv per MATRIX e renderli in formato DATA.
+        /// </summary>
         private void Menu_importa_CSV(object sender, RoutedEventArgs e)
         {
             Form_aggiornaCSV form = new Form_aggiornaCSV();

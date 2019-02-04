@@ -53,7 +53,7 @@ namespace ExpenseIt
                         string tipoOP = lines[0];
                         reader.ReadRow(lines);
                         string data = lines[0];
-                        progettiSync.Add(new Progetto(num, nome, tipoOP, tipoOP, data, Globals.CLIENTI[num_cliente].getNomeCliente(), Globals.CLIENTI[num_cliente].getSuffisso()));
+                        progettiSync.Add(new Progetto(num, nome, tipoPLC, tipoOP, data, Globals.CLIENTI[num_cliente].getNomeCliente(), Globals.CLIENTI[num_cliente].getSuffisso()));
                         j++;
                     }
                 }
