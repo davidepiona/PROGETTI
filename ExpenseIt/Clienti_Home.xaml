@@ -135,6 +135,11 @@ Height="40" Click="Open_Folder" Background="Green"  x:Name="BottApri2" Visibilit
                         <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Importa CSV da MATRIX" Click="Menu_importa_CSV" Background="AliceBlue">
+                    <MenuItem.Icon>
+                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\IconCsv.ico" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Imposta repository GitHub" Click="Menu_github" Background="AliceBlue">
                     <MenuItem.Icon>
                         <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\github.png" />

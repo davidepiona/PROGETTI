@@ -352,11 +352,17 @@ namespace ExpenseIt
         {
             if (progetti.Count != 0 && progetti[progetti.Count - 1].numero != Globals.CLIENTI[num_cliente].getMaxId())
             {
-                string msg = "Indice ultimo progetto diverso dal numero di progetti di questo cliente" +
-                    progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId();
-                MessageBox.Show(msg, "Allarme inizializzazione"
-                                     , MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                string msg = "Indice ultimo progetto diverso dal numero di progetti di questo cliente(" + Globals.CLIENTI[num_cliente] +
+                    ") "+ progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId() +
+                    "\nAggiornare il numero modificando il l'indice di ultimo progetto?";
                 Globals.log.Warn(msg);
+                MessageBoxResult m = MessageBox.Show(msg, "Allarme inizializzazione"
+                                     , MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                
+                if(m == MessageBoxResult.Yes)
+                {
+                    Globals.CLIENTI[num_cliente].setMaxId(progetti[progetti.Count - 1].numero);
+                }
             }
         }
 
@@ -842,6 +848,12 @@ namespace ExpenseIt
                 m.scriviSETTINGS();
             }
 
+        }
+
+        private void Menu_importa_CSV(object sender, RoutedEventArgs e)
+        {
+            Form_aggiornaCSV form = new Form_aggiornaCSV();
+            form.ShowDialog();
         }
     }
 }

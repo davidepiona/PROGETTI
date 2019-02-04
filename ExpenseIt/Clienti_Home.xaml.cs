@@ -524,6 +524,7 @@ namespace ExpenseIt
         {
             Form_percorsi form = new Form_percorsi();
             form.ShowDialog();
+            this.InvalidateVisual();
         }
 
         /// <summary>
@@ -594,6 +595,12 @@ namespace ExpenseIt
                 buttonClone.Visibility = Visibility.Hidden;
                 buttonPush.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void Menu_importa_CSV(object sender, RoutedEventArgs e)
+        {
+            Form_aggiornaCSV form = new Form_aggiornaCSV();
+            form.ShowDialog();
         }
 
     }

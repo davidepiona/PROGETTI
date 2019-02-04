@@ -7,12 +7,12 @@ using System.Windows;
 // Le informazioni generali relative a un assembly sono controllate dal seguente 
 // set di attributi. Modificare i valori di questi attributi per modificare le informazioni
 // associate a un assembly.
-[assembly: AssemblyTitle("ExpenseIt")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("DATA")]
+[assembly: AssemblyDescription("DATA")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ExpenseIt")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Studio Automazione")]
+[assembly: AssemblyProduct("DATA")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
