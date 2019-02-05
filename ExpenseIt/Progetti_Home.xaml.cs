@@ -78,7 +78,8 @@ namespace ExpenseIt
             {
                 num_cliente = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT));
                 string cliente = Globals.CLIENTI.Find(x => x.getNomeCliente().Equals(Globals.LAST_CLIENT)).getNomeCliente();
-            }catch(NullReferenceException)
+            }
+            catch (NullReferenceException)
             {
                 string msg = "E34 - non è possibile raggiungere alcune informazioni relative al cliente" + Globals.LAST_CLIENT + ". \nL'applicazione sarà chiusa";
                 MessageBox.Show(msg, "E34"
@@ -123,7 +124,7 @@ namespace ExpenseIt
                 string msg = "E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
                     "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non " +
                     "saranno caricate da file.";
-                MessageBox.Show(msg, "E02", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                MessageBox.Show(msg, "E02", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                 Globals.log.Error(msg);
             }
             ultimaModifica.aggiornoModifiche(progetti);
@@ -139,7 +140,7 @@ namespace ExpenseIt
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////                            FUNZIONI PRINCIPALI                             ///////////////////               
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         /// <summary>
         /// Legge i progetti da file .csv e li salva nella lista progetti.
         /// </summary>
@@ -351,13 +352,13 @@ namespace ExpenseIt
             if (progetti.Count != 0 && progetti[progetti.Count - 1].numero != Globals.CLIENTI[num_cliente].getMaxId())
             {
                 string msg = "Indice ultimo progetto diverso dal numero di progetti di questo cliente(" + Globals.CLIENTI[num_cliente] +
-                    ") "+ progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId() +
+                    ") " + progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId() +
                     "\nAggiornare il numero modificando il l'indice di ultimo progetto?";
                 Globals.log.Warn(msg);
                 MessageBoxResult m = MessageBox.Show(msg, "Allarme inizializzazione"
                                      , MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-                
-                if(m == MessageBoxResult.Yes)
+
+                if (m == MessageBoxResult.Yes)
                 {
                     Globals.CLIENTI[num_cliente].setMaxId(progetti[progetti.Count - 1].numero);
                 }
@@ -440,7 +441,9 @@ namespace ExpenseIt
         }
 
         /// <summary>
-        /// Apre il file docx attualmente visualizzato
+        /// Controlla se esiste un file anteprima.docx nel progetto attualmente visualizzato 
+        /// - Apre il file docx
+        /// - Crea un file docx con tutte le informazioni del progetto
         /// </summary>
         private void Button_Apri_Docx(object sender, RoutedEventArgs e)
         {
@@ -623,7 +626,7 @@ namespace ExpenseIt
             buttonClone.IsEnabled = false;
             buttonPush.IsEnabled = false;
             buttonMerge.IsEnabled = false;
-            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler caricare i progetti di"+ Globals.CLIENTI[num_cliente].getNomeCliente() +" online?",
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler caricare i progetti di" + Globals.CLIENTI[num_cliente].getNomeCliente() + " online?",
                 "Caricare online?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             if (dialogResult == MessageBoxResult.Yes)
             {
@@ -769,7 +772,7 @@ namespace ExpenseIt
                     }
                 }
             }
-            catch (NullReferenceException nre) 
+            catch (NullReferenceException nre)
             {
                 //Console.WriteLine("ECCEZIONE: " + nre);
                 Globals.log.Warn("Eccezione in changePreview: " + nre);
@@ -839,7 +842,7 @@ namespace ExpenseIt
                 button.Visibility = Visibility.Hidden;
                 image.Visibility = Visibility.Hidden;
             }
-            
+
         }
 
         /// <summary>
@@ -881,8 +884,48 @@ namespace ExpenseIt
         /// </summary>
         private void Menu_importa_CSV(object sender, RoutedEventArgs e)
         {
-            Form_aggiornaCSV form = new Form_aggiornaCSV(progetti, num_cliente);
+            Form_aggiornaCSV form = new Form_aggiornaCSV();
             form.ShowDialog();
+        }
+
+        /// <summary>
+        /// Se l'utente conferma crea un file anteprima.docx per ogni progetto del cliente attuale
+        /// Inserisce i dati del progetto
+        /// </summary>
+        private void Menu_TRADEX(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler CREARE un file anteprima.docx in ogni progetto di questo cliente?",
+                "Creare TUTTI i DOCX?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                foreach (Progetto p in progetti)
+                {
+                    string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                    @"\" + p.sigla + @"\progetto.docx";
+                    if (!File.Exists(file))
+                    {
+                        try
+                        {
+                            var doc = Xceed.Words.NET.DocX.Create(file);
+                            doc.InsertParagraph(Globals.CLIENTI[num_cliente].getNomeCliente() + " " + p.numero).Bold();
+                            doc.InsertParagraph("\n TITOLO DEL PROGETTO: " + p.nome);
+                            doc.InsertParagraph("\n TIPO DI PLC: " + p.tipoPLC);
+                            doc.InsertParagraph("\n TIPO DI OP: " + p.tipoOP);
+                            doc.InsertParagraph("\n DATA INIZIO: " + p.data);
+                            doc.InsertParagraph("\n Note:");
+                            doc.Save();
+                        }
+                        catch (IOException)
+                        {
+                            string msg = "E45 - Il file " + file + " non è stato creato per un problema";
+                            System.Windows.MessageBoxResult me = System.Windows.MessageBox.Show(
+                                    msg, "E45", MessageBoxButton.OK,
+                                    MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.RightAlign);
+                            Globals.log.Warn(msg);
+                        }
+                    }
+                }
+            }
         }
     }
 }

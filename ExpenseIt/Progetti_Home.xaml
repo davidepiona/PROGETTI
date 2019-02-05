@@ -134,9 +134,13 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri"
                         <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\github.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Crea .docx per tutti i progetti" Click="Menu_TRADEX" Background="AliceBlue">
+                    <MenuItem.Icon>
+                        <Image Source="C:\Users\attil\source\repos\Software_TRADEX\Software_TRADEX\word.jpg" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Mostra anteprima e docx" Click="Menu_anteprima" IsCheckable="True" Name="Menu_anteprima_check" Background="AliceBlue"/>
                 <MenuItem Header="Mostra azioni sincronizzazione" Click="Menu_sync" IsCheckable="True" Name="Menu_sync_check" Background="AliceBlue"/>
-
             </MenuItem>
 
         </Menu>

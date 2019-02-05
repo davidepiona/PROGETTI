@@ -37,10 +37,10 @@ namespace ExpenseIt
             ShowsNavigationUI = false;
             if (Globals.CLIENTI == null)
             {
-                Globals.SETTINGS = Directory.GetCurrentDirectory() + @"\SETTINGS.csv";
+                Globals.SETTINGS = Globals.SETTINGS + @"SETTINGS.csv";
                 Console.WriteLine("Settings lette da: "+ Globals.SETTINGS);
                 leggiSETTINGS(null,null);
-                log4net.GlobalContext.Properties["LogFileName"] = Directory.GetCurrentDirectory() + @"\DATA.log"; 
+                log4net.GlobalContext.Properties["LogFileName"] = Globals.SETTINGS + @"\DATA.log"; 
                 Globals.log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
                 Globals.log.Info("Settings lette da: " + Globals.SETTINGS);
                 InitializeComponent();
@@ -178,10 +178,10 @@ namespace ExpenseIt
 
         public static String GITURL = "https://github.com/davidepiona/DATIsync.git";
         public static String GITPATH = @"C:\Program Files\Git\cmd\git.exe";
-        public static String SETTINGS = @"";
         public static String PROGETTI = @"R:\PROGETTI\";
-        public static String DATI = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\";
-        public static String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync\";
+        public static String SETTINGS = @"R:\PROGETTI\DATA\";
+        public static String DATI = @"R:\PROGETTI\DATA\DATI\";
+        public static String DATIsync = @"R:\PROGETTI\DATA\DATIsync\";
         public static bool ANTEPRIME = true;
         public static bool SINCRONIZZAZIONE = true;
         public static bool DEFAULT = false;
