@@ -100,9 +100,7 @@ namespace ExpenseIt
         {
             InitializeComponent();
             this.num_cliente = num_cliente;
-
             initialize();
-
         }
 
         /// <summary>
@@ -416,6 +414,8 @@ namespace ExpenseIt
             {
                 System.Diagnostics.Process.Start(path);
             }
+            TextBox textBox = this.FindName("TextBox") as TextBox;
+            textBox.Focus();
         }
 
         /// <summary>
@@ -444,8 +444,35 @@ namespace ExpenseIt
         /// </summary>
         private void Button_Apri_Docx(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
-                @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx");
+            string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx";
+            if (File.Exists(file))
+            {
+                System.Diagnostics.Process.Start(file);
+            }
+            else
+            {
+                Progetto progetto = progetti.Find(x => x.sigla.Equals(Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato));
+                try
+                {
+                    var doc = Xceed.Words.NET.DocX.Create(file);
+                    doc.InsertParagraph(Globals.CLIENTI[num_cliente].getNomeCliente() + " " + ProgSelezionato).Bold();
+                    doc.InsertParagraph("\n TITOLO DEL PROGETTO: " + progetto.nome);
+                    doc.InsertParagraph("\n TIPO DI PLC: " + progetto.tipoPLC);
+                    doc.InsertParagraph("\n TIPO DI OP: " + progetto.tipoOP);
+                    doc.InsertParagraph("\n DATA INIZIO: " + progetto.data);
+                    doc.InsertParagraph("\n Note:");
+                    doc.Save();
+                }
+                catch (IOException)
+                {
+                    string msg = "E44 - Il file " + file + " non è stato creato per un problema";
+                    MessageBox.Show(msg, "E44", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    Globals.log.Error(msg);
+                }
+                DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+                ChangePreview(dataGrid, null);
+            }
         }
 
         /// <summary>
@@ -720,7 +747,7 @@ namespace ExpenseIt
                     {
                         richTextBox.Document.Blocks.Clear();
                         richTextBox.Visibility = Visibility.Hidden;
-                        button.Visibility = Visibility.Hidden;
+                        //button.Visibility = Visibility.Hidden;
                     }
 
                     file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
@@ -741,7 +768,6 @@ namespace ExpenseIt
                         image.Source = null;
                     }
                 }
-
             }
             catch (NullReferenceException nre) 
             {
@@ -855,7 +881,7 @@ namespace ExpenseIt
         /// </summary>
         private void Menu_importa_CSV(object sender, RoutedEventArgs e)
         {
-            Form_aggiornaCSV form = new Form_aggiornaCSV();
+            Form_aggiornaCSV form = new Form_aggiornaCSV(progetti, num_cliente);
             form.ShowDialog();
         }
     }

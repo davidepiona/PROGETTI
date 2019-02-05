@@ -602,7 +602,7 @@ namespace ExpenseIt
         /// </summary>
         private void Menu_importa_CSV(object sender, RoutedEventArgs e)
         {
-            Form_aggiornaCSV form = new Form_aggiornaCSV();
+            Form_aggiornaCSV form = new Form_aggiornaCSV(null, 0);
             form.ShowDialog();
         }
 

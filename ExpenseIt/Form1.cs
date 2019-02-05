@@ -102,7 +102,7 @@ namespace ExpenseIt
                 {
                     var doc = Xceed.Words.NET.DocX.Create(fileName);
                     doc.InsertParagraph(cliente + " " + numProgetto).Bold();
-                    doc.InsertParagraph("\n TITOLO DEL PROGETTO:" + titolo);
+                    doc.InsertParagraph("\n TITOLO DEL PROGETTO: " + titolo);
                     doc.InsertParagraph("\n TIPO DI PLC: " + tipoPLC);
                     doc.InsertParagraph("\n TIPO DI OP: " + tipoOP);
                     doc.InsertParagraph("\n DATA INIZIO: " + data);

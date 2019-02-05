@@ -19,11 +19,19 @@ namespace ExpenseIt
     /// </summary>
     public partial class Form_aggiornaCSV : Form
     {
+        List<Progetto> progetti;
+        int num_cliente;
         /// <summary>
         /// Costruttore classico in cui vengono impostati i valori delle textbox
         /// </summary>
-        public Form_aggiornaCSV()
+        public Form_aggiornaCSV(List<Progetto> progetti, int num_cliente)
         {
+            this.progetti = progetti;
+            this.num_cliente = num_cliente;
+            if (progetti == null)
+            {
+                pictureBox3.Visible = false;
+            }
             InitializeComponent();
             textBox1.Text = Globals.DATI;
             textBox2.Text = Globals.DATI;
@@ -131,6 +139,39 @@ namespace ExpenseIt
             System.Windows.MessageBox.Show(risultato);
             Globals.log.Info(risultato);
             this.Close();
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            
+            foreach(Progetto p in progetti)
+            {
+                string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
+                @"\" + p.sigla + @"\progetto.docx";
+                if (!File.Exists(file))
+                {
+                    try
+                    {
+                        var doc = Xceed.Words.NET.DocX.Create(file);
+                        doc.InsertParagraph(Globals.CLIENTI[num_cliente].getNomeCliente() + " " + p.numero).Bold();
+                        doc.InsertParagraph("\n TITOLO DEL PROGETTO: " + p.nome);
+                        doc.InsertParagraph("\n TIPO DI PLC: " + p.tipoPLC);
+                        doc.InsertParagraph("\n TIPO DI OP: " + p.tipoOP);
+                        doc.InsertParagraph("\n DATA INIZIO: " + p.data);
+                        doc.InsertParagraph("\n Note:");
+                        doc.Save();
+                    }
+                    catch (IOException)
+                    {
+                        string msg = "E45 - Il file " + file + " non è stato creato per un problema";
+                        System.Windows.MessageBoxResult me = System.Windows.MessageBox.Show(
+                                msg, "E45", MessageBoxButton.OK,
+                                MessageBoxImage.Error, MessageBoxResult.OK, System.Windows.MessageBoxOptions.RightAlign);
+                        Globals.log.Warn(msg);
+                    }
+                }
+            }
+            
         }
     }
 }

@@ -109,8 +109,10 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri"
                ToolTip="Apre l'immagine visualizzata in anteprima" ToolTipService.InitialShowDelay="2000"/>
         <RichTextBox x:Name="richTextBox" Grid.Column="0" Grid.Row="4" Grid.RowSpan="3" Margin="5,5,5,5" IsReadOnly="True" Visibility="Hidden" ></RichTextBox>
         <Button x:Name="buttonOpenDocx" Grid.Column="0" Grid.Row="7"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_Apri_Docx" Background="Green" Content="Apri Docx" Visibility="Hidden"
-                ToolTip="Apre in Word il file docx visualizzato in anteprima" ToolTipService.InitialShowDelay="2000"/>
+            Height="40" Click="Button_Apri_Docx" Background="Green" Visibility="Hidden"
+                ToolTip="Apre in Word il file docx visualizzato in anteprima" ToolTipService.InitialShowDelay="2000">
+            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\word.jpg"></Image>
+        </Button>
         <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
               Margin="0,0,40,0">
             <MenuItem Width="50" Height="50" FlowDirection="RightToLeft">
