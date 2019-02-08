@@ -1,9 +1,9 @@
-﻿<Page x:Class="ExpenseIt.Clienti_Home"
+﻿<Page x:Class="DATA.Clienti_Home"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ExpenseIt"
+      xmlns:local="clr-namespace:DATA"
       mc:Ignorable="d" 
       d:DesignHeight="750" d:DesignWidth="1400"
       Title="Clienti_Home"
@@ -26,7 +26,7 @@
     <Grid x:Name="grid" Margin="10"  ClipToBounds="True" UseLayoutRounding="False">
         <!--Background="#FF2196F3"-->
         <Grid.Background>
-            <ImageBrush ImageSource="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\background2.jpg" />
+            <ImageBrush ImageSource="R:\PROGETTI\DATA\SRC\background2.jpg" />
         </Grid.Background>
         <Grid.ColumnDefinitions >
             <ColumnDefinition />
@@ -55,45 +55,50 @@
             ELENCO CLIENTI
         </Label>
         <!--<Canvas  Grid.Column="1" Grid.ColumnSpan="3"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="750" Width="900" Background="#FFE0E0E0" ClipToBounds="True" UseLayoutRounding="True"/>-->
-        <Border Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="650" Width="900" Background="#FFE0E0E0" CornerRadius="8" OpacityMask="#FF4F1A1A" />
-        <Button Grid.Column="5" Grid.Row="3"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_New_Client" Background="Green" Content="Nuovo Cliente" x:Name="BottNuovoCliente"
+        <Border Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" 
+                VerticalAlignment="Top" Height="650" Width="900" Background="WhiteSmoke" CornerRadius="8" OpacityMask="#FF4F1A1A" />
+        <Button Grid.Column="5" Grid.Row="3"  Width="150" HorizontalAlignment="Center" BorderBrush="RoyalBlue"
+            Height="40" Click="Button_New_Client" Background="SteelBlue" Content="Nuovo Cliente" x:Name="BottNuovoCliente"
                 ToolTip="Apre il form che permette di creare un nuovo cliente" ToolTipService.InitialShowDelay="2000"/>
         <Button Grid.Column="5" Grid.Row="7"  Width="150" HorizontalAlignment="Center"
-Height="40" Click="Open_Folder" Background="Green"  x:Name="BottApri2" Visibility="Hidden">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png"
+Height="40" Click="Open_Folder" Background="SteelBlue"  x:Name="BottApri2" Visibility="Hidden" BorderBrush="RoyalBlue">
+            <Image Source="R:\PROGETTI\DATA\SRC\foldericon.png" 
                    ToolTip="Apre nel filesystem la cartella del progetto selezionato" ToolTipService.InitialShowDelay="2000"/>
         </Button>
         <Button Grid.Column="5" Grid.Row="6"  Width="75" HorizontalAlignment="Left" Margin="30,0,0,0"
-            Height="40" Click="Button_GitHubCloneAll" Background="#7c1228"  x:Name="BottGitClone2"
-                ToolTip="Clone del repository in DATIsync: &#x0a; - elimina tutti i file in DATIsync &#x0a; - effettua git clone" ToolTipService.InitialShowDelay="2000">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\arrow-down.png" />
+            Height="40" Click="Button_GitHubCloneAll" Background="#7c1228"  x:Name="BottGitClone2" 
+                ToolTip="Clone del repository in DATIsync: &#x0a; - elimina tutti i file in DATIsync &#x0a; - effettua git clone" ToolTipService.InitialShowDelay="2000" BorderBrush="{x:Null}">
+            <Image Source="R:\PROGETTI\DATA\SRC\arrow-down.png" />
         </Button>
         <Button Grid.Column="5" Grid.Row="6"  Width="75" HorizontalAlignment="Right" Margin="0,0,30,0"
             Height="40" Click="Button_GitHubPushAll" Background="	#7c1228" x:Name="BottGitPush2"
-                ToolTip="Push sul repository di tutti i csv in DATIsync: &#x0a; - elimina tutti i file in DATIsync &#x0a; - copia tutti da DATI a DATIsync &#x0a; - git add * &#x0a; - git commit &#x0a; - git push (x2)" ToolTipService.InitialShowDelay="2000">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\arrow-up.png" />
+                ToolTip="Push sul repository di tutti i csv in DATIsync: &#x0a; - elimina tutti i file in DATIsync &#x0a; - copia tutti da DATI a DATIsync &#x0a; - git add * &#x0a; - git commit &#x0a; - git push (x2)" ToolTipService.InitialShowDelay="2000" BorderBrush="{x:Null}">
+            <Image Source="R:\PROGETTI\DATA\SRC\arrow-up.png" />
         </Button>
-        
-        <TextBox x:Name="TextBox" Grid.Row="6" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" HorizontalAlignment="Center" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
-        <Image Grid.ColumnSpan="6" Grid.Row="6" Height='20' Width='20' HorizontalAlignment="Center" Margin="0,20,210,17" VerticalAlignment="Top" Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\magnifier.png" />
+
+        <TextBox x:Name="TextBox" Grid.Row="6" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" HorizontalAlignment="Center" CaretBrush="SteelBlue"
+                 FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
+        <Image Grid.ColumnSpan="6" Grid.Row="6" Height='20' Width='20' HorizontalAlignment="Center" Margin="0,20,210,17" VerticalAlignment="Top" Source="R:\PROGETTI\DATA\SRC\magnifier.png" />
         <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Auto" Grid.Column="1" Grid.ColumnSpan="4" 
                   Width="880"  Margin="10,50,22,17" Grid.Row="1" Grid.RowSpan="5"  >
             <ScrollViewer.Resources>
                 <Style TargetType="{x:Type ScrollBar}">
                     <Setter Property="Background" Value="White"/>
+                    <Setter Property="Width" Value="30"/>
                 </Style>
             </ScrollViewer.Resources>
-            <Grid Background="White" x:Name="buttonGrid" >
-                <Grid.ColumnDefinitions >
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                </Grid.RowDefinitions>
-            </Grid>
+            <Border BorderBrush="LightSteelBlue" BorderThickness="1">
+                <Grid Background="White" x:Name="buttonGrid"  >
+                    <Grid.ColumnDefinitions >
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                    </Grid.RowDefinitions>
+                </Grid>
+            </Border>
         </ScrollViewer>
         <DataGrid AutoGenerateColumns="False" x:Name="dataGrid" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Left"
                   Width="880"  Margin="10,50,22,17" Grid.Row="6" Grid.RowSpan="2"  VerticalAlignment="Top" 
@@ -105,13 +110,13 @@ Height="40" Click="Open_Folder" Background="Green"  x:Name="BottApri2" Visibilit
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=sigla}" Width="105" FontSize="13" ></DataGridTextColumn>
-                <DataGridTextColumn Header="Nome" IsReadOnly="True"  Binding="{Binding Path=nome}" Width="329" FontSize="13" ></DataGridTextColumn>
-                <DataGridTextColumn Header="TipoPLC" IsReadOnly="True"  Binding="{Binding Path=tipoPLC}" Width="100" FontSize="10" ></DataGridTextColumn>
+                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=sigla}" Width="105" FontSize="15" ></DataGridTextColumn>
+                <DataGridTextColumn Header="Nome" IsReadOnly="True"  Binding="{Binding Path=nome}" Width="365" FontSize="15" ></DataGridTextColumn>
+                <DataGridTextColumn Header="TipoPLC" IsReadOnly="True"  Binding="{Binding Path=tipoPLC}" Width="100" FontSize="12" ></DataGridTextColumn>
                 <!--<DataGridTextColumn Header="TipoOP" IsReadOnly="True"  Binding="{Binding Path=tipoOP}" Width="115" FontSize="10"></DataGridTextColumn>-->
-                <DataGridTextColumn Header="Creazione" IsReadOnly="True"  Binding="{Binding Path=data}" Width="122" FontSize="10"></DataGridTextColumn>
-                <DataGridTextColumn Header="Modifica" IsReadOnly="True"  Binding="{Binding Path=modifica}" Width="122" FontSize="10"></DataGridTextColumn>
-                <DataGridTextColumn Header="Modifica" IsReadOnly="True" Visibility="Hidden" Binding="{Binding Path=nomeCliente}" Width="122" FontSize="10"></DataGridTextColumn>
+                <DataGridTextColumn Header="Creazione" IsReadOnly="True"  Binding="{Binding Path=data}" Width="145" FontSize="12"></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="Modifica" IsReadOnly="True"  Binding="{Binding Path=modifica}" Width="142" FontSize="10"></DataGridTextColumn>-->
+                <DataGridTextColumn Header="Cliente" IsReadOnly="True"  Binding="{Binding Path=nomeCliente}" Width="122" FontSize="12"></DataGridTextColumn>
                 <!--<DataGridTemplateColumn Header="Sync"  Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -119,30 +124,30 @@ Height="40" Click="Open_Folder" Background="Green"  x:Name="BottApri2" Visibilit
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>-->
-                <DataGridCheckBoxColumn Header="Sync" Binding="{Binding Path=sync}" IsReadOnly="True" CanUserResize="False" Width="60" IsThreeState="True"/>
+                <!--<DataGridCheckBoxColumn Header="Sync" Binding="{Binding Path=sync}" IsReadOnly="True" CanUserResize="False" Width="60" IsThreeState="True"/>-->
             </DataGrid.Columns>
         </DataGrid>
 
 
         <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center" 
-              Margin="0,0,40,0" >
-            <MenuItem Width="50" Height="50" FlowDirection="RightToLeft">
+              Margin="0,0,40,0">
+            <MenuItem Width="50" Height="50" FlowDirection="RightToLeft"  Name="Menu" >
                 <MenuItem.Background>
-                    <ImageBrush ImageSource="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\3lines.png"/>
+                    <ImageBrush ImageSource="R:\PROGETTI\DATA\SRC\3lines.png"/>
                 </MenuItem.Background>
                 <MenuItem Header="Imposta percorsi file" Click="Menu_percorsi" Background="AliceBlue">
                     <MenuItem.Icon>
-                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png" />
+                        <Image Source="R:\PROGETTI\DATA\SRC\foldericon.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Importa CSV da MATRIX" Click="Menu_importa_CSV" Background="AliceBlue">
+                <MenuItem Header="Importa CSV da MATRIX" Click="Menu_importa_CSV" Background="AliceBlue" Name="importCsv">
                     <MenuItem.Icon>
-                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\IconCsv.ico" />
+                        <Image Source="R:\PROGETTI\DATA\SRC\IconCsv.ico" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Imposta repository GitHub" Click="Menu_github" Background="AliceBlue">
                     <MenuItem.Icon>
-                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\github.png" />
+                        <Image Source="R:\PROGETTI\DATA\SRC\github.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Mostra anteprima e docx" Click="Menu_anteprima" IsCheckable="True" Name="Menu_anteprima_check" Background="AliceBlue"/>

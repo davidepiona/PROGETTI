@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Form che permette di selezionare le cartelle di origine e destinazione del processo di 
@@ -25,7 +25,7 @@ namespace ExpenseIt
         public Form_aggiornaCSV()
         {
             InitializeComponent();
-            textBox1.Text = Globals.DATI;
+            textBox1.Text = @"R:\PROGETTI\MATRIX\BASE_DATI\";
             textBox2.Text = Globals.DATI;
         }
 

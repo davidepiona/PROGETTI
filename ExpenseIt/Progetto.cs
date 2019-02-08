@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpenseIt
+namespace DATA
 {
     public class Progetto
     {
@@ -25,6 +25,7 @@ namespace ExpenseIt
         public bool? sync { get; set; }
         public string nomeCliente { get; set; }
         public string sigla { get; set; }
+        public string suffisso { get; set; }
 
         /// <summary>
         /// Inizializza gli attributi coi valori ricevuto e inizializza modifica a null, sync a false e sigla come concatenazione di suffisso e numero.
@@ -39,6 +40,7 @@ namespace ExpenseIt
             this.nomeCliente = nomeCliente;
             modifica = null;
             this.sync = false;
+            this.suffisso = suffissoCliente;
             sigla = suffissoCliente + numero;
         }
 
@@ -47,7 +49,7 @@ namespace ExpenseIt
         /// </summary>
         public string ToName()
         {
-            return nomeCliente+ numero + "\t" + nome + "\t\t" + tipoPLC;
+            return nomeCliente+ numero + "\t" + nome + "\t" + tipoPLC + "\t" + sigla;
         }
     }
 }

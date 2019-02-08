@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Classe della finestra principale che gestisce le operazioni comuni
@@ -40,7 +40,7 @@ namespace ExpenseIt
                 Globals.SETTINGS = Globals.SETTINGS + @"SETTINGS.csv";
                 Console.WriteLine("Settings lette da: "+ Globals.SETTINGS);
                 leggiSETTINGS(null,null);
-                log4net.GlobalContext.Properties["LogFileName"] = Globals.SETTINGS + @"\DATA.log"; 
+                log4net.GlobalContext.Properties["LogFileName"] = Globals.LOG + @"DATA.log"; 
                 Globals.log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
                 Globals.log.Info("Settings lette da: " + Globals.SETTINGS);
                 InitializeComponent();
@@ -180,12 +180,14 @@ namespace ExpenseIt
         public static String GITPATH = @"C:\Program Files\Git\cmd\git.exe";
         public static String PROGETTI = @"R:\PROGETTI\";
         public static String SETTINGS = @"R:\PROGETTI\DATA\";
+        public static String LOG = @"R:\PROGETTI\DATA\";
         public static String DATI = @"R:\PROGETTI\DATA\DATI\";
         public static String DATIsync = @"R:\PROGETTI\DATA\DATIsync\";
         public static bool ANTEPRIME = true;
         public static bool SINCRONIZZAZIONE = true;
         public static bool DEFAULT = false;
-        //public static readonly String DATIsync = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATIsync";// Unmodifiable
+        public static bool importCsvEnabled = true;
+        //public static readonly String DATIsync = @"R:\PROGETTI\DATA\SRC\DATIsync";// Unmodifiable
 
         public static log4net.ILog log; 
     }

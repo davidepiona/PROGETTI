@@ -15,7 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>F:\</PublishUrl>
+    <PublishUrl>C:\Users\attil\source\repos\ExpenseIt\PUB\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>12</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -207,6 +207,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_aggiornaCSV.resx">
       <DependentUpon>Form_aggiornaCSV.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_percorsi.resx">
       <DependentUpon>Form_percorsi.cs</DependentUpon>
@@ -248,6 +249,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="cravatta.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="IconApp.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

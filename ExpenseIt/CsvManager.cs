@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Determines how empty lines are interpreted when reading CSV files.

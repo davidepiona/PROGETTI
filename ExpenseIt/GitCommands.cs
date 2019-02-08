@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Classe per la gestione delle operazioni che comprendono:

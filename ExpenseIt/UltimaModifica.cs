@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpenseIt
+namespace DATA
 {
     class UltimaModifica
     {
@@ -343,7 +343,7 @@ namespace ExpenseIt
 
 //private List<string> confronto()
 //{
-//    string file = @"C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
+//    string file = @"R:\PROGETTI\DATA\SRC\DATI\CLIENTI\" + cliente.getNomeCliente() + "date.csv";
 //    List<string> daControllare = new List<string>();
 //    List<string> lines = new List<string>();
 //    using (var reader = new CsvFileReader(file))

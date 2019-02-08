@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Form per il cambio del percorso delle cartelle PROGETTI, DATI e DATIsync

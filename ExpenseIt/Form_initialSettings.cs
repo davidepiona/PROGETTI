@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Form per il cambio del percorso a cui trovare il file SETTINGS.csv (se non si trova nella cartella dell'eseguibile)

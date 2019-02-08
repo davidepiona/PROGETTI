@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Classe per la gestione della sicronizzazione dei progetti locali con quelli in DATIsync che consente di scoprire quali progetti sono assenti

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Form per la creazione di un nuovo progetto
@@ -30,6 +30,11 @@ namespace ExpenseIt
             foreach (Cliente c in Globals.CLIENTI)
             {
                 this.comboBox1.Items.Add(c.getNomeCliente());
+            }
+            List<string> tipi = readCSV_tipiPLC(Globals.LOG+ "tipiPLC.csv");
+            foreach (string s in tipi)
+            {
+                this.comboBox2.Items.Add(s);
             }
             this.ultimoProgetto = ultimoProgetto;
             this.comboBox1.SelectedItem = cliente.getNomeCliente();
@@ -58,7 +63,7 @@ namespace ExpenseIt
         {
             string cliente = comboBox1.Text.ToString();
             string titolo = textBox1.Text.ToString();
-            string tipoPLC = textBox2.Text.ToString();
+            string tipoPLC = comboBox2.Text.ToString();
             string tipoOP = textBox3.Text.ToString();
             if (titolo.Equals(""))
                 titolo = ".";
@@ -128,6 +133,54 @@ namespace ExpenseIt
                 MessageBox.Show(msg, "E06" , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                 Globals.log.Error(msg);
             }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////                             SCRIVI E LEGGI CSV                             ///////////////////               
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Metodo che legge i tipi di PLC da tipiPLC.csv in DATA e li restituisce
+        /// Restituisce false se per qualche ragione è stata sollevata un IOException o FormatException
+        /// </summary>
+        public List<string> readCSV_tipiPLC(string file)
+        {
+            List<string> tipi = new List<string>();
+            List<string> lines = new List<string>();
+            int j = 0;
+            try
+            {
+                using (var reader = new CsvFileReader(file))
+                {
+                    while (reader.ReadRow(lines))
+                    {
+                        j++;
+                        if (lines.Count != 0)
+                        {
+                            tipi.Add(lines[0]);
+                        }
+                        else
+                        {
+                            Console.WriteLine("vuoto");
+                        }
+                    }
+                }
+            }
+            catch (IOException)
+            {
+                string msg = "E45 - Il file " + file + " non esiste o è aperto da un altro programma";
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
+                return null;
+            }
+            catch (FormatException)
+            {
+                string msg = "E46 - Il file " + file + " è in un formato non corretto.\nProblema riscontrato all riga numero: " + j;
+                Console.WriteLine(msg);
+                Globals.log.Error(msg);
+                return null;
+            }
+            Globals.log.Info("TipiPLC letti da tipiPLC.csv");
+            return tipi;
         }
     }
 }

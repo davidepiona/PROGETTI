@@ -1,9 +1,9 @@
-﻿<Page x:Class="ExpenseIt.Progetti_Home"
+﻿<Page x:Class="DATA.Progetti_Home"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ExpenseIt"
+      xmlns:local="clr-namespace:DATA"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="800"
       
@@ -11,7 +11,7 @@
 
     <Grid x:Name="grid" Margin="10" Grid.Column="1" Grid.Row="1">
         <Grid.Background>
-            <ImageBrush ImageSource="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\background2.jpg" />
+            <ImageBrush ImageSource="R:\PROGETTI\DATA\SRC\background2.jpg" />
         </Grid.Background>
         <Grid.ColumnDefinitions >
             <ColumnDefinition />
@@ -40,60 +40,65 @@
             PROGETTI
         </Label>
         <!--<Canvas  Grid.Column="1" Grid.ColumnSpan="3"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="750" Width="900" Background="#FFE0E0E0" ClipToBounds="True" UseLayoutRounding="True"/>-->
-        <Border Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="650" Width="900" Background="#FFE0E0E0" CornerRadius="8" OpacityMask="#FF4F1A1A" />
+        <Border Grid.Column="1" Grid.ColumnSpan="4"  Grid.Row="1" HorizontalAlignment="Left"  Grid.RowSpan="9" VerticalAlignment="Top" Height="650" 
+                Width="900" Background="WhiteSmoke" CornerRadius="8" OpacityMask="#FF4F1A1A" /> 
 
         <Button Grid.Column="5" Grid.Row="2"  Width="150" HorizontalAlignment="Center"
-Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri" 
+Height="40" Click="Button_Open_Folder" Background="SteelBlue"  x:Name="BottApri" BorderBrush="RoyalBlue"
                 ToolTip="Apre nel filesystem la cartella del progetto selezionato" ToolTipService.InitialShowDelay="2000">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png"/>
+            <Image Source="R:\PROGETTI\DATA\SRC\foldericon.png"/>
         </Button>
         <Button Grid.Column="5" Grid.Row="3"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_New_Project" Background="Green" Content="Nuovo Progetto" x:Name="BottNuovo"
+            Height="40" Click="Button_New_Project" Background="SteelBlue" Content="Nuovo Progetto" x:Name="BottNuovo" BorderBrush="RoyalBlue"
                 ToolTip="Apre il form che permette di creare un nuovo progetto" ToolTipService.InitialShowDelay="2000"/>
         <Button Grid.Column="5" Grid.Row="7"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_Merge" Background="Green" Content="Merge" x:Name="BottMerge"
+            Height="40" Click="Button_Merge" Background="SteelBlue" Content="Merge" x:Name="BottMerge" BorderBrush="RoyalBlue"
                 ToolTip="Confronta i progetti del cliente attuale memorizzati in &#x0a;DATI con quelli memorizzati in DATIsync. &#x0a;Poi apre il form che permette di aggiungere quelli nuovi" ToolTipService.InitialShowDelay="2000"/>
         <Button Grid.Column="5" Grid.Row="5"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_Ultime_Modifiche" Background="Green" Content="Modifiche" x:Name="BottModifiche" 
+            Height="40" Click="Button_Ultime_Modifiche" Background="SteelBlue" Content="Modifiche" x:Name="BottModifiche" BorderBrush="RoyalBlue"
                 ToolTip="Aggiorna le ultime modifiche di ogni progetto: &#x0a; - cerca l'ultima modifica di ogni cartella &#x0a; - le scrive nel csv apposito &#x0a; - aggiorna i valori dei progetti &#x0a; - aggiorna la tabella" ToolTipService.InitialShowDelay="2000"/>
         <!--<Button Grid.Column="5" Grid.Row="6"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Sync" Background="Green" Content="Sync" x:Name="BottSync"/>-->
+            Height="40" Click="Sync" Background="SteelBlue" Content="Sync" x:Name="BottSync"/>-->
         <Button Grid.Column="5" Grid.Row="6"  Width="75" HorizontalAlignment="Left" Margin="30,0,0,0"
-            Height="40" Click="Button_GitHubClone" Background="Green"  x:Name="BottGitClone"
+            Height="40" Click="Button_GitHubClone" Background="SteelBlue"  x:Name="BottGitClone" BorderBrush="RoyalBlue"
                 ToolTip="Checkout dei file del CLIENTE attuale in DATIsync: &#x0a; - elimina i file del CLIENTE attuale da DATIsync &#x0a; - git fetch &#x0a; - git checkout CLIENTE* " ToolTipService.InitialShowDelay="2000">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\arrow-down.png" />
+            <Image Source="R:\PROGETTI\DATA\SRC\arrow-down.png" />
         </Button>
         <Button Grid.Column="5" Grid.Row="6"  Width="75" HorizontalAlignment="Right" Margin="0,0,30,0"
-            Height="40" Click="Button_GitHubPush" Background="Green" x:Name="BottGitPush"
-                ToolTip="Push sul repository dei csv del CLIENTE attuale: &#x0a; - elimina i file del CLIENTE attuale da DATIsync &#x0a; - copia i file del CLIENTE attuale da DATI a DATIsync &#x0a; - git add CLIENTE* &#x0a; - git commit &#x0a; - git push (x2)" ToolTipService.InitialShowDelay="2000">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\arrow-up.png" />
+            Height="40" Click="Button_GitHubPush" Background="SteelBlue" x:Name="BottGitPush" BorderBrush="RoyalBlue"
+                ToolTip="Push sul repository dei csv del CLIENTE attuale: &#x0a; - elimina i file del CLIENTE attuale da DATIsync &#x0a; - copia i file del CLIENTE attuale da DATI a DATIsync &#x0a; - git add CLIENTE* &#x0a; - git commit &#x0a; - git push (x2)" ToolTipService.InitialShowDelay="2000" >
+            <Image Source="R:\PROGETTI\DATA\SRC\arrow-up.png" />
         </Button>
         <Button Grid.Column="1" Grid.Row="0"  Width="70" HorizontalAlignment="Left"
-            Height="70" Click="Button_Cambia_Pagina" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" 
-                ToolTip="Torna alla schermata Clienti" ToolTipService.InitialShowDelay="2000">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\cravatta.ico"></Image>
+            Height="70" Click="Button_Cambia_Pagina" Padding="0" Background="{x:Null}" 
+                ToolTip="Torna alla schermata Clienti" ToolTipService.InitialShowDelay="2000" BorderBrush="{x:Null}">
+            <Image Source="R:\PROGETTI\DATA\SRC\cravatta.ico"></Image>
         </Button>
-
 
         <TextBox x:Name="TextBox" Grid.Row="1" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" 
                  HorizontalAlignment="Center" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" 
-                 Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" ></TextBox>
+                 Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" CaretBrush="SteelBlue" ></TextBox>
         <Image Grid.ColumnSpan="6" Grid.Row="1" Height='20' Width='20' HorizontalAlignment="Center" 
                Margin="0,20,210,17" VerticalAlignment="Top" 
-               Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\magnifier.png" />
-        <DataGrid AutoGenerateColumns="False" x:Name="dataGrid" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Left" Width="880" Height="566" Margin="10,50,22,17" Grid.Row="1" Grid.RowSpan="9"  VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Foreground="#FF222222" IsReadOnly="True" >
+               Source="R:\PROGETTI\DATA\SRC\magnifier.png" />
+        <DataGrid AutoGenerateColumns="False" x:Name="dataGrid" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Left" Width="880" Height="566" Background="WhiteSmoke"
+                  Margin="10,50,22,17" Grid.Row="1" Grid.RowSpan="9"  VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Foreground="#FF222222" IsReadOnly="True" >
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
                 </Style>
+                <Style TargetType="ScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
+                    <Setter Property="Width" Value="30" />
+                </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=sigla}" Width="105" FontSize="13" ></DataGridTextColumn>
-                <DataGridTextColumn Header="Nome" IsReadOnly="True"  Binding="{Binding Path=nome}" Width="329" FontSize="13" ></DataGridTextColumn>
-                <DataGridTextColumn Header="TipoPLC" IsReadOnly="True"  Binding="{Binding Path=tipoPLC}" Width="100" FontSize="10" ></DataGridTextColumn>
+                <!--<DataGridTextColumn Header="" IsReadOnly="True" Binding="{Binding Path=suffisso}" Width="45" FontSize="13" ></DataGridTextColumn>-->
+                <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Path=numero}" Width="50" FontSize="14" ></DataGridTextColumn>
+                <DataGridTextColumn Header="Nome" IsReadOnly="True"  Binding="{Binding Path=nome}" Width="340" FontSize="14" ></DataGridTextColumn>
+                <DataGridTextColumn Header="TipoPLC" IsReadOnly="True"  Binding="{Binding Path=tipoPLC}" Width="100" FontSize="12" ></DataGridTextColumn>
                 <!--<DataGridTextColumn Header="TipoOP" IsReadOnly="True"  Binding="{Binding Path=tipoOP}" Width="115" FontSize="10"></DataGridTextColumn>-->
-                <DataGridTextColumn Header="Creazione" IsReadOnly="True"  Binding="{Binding Path=data}" Width="122" FontSize="10"></DataGridTextColumn>
-                <DataGridTextColumn Header="Modifica" IsReadOnly="True"  Binding="{Binding Path=modifica}" Width="122" FontSize="10"></DataGridTextColumn>
+                <DataGridTextColumn Header="Creazione" IsReadOnly="True"  Binding="{Binding Path=data}" Width="135" FontSize="11"></DataGridTextColumn>
+                <DataGridTextColumn Header="Modifica" IsReadOnly="True"  Binding="{Binding Path=modifica}" Width="135" FontSize="11"></DataGridTextColumn>
                 <!--<DataGridTemplateColumn Header="Sync"  Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -109,34 +114,34 @@ Height="40" Click="Button_Open_Folder" Background="Green"  x:Name="BottApri"
                ToolTip="Apre l'immagine visualizzata in anteprima" ToolTipService.InitialShowDelay="2000"/>
         <RichTextBox x:Name="richTextBox" Grid.Column="0" Grid.Row="4" Grid.RowSpan="3" Margin="5,5,5,5" IsReadOnly="True" Visibility="Hidden" ></RichTextBox>
         <Button x:Name="buttonOpenDocx" Grid.Column="0" Grid.Row="7"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_Apri_Docx" Background="Green" Visibility="Hidden"
-                ToolTip="Apre in Word il file docx visualizzato in anteprima" ToolTipService.InitialShowDelay="2000">
-            <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\word.jpg"></Image>
+            Height="40" Click="Button_Apri_Docx" Background="SteelBlue" Visibility="Hidden" BorderBrush="RoyalBlue"
+                ToolTip="Controlla se esiste un file progetto.docx &#x0a;- se esiste: lo apre in word &#x0a;- se non esiste : lo crea" ToolTipService.InitialShowDelay="2000">
+            <Image Source="R:\PROGETTI\DATA\SRC\word.jpg"></Image>
         </Button>
         <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
               Margin="0,0,40,0">
-            <MenuItem Width="50" Height="50" FlowDirection="RightToLeft">
+            <MenuItem Width="50" Height="50" FlowDirection="RightToLeft" Name="Menu">
                 <MenuItem.Background>
-                    <ImageBrush ImageSource="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\3lines.png"/>
+                    <ImageBrush ImageSource="R:\PROGETTI\DATA\SRC\3lines.png"/>
                 </MenuItem.Background>
                 <MenuItem Header="Imposta percorsi file" Click="Menu_percorsi" Background="AliceBlue">
                     <MenuItem.Icon>
-                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\foldericon.png" />
+                        <Image Source="R:\PROGETTI\DATA\SRC\foldericon.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Importa CSV da MATRIX" Click="Menu_importa_CSV" Background="AliceBlue">
+                <MenuItem Header="Importa CSV da MATRIX" Click="Menu_importa_CSV" Background="AliceBlue" Name="importCsv">
                     <MenuItem.Icon>
-                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\IconCsv.ico" />
+                        <Image Source="R:\PROGETTI\DATA\SRC\IconCsv.ico" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Impostazioni GitHub" Click="Menu_github" Background="AliceBlue">
                     <MenuItem.Icon>
-                        <Image Source="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\github.png" />
+                        <Image Source="R:\PROGETTI\DATA\SRC\github.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Crea .docx per tutti i progetti" Click="Menu_TRADEX" Background="AliceBlue">
+                <MenuItem Header="Crea .docx per tutti i progetti" Click="Menu_DOCX" Background="AliceBlue">
                     <MenuItem.Icon>
-                        <Image Source="C:\Users\attil\source\repos\Software_TRADEX\Software_TRADEX\word.jpg" />
+                        <Image Source="R:\PROGETTI\DATA\SRC\word.jpg" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Mostra anteprima e docx" Click="Menu_anteprima" IsCheckable="True" Name="Menu_anteprima_check" Background="AliceBlue"/>

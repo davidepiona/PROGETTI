@@ -1,4 +1,4 @@
-﻿using ExpenseIt;
+﻿using DATA;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,14 +17,22 @@ namespace DATA
     {
         private string origine;
         private string destinazione;
+        private string temp;
 
         /// <summary>
-        /// Costruttore classico che inizializa alcuni attributi ai valori passati
+        /// Costruttore classico che inizializa alcuni attributi ai valori passati 
         /// </summary>
         public ImportaCSV(string origine, string destinazione)
         {
             this.origine = origine;
             this.destinazione = destinazione;
+            string[] percorso = destinazione.Split('\\');
+            //CREAVO LA CARTELLA TEMP PER PROVARE A RISOLVERE IL BUG - non ha funzionato
+            //for (int i =0; i< percorso.Length-2; i++)
+            //{
+            //    temp += percorso[i] +'\\';
+            //}
+            //temp += "TEMP\\";
         }
 
         /// <summary>
@@ -42,6 +50,7 @@ namespace DATA
             Globals.log.Info("Read MATRIX Projects");
             string s = "";
             string[] fileEntries = Directory.GetFiles(origine);
+            //Directory.CreateDirectory(temp);
             foreach (string fileName in fileEntries)
             {
                 string nomeCSV = fileName.Split('\\').Last();
@@ -66,13 +75,14 @@ namespace DATA
                     }
                 }
 
-                if (!nomeCSV.Equals("CLIENTI.csv") && !nomeCSV.Equals("LAST.csv") &&
-                    !nomeCSV.Equals("CLIENTI.CSV") && !nomeCSV.Equals("LAST.CSV"))
+                if (!nomeCSV.Equals("CLIENTI.csv") && !nomeCSV.Equals("LAST.csv") && !nomeCSV.Equals("CLIENTI.CSV") && !nomeCSV.Equals("LAST.CSV"))
                 {
                     List<Progetto> proj = readProjects(fileName);
                     if (proj != null)
                     {
                         string file = destinazione + nomeCSV;
+                        File.Delete(file);
+
                         try
                         {
                             foreach (Progetto p in proj)
@@ -186,6 +196,66 @@ namespace DATA
                 i++;
             }
             File.WriteAllLines(destinazione + "CLIENTI.csv", lines);
+        }
+
+        /// <summary>
+        /// CREATO PROVANDO A RISOLVERE IL BUG CHE FA SI CHE IMPORTANDO I CSV DOPO AVER
+        /// FATTO UNA RICERCA NELLA PAGINA CLIENTI SI BLOCCHI L'APPLICAZIONE.
+        /// </summary>
+        private void changeFolder()
+        {
+            Globals.log.Info("ChangeFolder");
+
+            //METTO TUTTO IN TEMP
+            string[] fileEntries = Directory.GetFiles(destinazione);
+            foreach (string fileName in fileEntries)
+            {
+                string ultimo = fileName.Split('\\').Last();
+                if (!File.Exists(temp + ultimo))
+                {
+                    File.Copy(fileName, temp + ultimo);
+                }
+            }
+            Globals.DATI = temp;
+            //ELIMINO DATI
+            DirectoryInfo di = new DirectoryInfo(destinazione);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+            Directory.Delete(destinazione, false);
+
+            //RINOMINO TEMP IN DATI
+            Globals.log.Info("DEST: " + destinazione);
+
+            Directory.CreateDirectory(destinazione);
+            //Now Create all of the directories
+            foreach (string dirPath in Directory.GetDirectories(temp, "*",
+                SearchOption.AllDirectories))
+                Directory.CreateDirectory(dirPath.Replace(temp, destinazione));
+
+            //Copy all the files & Replaces any files with the same name
+            foreach (string newPath in Directory.GetFiles(temp, "*.*",
+                SearchOption.AllDirectories))
+                File.Copy(newPath, newPath.Replace(temp, destinazione), true);
+
+            Globals.DATI = destinazione;
+
+            //ELIMINO DATI
+            di = new DirectoryInfo(temp);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+            Directory.Delete(temp, false);
         }
     }
 }

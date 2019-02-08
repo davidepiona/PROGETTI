@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Logica di interazione per Progetti_Home.xaml
@@ -124,8 +124,8 @@ namespace ExpenseIt
                 string msg = "E02 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() +
                     "date.csv" + " non esiste o è aperto da un altro programma.\n\nLe ultime modifiche dei progetti non " +
                     "saranno caricate da file.";
-                MessageBox.Show(msg, "E02", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-                Globals.log.Error(msg);
+                //MessageBox.Show(msg, "E02", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Warn(msg);
             }
             ultimaModifica.aggiornoModifiche(progetti);
             CheckBox_sync_ultima_modifica();
@@ -337,8 +337,7 @@ namespace ExpenseIt
                 if (!ultimaModifica.confrontoSync(progetti))
                 {
                     string msg = "E' necessario aver caricato almeno una volta le date di ultime modifiche prima di effettuare la sincronizzazione";
-                    MessageBox.Show(msg, "Sincronizzazione non avvenuta"
-                                     , MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                    //MessageBox.Show(msg, "Sincronizzazione non avvenuta", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                     Globals.log.Error(msg);
                 }
             }
@@ -351,9 +350,9 @@ namespace ExpenseIt
         {
             if (progetti.Count != 0 && progetti[progetti.Count - 1].numero != Globals.CLIENTI[num_cliente].getMaxId())
             {
-                string msg = "Indice ultimo progetto diverso dal numero di progetti di questo cliente(" + Globals.CLIENTI[num_cliente] +
-                    ") " + progetti[progetti.Count - 1].numero + "  " + Globals.CLIENTI[num_cliente].getMaxId() +
-                    "\nAggiornare il numero modificando il l'indice di ultimo progetto?";
+                string msg = "L'indice ultimo progetto è '"+ progetti[progetti.Count - 1].numero  + "' ed è diverso dal numero di progetti del cliente " 
+                    + Globals.CLIENTI[num_cliente].getNomeCliente() + " che sono '" + Globals.CLIENTI[num_cliente].getMaxId() +
+                    "'\nAggiornare il numero modificando l'indice di ultimo progetto?";
                 Globals.log.Warn(msg);
                 MessageBoxResult m = MessageBox.Show(msg, "Allarme inizializzazione"
                                      , MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
@@ -361,6 +360,8 @@ namespace ExpenseIt
                 if (m == MessageBoxResult.Yes)
                 {
                     Globals.CLIENTI[num_cliente].setMaxId(progetti[progetti.Count - 1].numero);
+                    MainWindow mw = new MainWindow();
+                    mw.salvaClientiCSV();
                 }
             }
         }
@@ -389,14 +390,18 @@ namespace ExpenseIt
             }
             if (!Globals.SINCRONIZZAZIONE)
             {
-                Button buttonModifiche = this.FindName("BottModifiche") as Button;
                 Button buttonClone = this.FindName("BottGitClone") as Button;
                 Button buttonPush = this.FindName("BottGitPush") as Button;
                 Button buttonMerge = this.FindName("BottMerge") as Button;
-                buttonModifiche.Visibility = Visibility.Hidden;
                 buttonClone.Visibility = Visibility.Hidden;
                 buttonPush.Visibility = Visibility.Hidden;
                 buttonMerge.Visibility = Visibility.Hidden;
+            }
+            if (!Globals.importCsvEnabled)
+            {
+                MenuItem menu = this.FindName("Menu") as MenuItem;
+                MenuItem importCsv = this.FindName("importCsv") as MenuItem;
+                menu.Items.Remove(importCsv);
             }
         }
 
@@ -429,7 +434,17 @@ namespace ExpenseIt
             {
                 Console.WriteLine("New Project");
                 Globals.log.Info("New Project");
-                Form1 testDialog = new Form1(Globals.CLIENTI[num_cliente], progetti[progetti.Count - 1].numero);
+                int numUltimoProgetto; 
+                if (progetti.Count == 0)
+                {
+                    numUltimoProgetto = 0;
+                }
+                else
+                {
+                    numUltimoProgetto = progetti[progetti.Count - 1].numero;
+                }
+                Form1 testDialog = new Form1(Globals.CLIENTI[num_cliente], numUltimoProgetto);
+
                 testDialog.FormClosed
                     += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
                 testDialog.ShowDialog();
@@ -441,9 +456,9 @@ namespace ExpenseIt
         }
 
         /// <summary>
-        /// Controlla se esiste un file anteprima.docx nel progetto attualmente visualizzato 
-        /// - Apre il file docx
-        /// - Crea un file docx con tutte le informazioni del progetto
+        /// Controlla se esiste un file progetto.docx nel progetto attualmente visualizzato 
+        /// - se esist: apre il file docx
+        /// - se non esiste : crea un file docx con tutte le informazioni del progetto
         /// </summary>
         private void Button_Apri_Docx(object sender, RoutedEventArgs e)
         {
@@ -456,25 +471,28 @@ namespace ExpenseIt
             else
             {
                 Progetto progetto = progetti.Find(x => x.sigla.Equals(Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato));
-                try
+                if (progetto != null)
                 {
-                    var doc = Xceed.Words.NET.DocX.Create(file);
-                    doc.InsertParagraph(Globals.CLIENTI[num_cliente].getNomeCliente() + " " + ProgSelezionato).Bold();
-                    doc.InsertParagraph("\n TITOLO DEL PROGETTO: " + progetto.nome);
-                    doc.InsertParagraph("\n TIPO DI PLC: " + progetto.tipoPLC);
-                    doc.InsertParagraph("\n TIPO DI OP: " + progetto.tipoOP);
-                    doc.InsertParagraph("\n DATA INIZIO: " + progetto.data);
-                    doc.InsertParagraph("\n Note:");
-                    doc.Save();
+                    try
+                    {
+                        var doc = Xceed.Words.NET.DocX.Create(file);
+                        doc.InsertParagraph(Globals.CLIENTI[num_cliente].getNomeCliente() + " " + ProgSelezionato).Bold();
+                        doc.InsertParagraph("\n TITOLO DEL PROGETTO: " + progetto.nome);
+                        doc.InsertParagraph("\n TIPO DI PLC: " + progetto.tipoPLC);
+                        doc.InsertParagraph("\n TIPO DI OP: " + progetto.tipoOP);
+                        doc.InsertParagraph("\n DATA INIZIO: " + progetto.data);
+                        doc.InsertParagraph("\n Note:");
+                        doc.Save();
+                    }
+                    catch (IOException)
+                    {
+                        string msg = "E44 - Il file " + file + " non è stato creato per un problema";
+                        MessageBox.Show(msg, "E44", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                        Globals.log.Error(msg);
+                    }
+                    DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+                    ChangePreview(dataGrid, null);
                 }
-                catch (IOException)
-                {
-                    string msg = "E44 - Il file " + file + " non è stato creato per un problema";
-                    MessageBox.Show(msg, "E44", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-                    Globals.log.Error(msg);
-                }
-                DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-                ChangePreview(dataGrid, null);
             }
         }
 
@@ -636,7 +654,6 @@ namespace ExpenseIt
                     List<string> pushInfo = git.push(Globals.CLIENTI[num_cliente].getNomeCliente());
                     if (pushInfo != null)
                     {
-
                         if (pushInfo.Count != 0)
                         {
                             string message = "";
@@ -727,11 +744,12 @@ namespace ExpenseIt
         {
             Console.WriteLine("Change Preview");
             Globals.log.Info("Change Preview");
+            RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
+            Button button = this.FindName("buttonOpenDocx") as Button;
             try
             {
-                ProgSelezionato = (((Progetto)((DataGrid)sender).SelectedValue).numero);
-                RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
-                Button button = this.FindName("buttonOpenDocx") as Button;
+                ProgSelezionato = ((Progetto)((DataGrid)sender).SelectedValue).numero;
+                
                 Image image = this.FindName("image") as Image;
                 if (Globals.ANTEPRIME)
                 {
@@ -775,7 +793,14 @@ namespace ExpenseIt
             catch (NullReferenceException nre)
             {
                 //Console.WriteLine("ECCEZIONE: " + nre);
+                richTextBox.Visibility = Visibility.Hidden;
+                button.Visibility = Visibility.Hidden;
                 Globals.log.Warn("Eccezione in changePreview: " + nre);
+            }
+            if (!Globals.ANTEPRIME)
+            {
+                richTextBox.Visibility = Visibility.Hidden;
+                button.Visibility = Visibility.Hidden;
             }
         }
 
@@ -852,20 +877,17 @@ namespace ExpenseIt
         private void Menu_sync(object sender, RoutedEventArgs e)
         {
             bool value = ((MenuItem)sender).IsChecked;
-            Button buttonModifiche = this.FindName("BottModifiche") as Button;
             Button buttonClone = this.FindName("BottGitClone") as Button;
             Button buttonPush = this.FindName("BottGitPush") as Button;
             Button buttonMerge = this.FindName("BottMerge") as Button;
             if (value)
             {
-                buttonModifiche.Visibility = Visibility.Visible;
                 buttonClone.Visibility = Visibility.Visible;
                 buttonPush.Visibility = Visibility.Visible;
                 buttonMerge.Visibility = Visibility.Visible;
             }
             else
             {
-                buttonModifiche.Visibility = Visibility.Hidden;
                 buttonClone.Visibility = Visibility.Hidden;
                 buttonPush.Visibility = Visibility.Hidden;
                 buttonMerge.Visibility = Visibility.Hidden;
@@ -889,12 +911,12 @@ namespace ExpenseIt
         }
 
         /// <summary>
-        /// Se l'utente conferma crea un file anteprima.docx per ogni progetto del cliente attuale
+        /// Se l'utente conferma crea un file progetto.docx per ogni progetto del cliente attuale
         /// Inserisce i dati del progetto
         /// </summary>
-        private void Menu_TRADEX(object sender, RoutedEventArgs e)
+        private void Menu_DOCX(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler CREARE un file anteprima.docx in ogni progetto di questo cliente?",
+            MessageBoxResult dialogResult = MessageBox.Show("Sei sicuro di voler CREARE un file progetto.docx in ogni progetto di questo cliente?",
                 "Creare TUTTI i DOCX?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
             if (dialogResult == MessageBoxResult.Yes)
             {

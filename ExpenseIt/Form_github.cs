@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Form per il cambio del percorso dell'eseguibile git.exe e il cambio del repository github
@@ -195,7 +195,6 @@ namespace ExpenseIt
                 string path = openFileDialog1.FileName;
                 textBox2.Text = path;
             }
-            
         }
 
         /// <summary>

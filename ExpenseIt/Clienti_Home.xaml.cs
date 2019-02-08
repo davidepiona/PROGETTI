@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ExpenseIt
+namespace DATA
 {
     /// <summary>
     /// Logica di interazione per Clienti_Home.xaml
@@ -69,14 +69,17 @@ namespace ExpenseIt
                 }
                 Button b = new Button
                 {
-                    Width = 165,
+                    Width = 160,
                     Height = 50,
                     Name = "button" + i,
                     Margin = new Thickness(25),
+                    FontSize = 13,
                     Content = cliente.getNomeCliente().Replace("_", "__")
                 };
                 b.Click += new RoutedEventHandler(Button_Click);
-                b.Background = Brushes.White;
+                //b.Background = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF4682B4"));
+                b.Background = Brushes.LightSteelBlue;
+                b.BorderBrush = Brushes.LightSteelBlue;
                 b.Foreground = Brushes.Black;
                 buttonList.Add(b);
                 Grid.SetColumn(buttonList[i], i % 4);
@@ -87,7 +90,7 @@ namespace ExpenseIt
             InitializeComponent();
             SetVisibility();
         }
-       
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////                            FUNZIONI PRINCIPALI                             ///////////////////               
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,14 +121,16 @@ namespace ExpenseIt
             Cliente cliente = Globals.CLIENTI[i];
             Button b = new Button
             {
-                Width = 165,
+                Width = 160,
                 Height = 50,
-                Margin = new Thickness(25),
                 Name = "button" + i,
+                Margin = new Thickness(25),
+                FontSize = 13,
                 Content = cliente.getNomeCliente().Replace("_", "__")
             };
             b.Click += new RoutedEventHandler(Button_Click);
-            b.Background = Brushes.White;
+            b.Background = Brushes.LightSteelBlue;
+            b.BorderBrush = Brushes.LightSteelBlue;
             b.Foreground = Brushes.Black;
             buttonList.Add(b);
             Grid.SetColumn(buttonList[i], i % 4);
@@ -147,26 +152,41 @@ namespace ExpenseIt
                 int j = 0;
                 List<string> lines = new List<string>();
                 try
-                {   
+                {
                     Console.WriteLine("Leggo:" + Globals.CLIENTI[i].getNomeCliente());
-                    using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv"))
+                    var file = File.OpenRead(Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv");
+                    var reader = new StreamReader(file);
+                    while (!reader.EndOfStream)
                     {
-                        while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
-                        {
-                            
-                            int num = Int32.Parse(lines[0]);
-                            reader.ReadRow(lines);
-                            string nome = lines[0];
-                            reader.ReadRow(lines);
-                            string tipoPLC = lines[0];
-                            reader.ReadRow(lines);
-                            string tipoOP = lines[0];
-                            reader.ReadRow(lines);
-                            string data = lines[0];
-                            progettiAll.Add(new Progetto(num, nome, tipoPLC, tipoOP, data, Globals.CLIENTI[i].getNomeCliente(), Globals.CLIENTI[i].getSuffisso()));
-                            j++;
-                        }
+                        int num = Int32.Parse(reader.ReadLine());
+                        string nome = reader.ReadLine();
+                        string tipoPLC = reader.ReadLine();
+                        string tipoOP = reader.ReadLine();
+                        string data = reader.ReadLine();
+                        progettiAll.Add(new Progetto(num, nome, tipoPLC, tipoOP, data, Globals.CLIENTI[i].getNomeCliente(), Globals.CLIENTI[i].getSuffisso())); //, line[4].Equals("True"), line[5], line[6], line[7]));
+                        j++;
                     }
+                    file.Close();
+
+                    //ALTERNATIVA FUNZIONANTE
+                    //using (var reader = new CsvFileReader(Globals.DATI + Globals.CLIENTI[i].getNomeCliente() + ".csv"))
+                    //{
+                    //    while (reader.ReadRow(lines) && lines.Count != 0 && lines != null)
+                    //    {
+
+                    //        int num = Int32.Parse(lines[0]);
+                    //        reader.ReadRow(lines);
+                    //        string nome = lines[0];
+                    //        reader.ReadRow(lines);
+                    //        string tipoPLC = lines[0];
+                    //        reader.ReadRow(lines);
+                    //        string tipoOP = lines[0];
+                    //        reader.ReadRow(lines);
+                    //        string data = lines[0];
+                    //        progettiAll.Add(new Progetto(num, nome, tipoPLC, tipoOP, data, Globals.CLIENTI[i].getNomeCliente(), Globals.CLIENTI[i].getSuffisso()));
+                    //        j++;
+                    //    }
+                    //}
                 }
                 catch (IOException)
                 {
@@ -313,6 +333,10 @@ namespace ExpenseIt
                 ReadProjects();
                 button.Visibility = Visibility.Visible;
                 dataGrid.Visibility = Visibility.Visible;
+                Globals.importCsvEnabled = false;
+                MenuItem menu = this.FindName("Menu") as MenuItem;
+                MenuItem importCsv = this.FindName("importCsv") as MenuItem;
+                menu.Items.Remove(importCsv);
             }
             Progetto ultimo = UpdateList(((TextBox)sender).Text);
             dataGrid.SelectedIndex = 0;
@@ -364,7 +388,7 @@ namespace ExpenseIt
         {
             DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             Progetto p = dataGrid.SelectedItem as Progetto;
-            string path = Globals.PROGETTI + p.nomeCliente + @"\" + p.nomeCliente + p.numero;
+            string path = Globals.PROGETTI + p.nomeCliente + @"\" + p.suffisso + p.numero;
             int n = Globals.CLIENTI.FindIndex(x => x.getNomeCliente().Equals(p.nomeCliente));
             Globals.CLIENTI[n].setLastId(p.numero);
             Globals.LAST_CLIENT = p.nomeCliente;
@@ -594,6 +618,12 @@ namespace ExpenseIt
                 Button buttonPush = this.FindName("BottGitPush2") as Button;
                 buttonClone.Visibility = Visibility.Hidden;
                 buttonPush.Visibility = Visibility.Hidden;
+            }
+            if (!Globals.importCsvEnabled)
+            {
+                MenuItem menu = this.FindName("Menu") as MenuItem;
+                MenuItem importCsv = this.FindName("importCsv") as MenuItem;
+                menu.Items.Remove(importCsv);
             }
         }
 

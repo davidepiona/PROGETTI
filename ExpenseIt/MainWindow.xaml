@@ -1,4 +1,4 @@
-﻿<NavigationWindow x:Class="ExpenseIt.MainWindow"
+﻿<NavigationWindow x:Class="DATA.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,7 +14,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Closing="MainWindow_Closing"
-        Title="DATA" Height="900" Width="1400" Source="Progetti_Home.xaml" WindowStartupLocation="CenterScreen" Icon="C:\Users\attil\source\repos\ExpenseIt\ExpenseIt\IconApp.ico">
+        Title="DATA" Height="900" Width="1400" Source="Progetti_Home.xaml" WindowStartupLocation="CenterScreen" Icon="R:\PROGETTI\DATA\SRC\IconApp.ico">
     <NavigationWindow.TaskbarItemInfo>
         <TaskbarItemInfo/>
     </NavigationWindow.TaskbarItemInfo>
