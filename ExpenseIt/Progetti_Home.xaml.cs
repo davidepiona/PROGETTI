@@ -778,15 +778,16 @@ namespace DATA
             Globals.log.Info("Change Preview");
             RichTextBox richTextBox = this.FindName("richTextBox") as RichTextBox;
             Button button = this.FindName("buttonOpenDocx") as Button;
+            Image image = this.FindName("image") as Image;
             try
             {
                 ProgSelezionato = ((Progetto)((DataGrid)sender).SelectedValue).numero;
                 
-                Image image = this.FindName("image") as Image;
                 if (Globals.ANTEPRIME)
                 {
                     richTextBox.Visibility = Visibility.Visible;
                     button.Visibility = Visibility.Visible;
+                    image.Visibility = Visibility.Visible;
 
                     string file = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() +
                                   @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx";
@@ -819,6 +820,7 @@ namespace DATA
                     else
                     {
                         image.Source = null;
+                        image.Visibility = Visibility.Hidden;
                     }
                 }
             }
@@ -827,12 +829,14 @@ namespace DATA
                 //Console.WriteLine("ECCEZIONE: " + nre);
                 richTextBox.Visibility = Visibility.Hidden;
                 button.Visibility = Visibility.Hidden;
+                image.Visibility = Visibility.Hidden;
                 Globals.log.Warn("Eccezione in changePreview: " + nre);
             }
             if (!Globals.ANTEPRIME)
             {
                 richTextBox.Visibility = Visibility.Hidden;
                 button.Visibility = Visibility.Hidden;
+                image.Visibility = Visibility.Hidden;
             }
         }
 
