@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -183,6 +184,13 @@ namespace DATA
                 string msg = "E31 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv" +
                     " è in un formato non corretto.\nProblema riscontrato al progetto numero: " + j;
                 MessageBox.Show(msg, "E31", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
+                Globals.log.Error(msg);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                string msg = "E37 - Il file " + Globals.DATI + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv" +
+                    " è in un formato non corretto.\nProblema riscontrato al progetto numero: " + j + "  - ArgumentOutOfRangeException";
+                MessageBox.Show(msg, "E37", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
                 Globals.log.Error(msg);
             }
         }
@@ -689,6 +697,30 @@ namespace DATA
             buttonPush.IsEnabled = true;
             buttonMerge.IsEnabled = true;
             updateList("");
+        }
+
+        /// <summary>
+        /// Bottone che apre il form per la modifica del progetto selezionato
+        /// Possibilità di cambiarne i parametri
+        /// Possibilità di eliminare il progetto
+        /// </summary>
+        private void Button_Modify(object sender, RoutedEventArgs e)
+        {
+            if (ProgSelezionato != 0)
+            {
+                try
+                {
+                    Progetto itemToRemove = progetti.Single(r => r.numero == ProgSelezionato);
+                    Form_Modifica form = new Form_Modifica(progetti, itemToRemove);
+                    form.FormClosed
+                            += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
+                    form.ShowDialog();
+                }
+                catch (InvalidOperationException)
+                {
+                    Globals.log.Info("Non è stato trovato nessun elemento con indice " + ProgSelezionato + " , probabilmente è stato eliminato in precedenza");
+                }
+            }
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

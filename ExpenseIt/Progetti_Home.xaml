@@ -55,7 +55,7 @@ Height="40" Click="Button_Open_Folder" Background="SteelBlue"  x:Name="BottApri"
             Height="40" Click="Button_Merge" Background="SteelBlue" Content="Merge" x:Name="BottMerge" BorderBrush="RoyalBlue"
                 ToolTip="Confronta i progetti del cliente attuale memorizzati in &#x0a;DATI con quelli memorizzati in DATIsync. &#x0a;Poi apre il form che permette di aggiungere quelli nuovi" ToolTipService.InitialShowDelay="2000"/>
         <Button Grid.Column="5" Grid.Row="5"  Width="150" HorizontalAlignment="Center"
-            Height="40" Click="Button_Ultime_Modifiche" Background="SteelBlue" Content="Modifiche" x:Name="BottModifiche" BorderBrush="RoyalBlue"
+            Height="40" Click="Button_Ultime_Modifiche" Background="SteelBlue" Content="Ultime Modifiche" x:Name="BottModifiche" BorderBrush="RoyalBlue"
                 ToolTip="Aggiorna le ultime modifiche di ogni progetto: &#x0a; - cerca l'ultima modifica di ogni cartella &#x0a; - le scrive nel csv apposito &#x0a; - aggiorna i valori dei progetti &#x0a; - aggiorna la tabella" ToolTipService.InitialShowDelay="2000"/>
         <!--<Button Grid.Column="5" Grid.Row="6"  Width="150" HorizontalAlignment="Center"
             Height="40" Click="Sync" Background="SteelBlue" Content="Sync" x:Name="BottSync"/>-->
@@ -68,6 +68,14 @@ Height="40" Click="Button_Open_Folder" Background="SteelBlue"  x:Name="BottApri"
             Height="40" Click="Button_GitHubPush" Background="SteelBlue" x:Name="BottGitPush" BorderBrush="RoyalBlue"
                 ToolTip="Push sul repository dei csv del CLIENTE attuale: &#x0a; - elimina i file del CLIENTE attuale da DATIsync &#x0a; - copia i file del CLIENTE attuale da DATI a DATIsync &#x0a; - git add CLIENTE* &#x0a; - git commit &#x0a; - git push (x2)" ToolTipService.InitialShowDelay="2000" >
             <Image Source="R:\PROGETTI\DATA\SRC\arrow-up.png" />
+        </Button>
+        <Button Grid.Column="5" Grid.Row="4"  Width="150" HorizontalAlignment="Center"
+            Height="40" Click="Button_Modify" Background="SteelBlue"  x:Name="BottModif" BorderBrush="RoyalBlue"
+                ToolTip="Apre il form di modifica del programma &#xA; - possibilità di modificarlo&#xA; - possibilità di eliminarlo" ToolTipService.InitialShowDelay="2000">
+            <StackPanel Orientation="Horizontal" Height="40" VerticalAlignment="Center">
+                <Image Source="R:\PROGETTI\DATA\SRC\pencil.ico" Height="35" Width="40" Margin="0" />
+                <TextBlock Text="   Modifica" Foreground="White" VerticalAlignment="Center"/>
+            </StackPanel>
         </Button>
         <Button Grid.Column="1" Grid.Row="0"  Width="70" HorizontalAlignment="Left"
             Height="70" Click="Button_Cambia_Pagina" Padding="0" Background="{x:Null}" 
