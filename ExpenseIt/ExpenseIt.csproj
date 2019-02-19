@@ -103,6 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Confronto.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +158,9 @@
     <Compile Include="Progetto.cs" />
     <Compile Include="Sync.cs" />
     <Compile Include="UltimaModifica.cs" />
+    <Compile Include="Window_ShowDifference.xaml.cs">
+      <DependentUpon>Window_ShowDifference.xaml</DependentUpon>
+    </Compile>
     <Page Include="Clienti_Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -179,6 +183,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Progetti_Home.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window_ShowDifference.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

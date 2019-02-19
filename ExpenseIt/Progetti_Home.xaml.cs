@@ -584,12 +584,43 @@ namespace DATA
         {
             Sync s = new Sync(progetti, num_cliente);
             s.readSyncProject(Globals.DATIsync + Globals.CLIENTI[num_cliente].getNomeCliente() + ".csv");
-            List<Progetto>[] compare = s.compareSyncProject();
-            Console.WriteLine("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
-            Globals.log.Info("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
-            Form_ShowDifference form = new Form_ShowDifference(compare[1], num_cliente);
-            form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
-            form.ShowDialog();
+            //List<Progetto>[] compare = s.compareSyncProject();
+            //Console.WriteLine("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
+            //Globals.log.Info("Progetti uguali = " + compare[0].Count + "\nProgetti mancanti localmente = " + compare[1].Count + "\nProgetti in più = " + compare[2].Count);
+            //Form_ShowDifference form = new Form_ShowDifference(compare[1], num_cliente);
+            //form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
+            //form.ShowDialog();
+            List < Confronto > list = s.compareProjectsLists(); 
+                Window_ShowDifference win2 = new Window_ShowDifference(list);
+            win2.Closed
+                            += new EventHandler(updateListAfterMerge);
+            win2.ShowDialog();
+        }
+
+        private void updateListAfterMerge(object sender, EventArgs e)
+        {
+            Console.WriteLine("UpdateList3");
+            Globals.log.Info("UpdateList3");
+            progetti = new List<Progetto>();
+            readProjects();
+            CheckBox_sync_ultima_modifica();
+            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            ultimaModifica.aggiornoModifiche(progetti);
+            if (dataGrid != null)
+            {
+                int i = 0;
+                dataGrid.Items.Clear();
+                foreach (Progetto p in progetti)
+                {
+                    dataGrid.Items.Add(p);
+                    if (p.numero.Equals(Globals.CLIENTI[num_cliente].getlastId()))
+                    {
+                        dataGrid.SelectedIndex = i;
+                        dataGrid.ScrollIntoView(progetti[i]);
+                    }
+                    i++;
+                }
+            }
         }
 
         /// <summary>
@@ -793,9 +824,17 @@ namespace DATA
                                   @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato + @"\progetto.docx";
                     if (File.Exists(file))
                     {
-                        var doc = Xceed.Words.NET.DocX.Load(file);
-                        richTextBox.Document.Blocks.Clear();
-                        richTextBox.AppendText(doc.Text);
+                        try
+                        {
+                            var doc = Xceed.Words.NET.DocX.Load(file);
+                            richTextBox.Document.Blocks.Clear();
+                            richTextBox.AppendText(doc.Text);
+                        }
+                        catch (IOException)
+                        {
+                            string msg = "E52 - Il file " + file + " non è accessibile";
+                            Globals.log.Error(msg);
+                        }
                     }
                     else
                     {
@@ -943,6 +982,7 @@ namespace DATA
         private void Menu_importa_CSV(object sender, RoutedEventArgs e)
         {
             Form_aggiornaCSV form = new Form_aggiornaCSV();
+            form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
             form.ShowDialog();
         }
 

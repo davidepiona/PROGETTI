@@ -71,7 +71,7 @@
             this.textBox1.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.Location = new System.Drawing.Point(303, 115);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(260, 35);
+            this.textBox1.Size = new System.Drawing.Size(395, 35);
             this.textBox1.TabIndex = 2;
             // 
             // label2
@@ -90,7 +90,7 @@
             this.textBox3.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox3.Location = new System.Drawing.Point(303, 190);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(260, 35);
+            this.textBox3.Size = new System.Drawing.Size(395, 35);
             this.textBox3.TabIndex = 3;
             // 
             // label3
@@ -125,7 +125,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(303, 40);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(170, 35);
+            this.comboBox1.Size = new System.Drawing.Size(209, 35);
             this.comboBox1.TabIndex = 1;
             // 
             // button1
@@ -154,7 +154,7 @@
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(303, 264);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(170, 35);
+            this.comboBox2.Size = new System.Drawing.Size(209, 35);
             this.comboBox2.TabIndex = 22;
             // 
             // Form1

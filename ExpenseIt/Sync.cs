@@ -113,5 +113,48 @@ namespace DATA
             }
             return list;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Confronto> compareProjectsLists()
+        {
+            List<Confronto> list = new List<Confronto>();
+            foreach (Progetto p in progetti)
+            {
+                int i = progettiSync.FindIndex(x => x.numero.Equals(p.numero));
+                if (i != -1) //trovato
+                {
+                    progettiSync[i].sync = true;
+                    if (p.nome.Equals(progettiSync[i].nome) && p.data.Equals(progettiSync[i].data))
+                    {
+
+                    }
+                    else
+                    {
+                        Confronto c = new Confronto(p, progettiSync[i]);
+                        list.Add(c);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Un progetto in più: " + p.sigla + " -->" + p.data);
+                    Globals.log.Info("Un progetto in più: " + p.sigla + " -->" + p.data);
+                    Confronto c = new Confronto(p, null);
+                    list.Add(c);
+                }
+            }
+            foreach (Progetto ps in progettiSync)
+            {
+                if (ps.sync == false)
+                {
+                    Console.WriteLine("Un progetto mancante localmente: " + ps.sigla + " -->" + ps.data);
+                    Globals.log.Info("Un progetto mancante localmente: " + ps.sigla + " -->" + ps.data);
+                    Confronto c = new Confronto(null, ps);
+                    list.Add(c);
+                }
+            }
+            return list;
+        }
     }
 }

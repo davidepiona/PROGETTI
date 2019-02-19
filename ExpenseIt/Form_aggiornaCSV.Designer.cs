@@ -59,19 +59,19 @@
             // 
             // textBox2
             // 
-            this.textBox2.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.Font = new System.Drawing.Font("Dubai Medium", 11F, System.Drawing.FontStyle.Bold);
             this.textBox2.Location = new System.Drawing.Point(273, 214);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(438, 35);
+            this.textBox2.Size = new System.Drawing.Size(438, 32);
             this.textBox2.TabIndex = 26;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // textBox1
             // 
-            this.textBox1.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Font = new System.Drawing.Font("Dubai Medium", 11F, System.Drawing.FontStyle.Bold);
             this.textBox1.Location = new System.Drawing.Point(273, 100);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(438, 35);
+            this.textBox1.Size = new System.Drawing.Size(438, 32);
             this.textBox1.TabIndex = 23;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
