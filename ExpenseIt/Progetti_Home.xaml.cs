@@ -274,8 +274,10 @@ namespace DATA
             progetti = new List<Progetto>();
             readProjects();
             CheckBox_sync_ultima_modifica();
-            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
+            ultimaModifica.checkLastModifyProject(progetti.Last().sigla, Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + progetti.Last().sigla + @"\");
+            
             ultimaModifica.aggiornoModifiche(progetti);
+            DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
             if (dataGrid != null)
             {
                 int i = 0;
@@ -591,7 +593,7 @@ namespace DATA
             //form.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);
             //form.ShowDialog();
             List < Confronto > list = s.compareProjectsLists(); 
-                Window_ShowDifference win2 = new Window_ShowDifference(list);
+                Window_ShowDifference win2 = new Window_ShowDifference(list, progetti);
             win2.Closed
                             += new EventHandler(updateListAfterMerge);
             win2.ShowDialog();
@@ -741,7 +743,7 @@ namespace DATA
             {
                 try
                 {
-                    Progetto itemToRemove = progetti.Single(r => r.numero == ProgSelezionato);
+                    Progetto itemToRemove = progetti.Find(r => r.numero == ProgSelezionato);
                     Form_Modifica form = new Form_Modifica(progetti, itemToRemove);
                     form.FormClosed
                             += new System.Windows.Forms.FormClosedEventHandler(this.updateListNewProject);

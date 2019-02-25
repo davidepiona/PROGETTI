@@ -71,7 +71,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form_ShowDifference";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Progetti da aggiungere";

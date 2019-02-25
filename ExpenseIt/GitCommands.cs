@@ -295,9 +295,11 @@ namespace DATA
             {
                 string gitFetch = @"fetch";
                 _processStartInfo.Arguments = gitFetch;
+                var proc = Process.Start(_processStartInfo);
 
-                string gitCheckout = @"checkout origin/master -- " + cliente + "*";
+                string gitCheckout = @"checkout -- " + cliente + "*";
                 _processStartInfo.Arguments = gitCheckout;
+                proc = Process.Start(_processStartInfo);
             }
             catch (Win32Exception w32e)
             {

@@ -38,34 +38,49 @@
  FontWeight="Bold" FontSize="50" Foreground="White" >
             Remoto
         </Label>
-        <DataGrid AutoGenerateColumns="False" x:Name="dataGrid" Grid.Column="0" Grid.ColumnSpan="6" HorizontalAlignment="Left" Height="600" Background="WhiteSmoke"
+        <DataGrid AutoGenerateColumns="False" x:Name="dataGrid2" Grid.Column="0" Grid.ColumnSpan="6" HorizontalAlignment="Left" Height="600" Background="WhiteSmoke"
                   Margin="20,0,20,17" Grid.Row="1" Grid.RowSpan="9"  VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Foreground="#FF222222" IsReadOnly="True" >
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
                 </Style>
+                <!--<Style TargetType="DataGridCheckBoxColumn">
+                    <EventSetter Event=""  Handler="Row_DoubleClick"/>
+                </Style>-->
                 <Style TargetType="ScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
                     <Setter Property="Width" Value="30" />
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id1" IsReadOnly="True" Binding="{Binding Path=id1}" Width="30*" FontSize="12" ></DataGridTextColumn>
-                <DataGridTextColumn Header="Nome1" IsReadOnly="True"  Binding="{Binding Path=nome1}" Width="160*" FontSize="12" ></DataGridTextColumn>
-                <DataGridTextColumn Header="Creazione1" IsReadOnly="True"  Binding="{Binding Path=dataCreazione1}" Width="70*" FontSize="11"></DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="Sync1" Binding="{Binding Path=scelto1}" IsReadOnly="True" CanUserResize="False" Width="40*" IsThreeState="True"/>
+                <DataGridTextColumn Header="Nome1" IsReadOnly="True"  Binding="{Binding Path=nome1}" Width="140*" FontSize="12" ></DataGridTextColumn>
+                <DataGridTextColumn Header="Creazione1" IsReadOnly="True"  Binding="{Binding Path=dataCreazione1}" Width="90*" FontSize="11"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="Sync1" Binding="{Binding Path=scelto1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserResize="False" Width="40*">
+                    <DataGridCheckBoxColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <EventSetter Event="PreviewMouseDown" Handler="OnClick1" />
+                        </Style>
+                    </DataGridCheckBoxColumn.CellStyle>
+                </DataGridCheckBoxColumn>
                 <DataGridTextColumn Width="3"></DataGridTextColumn>
                 <DataGridTextColumn Header="Id1" IsReadOnly="True" Binding="{Binding Path=id2}" Width="30*" FontSize="12" ></DataGridTextColumn>
-                <DataGridTextColumn Header="Nome1" IsReadOnly="True"  Binding="{Binding Path=nome2}" Width="160*" FontSize="12" ></DataGridTextColumn>
-                <DataGridTextColumn Header="Creazione1" IsReadOnly="True"  Binding="{Binding Path=dataCreazione2}" Width="70*" FontSize="11"></DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="Sync1" Binding="{Binding Path=scelto2}" IsReadOnly="True" CanUserResize="False" Width="40*" IsThreeState="True"/>
+                <DataGridTextColumn Header="Nome1" IsReadOnly="True"  Binding="{Binding Path=nome2}" Width="140*" FontSize="12" ></DataGridTextColumn>
+                <DataGridTextColumn Header="Creazione1" IsReadOnly="True"  Binding="{Binding Path=dataCreazione2}" Width="90*" FontSize="11"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="Sync1" Binding="{Binding Path=scelto2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" CanUserResize="False" Width="40*">
+                    <DataGridCheckBoxColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <EventSetter Event="PreviewMouseDown" Handler="OnClick2" />
+                        </Style>
+                    </DataGridCheckBoxColumn.CellStyle>
+                </DataGridCheckBoxColumn>
             </DataGrid.Columns>
         </DataGrid>
         <Rectangle Grid.Column="3" Fill="#FF000008" HorizontalAlignment="Left" Height="550" Margin="0,50,0,17" Grid.Row="1" Grid.RowSpan="8" Stroke="Black" VerticalAlignment="Top" Width="3"/>
-    
-    <Button Grid.Column="7" Grid.Row="8"  Width="150" HorizontalAlignment="Center"
+
+        <Button Grid.Column="5" Grid.Row="8"  Width="150" HorizontalAlignment="Center"
             Height="40"  Background="SteelBlue" Content="Ultime Modifiche" x:Name="BottModifiche" BorderBrush="RoyalBlue"
-                ToolTip="Aggiorna le ultime modifiche di ogni progetto: &#x0a; - cerca l'ultima modifica di ogni cartella &#x0a; - le scrive nel csv apposito &#x0a; - aggiorna i valori dei progetti &#x0a; - aggiorna la tabella" ToolTipService.InitialShowDelay="2000"
+                ToolTip="Aggiorna le ultime modifiche di ogni progetto: &#x0a; - cerca l'ultima modifica di ogni cartella &#x0a; - le scrive nel csv apposito &#x0a; - aggiorna i valori dei progetti &#x0a; - aggiorna la tabella" ToolTipService.InitialShowDelay="2000" Margin="7,0,8,23" VerticalAlignment="Bottom" Click="BottModifiche_Click"
             />
         <!--Click="Button_Ultime_Modifiche"/>-->
-</Grid>
+    </Grid>
 </Window>

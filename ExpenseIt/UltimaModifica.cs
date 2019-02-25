@@ -26,7 +26,6 @@ namespace DATA
         public UltimaModifica(Cliente cliente)
         {
             this.cliente = cliente;
-
         }
 
         /// <summary>
@@ -292,6 +291,20 @@ namespace DATA
             }
             Globals.log.Info("Date scritte in DATI");
             return true;
+        }
+
+        public void addModifyDate(string file, string progetto, DateTime data)
+        {
+            allDate.Add(progetto, data);
+            writeInCSV(file);
+        }
+
+        public void checkLastModifyProject(string sigla, string file)
+        {
+            if (!allDate.TryGetValue(sigla, out DateTime ultima))
+            {
+                allDate.Add(sigla, modificheByFile(file));
+            }
         }
     }
 }

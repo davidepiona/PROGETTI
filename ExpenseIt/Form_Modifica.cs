@@ -151,6 +151,18 @@ namespace DATA
                 {
                     Console.WriteLine("Rimuovo");
                     progetti.Remove(prog);
+                    int numCliente = 0;
+                    int i = 0;
+                    foreach (Cliente c in Globals.CLIENTI)
+                    {
+                        if (c.getNomeCliente().Equals(prog.nomeCliente))
+                        {
+                            numCliente = i;
+                        }
+                        i++;
+                    }
+                    Globals.CLIENTI[numCliente].setMaxId(Globals.CLIENTI[numCliente].getMaxId() -1 );
+                    Globals.CLIENTI[numCliente].setLastId(prog.numero+1);
                     if (scriviCSV())
                     {
                         Globals.log.Info("Progetto eliminato");

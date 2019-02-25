@@ -126,7 +126,16 @@ namespace DATA
                 if (i != -1) //trovato
                 {
                     progettiSync[i].sync = true;
-                    if (p.nome.Equals(progettiSync[i].nome) && p.data.Equals(progettiSync[i].data))
+                    //if (p.nome.Equals(progettiSync[i].nome) && p.data.Equals(progettiSync[i].data))
+                    string data1 = p.data;
+                    string data2 = progettiSync[i].data;
+                    if (data1.Length != data2.Length)
+                    {
+                        //Console.WriteLine(data1 + "\n" + data2);
+                        data1 = data1.Substring(0, 16);
+                        data2 = data2.Substring(0, 16);
+                    }
+                    if (p.nome.Equals(progettiSync[i].nome) && data1.Equals(data2))
                     {
 
                     }
