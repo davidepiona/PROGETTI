@@ -32,7 +32,7 @@ namespace DATA
             this.prog = prog;
             this.progetti = progetti;
             InitializeComponent();
-            label5.Text = "Id" + prog.numero;
+            label4.Text = "Id" + prog.numero;
             
             textBox1.Text = prog.nome;
             textBox3.Text = prog.tipoOP;
@@ -161,7 +161,7 @@ namespace DATA
                         }
                         i++;
                     }
-                    Globals.CLIENTI[numCliente].setMaxId(Globals.CLIENTI[numCliente].getMaxId() -1 );
+                    Globals.CLIENTI[numCliente].setMaxId(progetti.Count);
                     Globals.CLIENTI[numCliente].setLastId(prog.numero+1);
                     if (scriviCSV())
                     {

@@ -134,7 +134,7 @@ namespace DATA
             Label titolo = this.FindName("titolo") as Label;
             titolo.Content = titolo.Content.ToString() + " " + Globals.CLIENTI[num_cliente].getNomeCliente().Replace("_", "__");
             PreviewKeyDown += new KeyEventHandler(PreviewKeyDown2);
-            InitCheck();
+            //InitCheck(); //disabilitato perchè si è cambiato il significato di MaxId in Clienti
             SetVisibility();
         }
 
@@ -355,6 +355,7 @@ namespace DATA
 
         /// <summary>
         /// Controllo iniziale: controlla che il numero di progetti in CLIENTI.csv coincida col numero dell'ultimo progetto
+        /// NON PIU' UTILIZZATO
         /// </summary>
         private void InitCheck()
         {
@@ -366,10 +367,9 @@ namespace DATA
                 Globals.log.Warn(msg);
                 MessageBoxResult m = MessageBox.Show(msg, "Allarme inizializzazione"
                                      , MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.OK, MessageBoxOptions.RightAlign);
-
                 if (m == MessageBoxResult.Yes)
                 {
-                    Globals.CLIENTI[num_cliente].setMaxId(progetti[progetti.Count - 1].numero);
+                    Globals.CLIENTI[num_cliente].setMaxId(progetti.Count);
                     MainWindow mw = new MainWindow();
                     mw.salvaClientiCSV();
                 }

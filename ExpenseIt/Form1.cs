@@ -38,6 +38,7 @@ namespace DATA
             }
             this.ultimoProgetto = ultimoProgetto;
             this.comboBox1.SelectedItem = cliente.getNomeCliente();
+            label5.Text = "Id" + (ultimoProgetto+1);
         }
 
         // <summary>
@@ -120,7 +121,7 @@ namespace DATA
                     MessageBox.Show(msg2, "E07", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                     Globals.log.Error(msg2);
                 }
-                Globals.CLIENTI[numCliente].setMaxId(Globals.CLIENTI[numCliente].getMaxId() + 1);
+                Globals.CLIENTI[numCliente].setMaxId(Globals.CLIENTI[numCliente].getMaxId() +1);
                 Globals.CLIENTI[numCliente].setLastId(Globals.CLIENTI[numCliente].getMaxId());
                 MainWindow m = new MainWindow();
                 m.salvaClientiCSV();

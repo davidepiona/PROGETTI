@@ -40,6 +40,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,7 +61,7 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Dubai Medium", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(97, 115);
+            this.label1.Location = new System.Drawing.Point(97, 130);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(177, 39);
             this.label1.TabIndex = 2;
@@ -69,7 +70,7 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(303, 115);
+            this.textBox1.Location = new System.Drawing.Point(303, 130);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(395, 35);
             this.textBox1.TabIndex = 2;
@@ -79,7 +80,7 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Dubai Medium", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(97, 265);
+            this.label2.Location = new System.Drawing.Point(97, 268);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(110, 39);
             this.label2.TabIndex = 4;
@@ -88,7 +89,7 @@
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.Location = new System.Drawing.Point(303, 190);
+            this.textBox3.Location = new System.Drawing.Point(303, 199);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(395, 35);
             this.textBox3.TabIndex = 3;
@@ -98,7 +99,7 @@
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Dubai Medium", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(97, 190);
+            this.label3.Location = new System.Drawing.Point(97, 199);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 39);
             this.label3.TabIndex = 6;
@@ -109,11 +110,11 @@
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Dubai Medium", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(97, 40);
+            this.label5.Location = new System.Drawing.Point(477, 9);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(89, 39);
+            this.label5.Size = new System.Drawing.Size(37, 39);
             this.label5.TabIndex = 10;
-            this.label5.Text = "Cliente";
+            this.label5.Text = "Id";
             // 
             // comboBox1
             // 
@@ -123,7 +124,7 @@
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(303, 40);
+            this.comboBox1.Location = new System.Drawing.Point(303, 61);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(209, 35);
             this.comboBox1.TabIndex = 1;
@@ -152,10 +153,21 @@
             this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.Font = new System.Drawing.Font("Dubai Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(303, 264);
+            this.comboBox2.Location = new System.Drawing.Point(303, 267);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(209, 35);
             this.comboBox2.TabIndex = 22;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Font = new System.Drawing.Font("Dubai Medium", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(97, 57);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(89, 39);
+            this.label4.TabIndex = 23;
+            this.label4.Text = "Cliente";
             // 
             // Form1
             // 
@@ -164,6 +176,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(748, 426);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label5);
@@ -198,5 +211,6 @@
         private System.Windows.Forms.Button button2;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label4;
     }
 }

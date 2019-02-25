@@ -41,12 +41,6 @@
         <DataGrid AutoGenerateColumns="False" x:Name="dataGrid2" Grid.Column="0" Grid.ColumnSpan="6" HorizontalAlignment="Left" Height="600" Background="WhiteSmoke"
                   Margin="20,0,20,17" Grid.Row="1" Grid.RowSpan="9"  VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Foreground="#FF222222" IsReadOnly="True" >
             <DataGrid.Resources>
-                <Style TargetType="DataGridRow">
-                    <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
-                </Style>
-                <!--<Style TargetType="DataGridCheckBoxColumn">
-                    <EventSetter Event=""  Handler="Row_DoubleClick"/>
-                </Style>-->
                 <Style TargetType="ScrollBar" BasedOn="{StaticResource {x:Type ScrollBar}}">
                     <Setter Property="Width" Value="30" />
                 </Style>
@@ -77,9 +71,9 @@
         </DataGrid>
         <Rectangle Grid.Column="3" Fill="#FF000008" HorizontalAlignment="Left" Height="550" Margin="0,50,0,17" Grid.Row="1" Grid.RowSpan="8" Stroke="Black" VerticalAlignment="Top" Width="3"/>
 
-        <Button Grid.Column="5" Grid.Row="8"  Width="150" HorizontalAlignment="Center"
-            Height="40"  Background="SteelBlue" Content="Ultime Modifiche" x:Name="BottModifiche" BorderBrush="RoyalBlue"
-                ToolTip="Aggiorna le ultime modifiche di ogni progetto: &#x0a; - cerca l'ultima modifica di ogni cartella &#x0a; - le scrive nel csv apposito &#x0a; - aggiorna i valori dei progetti &#x0a; - aggiorna la tabella" ToolTipService.InitialShowDelay="2000" Margin="7,0,8,23" VerticalAlignment="Bottom" Click="BottModifiche_Click"
+        <Button Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="8"  Width="180" HorizontalAlignment="Right"
+            Height="40"  Background="SteelBlue" Content="Apporta Modifiche" x:Name="BottModifiche" BorderBrush="RoyalBlue"
+                ToolTip="Aggiorna le ultime modifiche di ogni progetto: &#x0a; - cerca l'ultima modifica di ogni cartella &#x0a; - le scrive nel csv apposito &#x0a; - aggiorna i valori dei progetti &#x0a; - aggiorna la tabella" ToolTipService.InitialShowDelay="2000" Margin="7,0,20,23" VerticalAlignment="Bottom" Click="BottModifiche_Click"
             />
         <!--Click="Button_Ultime_Modifiche"/>-->
     </Grid>
