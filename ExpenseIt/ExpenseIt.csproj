@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>18</ApplicationRevision>
+    <ApplicationRevision>19</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -122,6 +122,12 @@
     <Compile Include="Form_initialSettings.Designer.cs">
       <DependentUpon>Form_initialSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form_LastModify.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_LastModify.Designer.cs">
+      <DependentUpon>Form_LastModify.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_Modifica.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_initialSettings.resx">
       <DependentUpon>Form_initialSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_LastModify.resx">
+      <DependentUpon>Form_LastModify.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_Modifica.resx">
       <DependentUpon>Form_Modifica.cs</DependentUpon>

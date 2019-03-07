@@ -126,6 +126,11 @@ Height="40" Click="Button_Open_Folder" Background="SteelBlue"  x:Name="BottApri"
                 ToolTip="Controlla se esiste un file progetto.docx &#x0a;- se esiste: lo apre in word &#x0a;- se non esiste : lo crea" ToolTipService.InitialShowDelay="2000">
             <Image Source="R:\PROGETTI\DATA\SRC\word.jpg"></Image>
         </Button>
+        <Button x:Name="buttonLastModify" Grid.Column="0" Grid.Row="8"  Width="150" HorizontalAlignment="Center"
+            Height="40" Click="ButtonLastModify" Background="SteelBlue" BorderBrush="RoyalBlue"
+                ToolTip="Fa apparire un popup che mostra l'ultimo file modificato" ToolTipService.InitialShowDelay="2000">
+            <Image Source="R:\PROGETTI\DATA\SRC\clock.png"></Image>
+        </Button>
         <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
               Margin="0,0,40,0">
             <MenuItem Width="50" Height="50" FlowDirection="RightToLeft" Name="Menu">

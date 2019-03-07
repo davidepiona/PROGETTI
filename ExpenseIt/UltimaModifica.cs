@@ -19,6 +19,7 @@ namespace DATA
         private Dictionary<string, DateTime> allDateSync = new Dictionary<string, DateTime>();
         private Dictionary<string, int> status = new Dictionary<string, int>();
         DateTime dtNew = new DateTime();
+        private string fileName; 
 
         /// <summary>
         /// Costruttore semplice
@@ -122,6 +123,7 @@ namespace DATA
             if (DateTime.Compare(dtNew, dt) < 0)
             {
                 dtNew = dt;
+                fileName = path;
             }
         }
 
@@ -305,6 +307,11 @@ namespace DATA
             {
                 allDate.Add(sigla, modificheByFile(file));
             }
+        }
+
+        public string getFileName()
+        {
+            return fileName;
         }
     }
 }

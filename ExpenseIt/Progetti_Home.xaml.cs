@@ -756,6 +756,19 @@ namespace DATA
             }
         }
 
+        /// <summary>
+        /// Bottone che apre un popup per visualizzare l'ultimo file modificato e la relativa data di modifica
+        /// </summary>
+        private void ButtonLastModify(object sender, RoutedEventArgs e)
+        {
+            string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato;
+            DateTime date = ultimaModifica.modificheByFile(path);
+            string fileName = ultimaModifica.getFileName();
+            string fileName2 = fileName.Substring(path.Length+1);
+            Form_LastModify form = new Form_LastModify(fileName2, date.ToString());
+            form.ShowDialog();
+        }
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////                        INTERAZIONE CON L'UTENTE                            ///////////////////               
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
