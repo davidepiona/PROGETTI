@@ -62,10 +62,10 @@ namespace DATA
         /// </summary>
         private void button2_Click(object sender, EventArgs e)
         {
-            string cliente = comboBox1.Text.ToString();
-            string titolo = textBox1.Text.ToString();
-            string tipoPLC = comboBox2.Text.ToString();
-            string tipoOP = textBox3.Text.ToString();
+            string cliente = comboBox1.Text.ToString().Replace(",", "");
+            string titolo = textBox1.Text.ToString().Replace(",", "");
+            string tipoPLC = comboBox2.Text.ToString().Replace(",", "");
+            string tipoOP = textBox3.Text.ToString().Replace(",", "");
             if (titolo.Equals(""))
                 titolo = ".";
             if (tipoPLC.Equals(""))

@@ -68,10 +68,10 @@ namespace DATA
         /// </summary>
         private void button2_Click(object sender, EventArgs e)
         {
-            prog.nomeCliente = comboBox1.Text.ToString();
-            prog.nome = textBox1.Text.ToString();
-            prog.tipoOP = textBox3.Text.ToString();
-            prog.tipoPLC = comboBox2.Text.ToString();
+            prog.nomeCliente = comboBox1.Text.ToString().Replace(",", "");
+            prog.nome = textBox1.Text.ToString().Replace(",", "");
+            prog.tipoOP = textBox3.Text.ToString().Replace(",", "");
+            prog.tipoPLC = comboBox2.Text.ToString().Replace(",", "");
             if (prog.nome.Equals(""))
                 prog.nome = ".";
             if (prog.tipoOP.Equals(""))

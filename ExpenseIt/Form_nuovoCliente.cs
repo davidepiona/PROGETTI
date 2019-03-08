@@ -42,8 +42,8 @@ namespace DATA
         /// </summary>
         private void button2_Click(object sender, EventArgs e)
         {
-            string nome = textBox1.Text.ToString();
-            string suffisso = textBox2.Text.ToString();
+            string nome = textBox1.Text.ToString().Replace(",", "");
+            string suffisso = textBox2.Text.ToString().Replace(",", "");
             if (nome.Equals(""))
             {
                 MessageBox.Show("Inserire un nome valido", "Nome assente",
