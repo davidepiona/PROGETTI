@@ -20,6 +20,7 @@ namespace DATA
         private Dictionary<string, int> status = new Dictionary<string, int>();
         DateTime dtNew = new DateTime();
         private string fileName; 
+        private string extension; 
 
         /// <summary>
         /// Costruttore semplice
@@ -123,7 +124,64 @@ namespace DATA
             if (DateTime.Compare(dtNew, dt) < 0)
             {
                 dtNew = dt;
-                fileName = path;
+            }
+        }
+
+        /// <summary>
+        /// Chiama i metodi ProcessDirectory o ProcessFile a seconda di che tipo di elemento riceve
+        /// MEMORIZZA IL NOME DEL FILE CON MODIFICA PIU' RECENTE(NON DOC E NON DOCX)
+        /// </summary>
+        public DateTime modificheByFile2(string proj, string extension)
+        {
+            this.extension = extension;
+            dtNew = new DateTime();
+            if (Directory.Exists(proj))
+            {
+                ProcessDirectory2(proj);
+            }
+            else if (File.Exists(proj))
+            {
+                ProcessFile2(proj);
+            }
+            return dtNew;
+        }
+
+        /// <summary>
+        /// Processa tutti i file nella cartella che è stata passata e
+        /// agisce ricorsivamente nello stesso modo in ogni sottodirectory
+        /// MEMORIZZA IL NOME DEL FILE CON MODIFICA PIU' RECENTE(NON DOC E NON DOCX)
+        /// </summary>
+        public void ProcessDirectory2(string targetDirectory)
+        {
+            string[] fileEntries = Directory.GetFiles(targetDirectory);
+            foreach (string fileName in fileEntries)
+                ProcessFile2(fileName);
+
+            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+            foreach (string subdirectory in subdirectoryEntries)
+                ProcessDirectory2(subdirectory);
+        }
+
+        /// <summary>
+        /// Azione di confronto su ogni singolo file per valutare se la sua data di modifica 
+        /// sia la più recente e nel caso memorizzarla.
+        /// MEMORIZZA IL NOME DEL FILE CON MODIFICA PIU' RECENTE(NON DOC E NON DOCX)
+        /// </summary>
+        private void ProcessFile2(string path)
+        {
+            DateTime dt = File.GetLastWriteTime(path);
+
+            if (DateTime.Compare(dtNew, dt) < 0)
+            {
+                string split = path.Split('.').Last();
+                if (!split.Equals("docx") && !split.Equals("doc"))
+                {
+                    if (extension.Equals("") || string.Concat("." + split).Equals(extension))
+                    {
+                        dtNew = dt;
+                        fileName = path;
+                    }
+                }
             }
         }
 
@@ -312,6 +370,11 @@ namespace DATA
         public string getFileName()
         {
             return fileName;
+        }
+
+        internal void setFileName(string newFileName)
+        {
+            this.fileName = newFileName;
         }
     }
 }

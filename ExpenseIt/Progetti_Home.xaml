@@ -84,7 +84,7 @@ Height="40" Click="Button_Open_Folder" Background="SteelBlue"  x:Name="BottApri"
         </Button>
 
         <TextBox x:Name="TextBox" Grid.Row="1" Grid.ColumnSpan="6"  Padding="17,0,0,1" Background="White" 
-                 HorizontalAlignment="Center" FontSize="13" Margin="10,15,22,17" VerticalAlignment="Top" 
+                 HorizontalAlignment="Center" FontSize="15" Margin="10,15,22,17" VerticalAlignment="Top" 
                  Width="230" Height="30" TextChanged="TextBox_TextChanged" IsHitTestVisible="True" CaretBrush="SteelBlue" ></TextBox>
         <Image Grid.ColumnSpan="6" Grid.Row="1" Height='20' Width='20' HorizontalAlignment="Center" 
                Margin="0,20,210,17" VerticalAlignment="Top" 
@@ -131,6 +131,9 @@ Height="40" Click="Button_Open_Folder" Background="SteelBlue"  x:Name="BottApri"
                 ToolTip="Fa apparire un popup che mostra l'ultimo file modificato" ToolTipService.InitialShowDelay="2000">
             <Image Source="R:\PROGETTI\DATA\SRC\clock.png"></Image>
         </Button>
+        <TextBox x:Name="TextBoxModify" Grid.Row="8" Grid.Column="1"  Background="White" 
+                 HorizontalAlignment="Center" FontSize="20" VerticalAlignment="Center" 
+                 Width="100" Height="35" IsHitTestVisible="True" CaretBrush="SteelBlue" ></TextBox>
         <Menu DockPanel.Dock="Left" Grid.Column="5"  Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
               Margin="0,0,40,0">
             <MenuItem Width="50" Height="50" FlowDirection="RightToLeft" Name="Menu">

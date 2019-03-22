@@ -761,12 +761,32 @@ namespace DATA
         /// </summary>
         private void ButtonLastModify(object sender, RoutedEventArgs e)
         {
-            string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato;
-            DateTime date = ultimaModifica.modificheByFile(path);
-            string fileName = ultimaModifica.getFileName();
-            string fileName2 = fileName.Substring(path.Length+1);
-            Form_LastModify form = new Form_LastModify(fileName2, date.ToString());
-            form.ShowDialog();
+                string fileName = "";
+                string data = "";
+                try
+                {
+                    string path = Globals.PROGETTI + Globals.CLIENTI[num_cliente].getNomeCliente() + @"\" + Globals.CLIENTI[num_cliente].getSuffisso() + ProgSelezionato;
+                    TextBox textBox = this.FindName("TextBoxModify") as TextBox;
+                    DateTime date = ultimaModifica.modificheByFile2(path, textBox.Text);
+                    string fileName2 = ultimaModifica.getFileName();
+                    ultimaModifica.setFileName("");
+                    fileName = fileName2.Substring(path.Length + 1);
+                    data = date.ToString();
+                    if (data.Equals("01/01/0001 00:00:00"))
+                    {
+                        data = "";
+                    }
+                }catch(ArgumentOutOfRangeException)
+                {
+                    Globals.log.Error("ArgumentOutOfRangeException in button last modify");
+                }
+                catch (NullReferenceException)
+                {
+                    Globals.log.Error("NullReferenceException in button last modify");
+                }
+
+                Form_LastModify form = new Form_LastModify(fileName, data);
+                form.Show();
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

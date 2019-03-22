@@ -18,7 +18,12 @@ namespace DATA
             label1.Text = fileName;
             label2.Text = date;
             this.Width = label1.Width + 100;
+            this.LostFocus += Form_LostFocus; 
         }
 
+        private void Form_LostFocus(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
