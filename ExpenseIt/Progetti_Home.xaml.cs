@@ -103,6 +103,8 @@ namespace DATA
             InitializeComponent();
             this.num_cliente = num_cliente;
             initialize();
+            TextBox textBox = this.FindName("TextBox") as TextBox;
+            textBox.Focus();
         }
 
         /// <summary>
@@ -806,10 +808,11 @@ namespace DATA
         /// </summary>
         private void PreviewKeyDown2(object sender, KeyEventArgs e)
         {
+            //MessageBox.Show(e.Key.ToString());
             if (e.Key == Key.Up)
             {
                 DataGrid dataGrid = this.FindName("dataGrid") as DataGrid;
-                dataGrid.Focus();
+                //dataGrid.Focus();
                 if (dataGrid.SelectedIndex > 0)
                 {
                     dataGrid.SelectedIndex = dataGrid.SelectedIndex - 1;
@@ -828,6 +831,16 @@ namespace DATA
             if (e.Key == Key.Enter)
             {
                 Button_Open_Folder(null, null);
+            }
+            if(e.Key == Key.Back)
+            {
+                TextBox textBox = this.FindName("TextBox") as TextBox;
+                if (!textBox.IsFocused)
+                {
+                    Clienti_Home clienti_home = new Clienti_Home();
+                    this.NavigationService.Navigate(clienti_home);
+
+                }
             }
         }
 
