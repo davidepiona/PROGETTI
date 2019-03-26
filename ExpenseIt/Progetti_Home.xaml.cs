@@ -102,9 +102,9 @@ namespace DATA
         {
             InitializeComponent();
             this.num_cliente = num_cliente;
+            Loaded += Progetti_Home_Loaded2;
             initialize();
-            TextBox textBox = this.FindName("TextBox") as TextBox;
-            textBox.Focus();
+            
         }
 
         /// <summary>
@@ -329,6 +329,15 @@ namespace DATA
                 Clienti_Home clienti_home = new Clienti_Home();
                 this.NavigationService.Navigate(clienti_home);
             }
+        }
+
+        /// <summary>
+        /// Dopo aver caricato la pagina da il focus alla textbox
+        /// </summary>
+        public void Progetti_Home_Loaded2(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = this.FindName("TextBox") as TextBox;
+            textBox.Focus();
         }
 
         /// <summary>
