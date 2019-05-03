@@ -94,16 +94,16 @@ namespace DATA
                 Globals.log.Info(msg);
                 try
                 {
-                    Directory.CreateDirectory(Globals.PROGETTI + cliente + @"\" + cliente + numProgetto);
+                    Directory.CreateDirectory(Globals.PROGETTI + cliente + @"\" + Globals.CLIENTI[numCliente].getSuffisso() + numProgetto);
                 }
                 catch (IOException)
                 {
-                    string msg2 = "E09 - La cartella " + Globals.PROGETTI + cliente + @"\" + cliente + numProgetto + " non è stata creata per un problema";
+                    string msg2 = "E09 - La cartella " + Globals.PROGETTI + cliente + @"\" + Globals.CLIENTI[numCliente].getSuffisso() + numProgetto + " non è stata creata per un problema";
                     MessageBox.Show(msg2, "E09"
                                          , MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign);
                     Globals.log.Error(msg2);
                 }
-                string fileName = Globals.PROGETTI + cliente + @"\" + cliente + numProgetto + @"\progetto.docx";
+                string fileName = Globals.PROGETTI + cliente + @"\" + Globals.CLIENTI[numCliente].getSuffisso() + numProgetto + @"\progetto.docx";
                 try
                 {
                     var doc = Xceed.Words.NET.DocX.Create(fileName);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -329,7 +330,34 @@ namespace DATA
                 Clienti_Home clienti_home = new Clienti_Home();
                 this.NavigationService.Navigate(clienti_home);
             }
+            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            Task timerTask = RunPeriodically(TimeSpan.FromMinutes(5), tokenSource.Token);
         }
+
+        /// <summary>
+        /// Funzione che viene richiamata ogni 5 minuti e scrive in un file LAVORO.csv il cliente e il progetto su cui si sta lavorando
+        /// </summary>
+        async Task RunPeriodically(TimeSpan interval, CancellationToken token)
+        {
+            while (true)
+            {
+                Progetto item = progetti.Find(r => r.numero == ProgSelezionato);
+                string lavoro = String.Format("{0};{1};{2}", (DateTime.Now).ToString() , Globals.CLIENTI[num_cliente].getNomeCliente(), item.numero + " - " + item.nome);
+                string[] lines = new string[1];
+                lines[0] = lavoro;
+                try
+                {
+                    File.AppendAllLines(Globals.LOG + "LAVORO.csv", lines);
+                }
+                catch (IOException)
+                {
+                    string msg = "E80 - E' stato impossibile salvare gli aggiornamenti di lavoro in data " + (DateTime.Now).ToString();
+                    Globals.log.Error(msg);
+                }
+                await Task.Delay(interval, token);
+            }
+        }
+
 
         /// <summary>
         /// Dopo aver caricato la pagina da il focus alla textbox
