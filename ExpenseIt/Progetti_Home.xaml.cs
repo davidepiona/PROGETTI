@@ -24,6 +24,7 @@ namespace DATA
     public partial class Progetti_Home : Page
     {
         private bool back = false;
+        private static string lavoro = "";
         private int num_cliente;
         private int ProgSelezionato;
         private List<Progetto> progetti = new List<Progetto>();
@@ -99,10 +100,10 @@ namespace DATA
         /// <summary>
         /// Costruttore 2, per quando viene chiamato dall'altra pagina.
         /// </summary>
-        public Progetti_Home(int num_cliente)
+        public Progetti_Home(int num_clienti)
         {
             InitializeComponent();
-            this.num_cliente = num_cliente;
+            num_cliente = num_clienti;
             Loaded += Progetti_Home_Loaded2;
             initialize();
             
@@ -330,34 +331,38 @@ namespace DATA
                 Clienti_Home clienti_home = new Clienti_Home();
                 this.NavigationService.Navigate(clienti_home);
             }
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
-            Task timerTask = RunPeriodically(TimeSpan.FromMinutes(5), tokenSource.Token);
+            Thread printer = new Thread(new ThreadStart(InvokeMethod));
+            printer.Start();
         }
 
-        /// <summary>
-        /// Funzione che viene richiamata ogni 5 minuti e scrive in un file LAVORO.csv il cliente e il progetto su cui si sta lavorando
-        /// </summary>
-        async Task RunPeriodically(TimeSpan interval, CancellationToken token)
+        static void InvokeMethod()
         {
+            bool first = true;
             while (true)
             {
-                Progetto item = progetti.Find(r => r.numero == ProgSelezionato);
-                string lavoro = String.Format("{0};{1};{2}", (DateTime.Now).ToString() , Globals.CLIENTI[num_cliente].getNomeCliente(), item.numero + " - " + item.nome);
-                string[] lines = new string[1];
-                lines[0] = lavoro;
-                try
+                if (first)
                 {
-                    File.AppendAllLines(Globals.LOG + "LAVORO.csv", lines);
+                    first = false;
+                    Thread.Sleep(1000 * 15);
                 }
-                catch (IOException)
+                else
                 {
-                    string msg = "E80 - E' stato impossibile salvare gli aggiornamenti di lavoro in data " + (DateTime.Now).ToString();
-                    Globals.log.Error(msg);
+                    Globals.log.Info(lavoro);
+                    string[] lines = new string[1];
+                    lines[0] = lavoro;
+                    try
+                    {
+                        File.AppendAllLines(Globals.LOG + "LAVORO.csv", lines);
+                    }
+                    catch (IOException)
+                    {
+                        string msg = "E80 - E' stato impossibile salvare gli aggiornamenti di lavoro in data " + (DateTime.Now).ToString();
+                        Globals.log.Error(msg);
+                    }
+                    Thread.Sleep(1000 * 5 );
                 }
-                await Task.Delay(interval, token);
             }
         }
-
 
         /// <summary>
         /// Dopo aver caricato la pagina da il focus alla textbox
@@ -898,7 +903,8 @@ namespace DATA
             try
             {
                 ProgSelezionato = ((Progetto)((DataGrid)sender).SelectedValue).numero;
-                
+                Progetto item = progetti.Find(r => r.numero == ProgSelezionato);
+                lavoro = String.Format("{0};{1};{2}", (DateTime.Now).ToString(), Globals.CLIENTI[num_cliente].getNomeCliente(), item.numero + " - " + item.nome);
                 if (Globals.ANTEPRIME)
                 {
                     richTextBox.Visibility = Visibility.Visible;
