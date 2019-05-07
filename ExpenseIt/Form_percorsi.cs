@@ -27,6 +27,7 @@ namespace DATA
             textBox1.Text = Globals.PROGETTI;
             textBox2.Text = Globals.DATI;
             textBox3.Text = Globals.DATIsync;
+            textBox4.Text = Globals.MIN_SALVA_LAVORO.ToString();
         }
 
         /// <summary>
@@ -152,6 +153,7 @@ namespace DATA
             string tb1 = textBox1.Text.ToString();
             string tb2 = textBox2.Text.ToString();
             string tb3 = textBox3.Text.ToString();
+            string tb4 = textBox4.Text.ToString();
             if (!Directory.Exists(tb1) || !Directory.Exists(tb2) || !Directory.Exists(tb3))
             {
                 string msg = "Uno dei percorsi inseriti non esiste, sei sicuro di voler continuare e salvare le modifiche?";
@@ -164,16 +166,25 @@ namespace DATA
                     return;
                 }
             }
-            if (!tb1.Equals(Globals.PROGETTI) || !tb2.Equals(Globals.DATI) || !tb3.Equals(Globals.DATIsync))
+            if (!tb1.Equals(Globals.PROGETTI) || !tb2.Equals(Globals.DATI) || !tb3.Equals(Globals.DATIsync) || !tb4.Equals(Globals.MIN_SALVA_LAVORO))
             {
                 Globals.PROGETTI = tb1;
                 Globals.DATI = tb2;
                 Globals.DATIsync = tb3;
+                Globals.MIN_SALVA_LAVORO = int.Parse(tb4);
                 MainWindow m = new MainWindow();
                 m.scriviSETTINGS();
                 Globals.log.Info("Percorsi settings");
             }
             this.Close();
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            if (!textBox4.Text.All(char.IsDigit))
+            {
+                textBox4.Text = "";
+            }
         }
     }
 }

@@ -116,6 +116,7 @@ namespace DATA
                     Globals.DATIsync = reader.ReadLine();
                     Globals.ANTEPRIME = reader.ReadLine().Equals("True") ? true : false;
                     Globals.SINCRONIZZAZIONE = reader.ReadLine().Equals("True") ? true : false;
+                    Globals.MIN_SALVA_LAVORO = int.Parse(reader.ReadLine());
                     file.Close();
                 }
                 catch (IOException)
@@ -143,7 +144,7 @@ namespace DATA
         {
             Console.WriteLine("Scrivo SETTINGS");
             Globals.log.Info("Scrivo SETTINGS");
-            string[] lines = new string[7];
+            string[] lines = new string[8];
             lines[0] = Globals.GITURL;
             lines[1] = Globals.GITPATH;
             lines[2] = Globals.PROGETTI;
@@ -151,6 +152,7 @@ namespace DATA
             lines[4] = Globals.DATIsync;
             lines[5] = Globals.ANTEPRIME.ToString();
             lines[6] = Globals.SINCRONIZZAZIONE.ToString();
+            lines[7] = Globals.MIN_SALVA_LAVORO.ToString();
             try
             {
                 File.WriteAllLines(Globals.SETTINGS, lines);
@@ -187,6 +189,7 @@ namespace DATA
         public static bool SINCRONIZZAZIONE = true;
         public static bool DEFAULT = false;
         public static bool importCsvEnabled = true;
+        public static int MIN_SALVA_LAVORO = 5;
         //public static readonly String DATIsync = @"R:\PROGETTI\DATA\SRC\DATIsync";// Unmodifiable
 
         public static log4net.ILog log; 

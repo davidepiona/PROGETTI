@@ -24,7 +24,9 @@ namespace DATA
     public partial class Progetti_Home : Page
     {
         private bool back = false;
-        private static string lavoro = "";
+        private bool first = true;
+        private static string lavoroCliente = "";
+        private static string lavoroProgetto = "";
         private int num_cliente;
         private int ProgSelezionato;
         private List<Progetto> progetti = new List<Progetto>();
@@ -331,15 +333,30 @@ namespace DATA
                 Clienti_Home clienti_home = new Clienti_Home();
                 this.NavigationService.Navigate(clienti_home);
             }
-            Thread printer = new Thread(new ThreadStart(InvokeMethod));
-            printer.Start();
+            if (first)
+            {
+                Thread printer = new Thread(() => InvokeMethod(Thread.CurrentThread));
+                printer.IsBackground = true;
+                printer.Start();
+                first = false;
+            }
         }
 
-        static void InvokeMethod()
+        /// <summary>
+        /// Funzione che periodicamente salva su file LAVORO.csv timestamp, cliente e progetto su cui si sta lavorando.
+        /// I primi 15 secondi non salva perchè si sta cercando un altro progetto
+        /// Successivamente salva ogni Globals.MIN_SALVA_LAVORO.
+        /// </summary>
+        static void InvokeMethod(Thread originalThread)
         {
             bool first = true;
             while (true)
             {
+                if (!originalThread.IsAlive)
+                {
+                    Thread.CurrentThread.Abort();
+                    Globals.log.Error("Aborted internal printer thread");
+                }
                 if (first)
                 {
                     first = false;
@@ -347,6 +364,7 @@ namespace DATA
                 }
                 else
                 {
+                    string lavoro = String.Format("{0};{1};{2}", (DateTime.Now).ToString(), lavoroCliente, lavoroProgetto);
                     Globals.log.Info(lavoro);
                     string[] lines = new string[1];
                     lines[0] = lavoro;
@@ -359,7 +377,7 @@ namespace DATA
                         string msg = "E80 - E' stato impossibile salvare gli aggiornamenti di lavoro in data " + (DateTime.Now).ToString();
                         Globals.log.Error(msg);
                     }
-                    Thread.Sleep(1000 * 5 );
+                    Thread.Sleep(1000 * 60* Globals.MIN_SALVA_LAVORO);
                 }
             }
         }
@@ -904,7 +922,8 @@ namespace DATA
             {
                 ProgSelezionato = ((Progetto)((DataGrid)sender).SelectedValue).numero;
                 Progetto item = progetti.Find(r => r.numero == ProgSelezionato);
-                lavoro = String.Format("{0};{1};{2}", (DateTime.Now).ToString(), Globals.CLIENTI[num_cliente].getNomeCliente(), item.numero + " - " + item.nome);
+                lavoroCliente = Globals.CLIENTI[num_cliente].getNomeCliente();
+                lavoroProgetto = item.numero + " - " + item.nome;
                 if (Globals.ANTEPRIME)
                 {
                     richTextBox.Visibility = Visibility.Visible;
